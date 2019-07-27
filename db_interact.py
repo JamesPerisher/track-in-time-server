@@ -4,18 +4,17 @@ import pandas as pd
 class connection():
     def __init__(self, database=':memory:'):
         self.conn = sqlite3.connect(database)
-
-    def start(self):
-        self.c = connection.cursor()
+        self.c = self.conn.cursor()
+        self.create_db()
 
     def commit(self):
         try:
-            connection.commit()
+            self.conn.commit()
         except:
-            print("Database: Logging error.")
+            print("Database: Commit error.")
 
     def create_db(self):
-        c = conn.cursor()
+        # c = conn.cursor()
         sql_command = """CREATE TABLE IF NOT EXISTS students(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             name_last TEXT,
@@ -26,32 +25,31 @@ class connection():
             teacher TEXT,
             dob TEXT,
             student_id INTEGER);"""
-        c.execute(sql_command)
+        self.c.execute(sql_command)
 
     def insert(self):
         pass
 
-def data_entry():
-    global conn, c
+    def data_entry(self):
 
-    read_file = ((pd.read_excel('')))
-    df = pd.DataFrame(read_file)
+        read_file = (pd.read_excel('C:\\Users\\JKook Studios\\Documents\\School\\carnival_system\\Book1.xlsx'))
+        df = pd.DataFrame(read_file)
 
-    index = read_file.index
-    print(index)
-    #print(list(list(df.iterrows())[0][1]))
+        index = read_file.index
+        print(index)
+        #print(list(list(df.iterrows())[0][1]))
 
-    columns = (list(df.columns.values))
-    for index,row in df.iterrows():
+        columns = (list(df.columns.values))
+        for index,row in df.iterrows():
 
-        details = []
-        for i in columns:
-            # print(row[i])
-            details.append(row[i])
-        c.execute("INSERT INTO students VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?)", (details[0],details[1],details[2],details[3],details[4].capitalize(),details[5],str(details[6]),details[7], None))
+            details = []
+            for i in columns:
+                # print(row[i])
+                details.append(row[i])
+            self.c.execute("INSERT INTO students VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?)", (details[0],details[1],details[2],details[3],details[4],details[5],str(details[6]),details[7]))
 
 
-    conn.commit()
+        self.conn.commit()
 
 
 

@@ -32,7 +32,10 @@ def add_person():
         return render_template("person_form.html", error="All fields must be filled.")
     return render_template("person_form.html", success="Successfully created user")
 
-#db.data_entry()
+
+c = db.connection()
+c.data_entry()
+
 
 if __name__ == '__main__':
     app.run()
