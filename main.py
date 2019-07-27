@@ -12,10 +12,6 @@ app = Flask(__name__, template_folder='templates')
 def home():
     return render_template("home.html")
 
-@app.route('/help')
-def helpme():
-    return render_template("helpme.html")
-
 @app.route('/home')
 def home_redirect():
     return redirect("/", code=302)
