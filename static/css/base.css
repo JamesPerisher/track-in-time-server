@@ -17,7 +17,7 @@ body {
 }
 
 .fake-link {
-  color: blue;
+  color: #00007e;
   text-decoration: underline;
   cursor: pointer;
 }
