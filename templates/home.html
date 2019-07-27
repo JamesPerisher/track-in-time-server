@@ -1,0 +1,27 @@
+{% extends "template.html" %}
+{% block title %}Home{% endblock %}
+{% set active='home' %}
+
+{% block head %}
+{{ super() }}
+<link type="text/css" rel="stylesheet" href="static/css/home.css" />
+{% endblock %}
+
+
+
+{% block content %}
+<div style="padding-top:200px" class="main_message">
+  <div style="background-color: #36393F;" class="message">
+    <h1>PaulN07's webpage<br>Built because building </h1>
+    <p style="padding-top:50px;padding-left:7px;">This page shows information on some of my important projects I’m working on and also provides the official download for my resource pack</p>
+  </div>
+</div>
+
+<div style="padding-left:15%;" class="main_message">
+  <div id="msgrght" class="message container">
+    <h1 style="padding-left: 20px;"> Join a basically uncensored discord server</h1>
+    <iframe src="https://discordapp.com/widget?id=539662473167634442&theme=dark" width=100% height=200% allowtransparency="true" frameborder="0"></iframe>
+    <a id="joinButton" href="https://discord.gg/2wj94TP" target="_blank">Join Now</a>
+  </div>
+</div>
+{% endblock %}

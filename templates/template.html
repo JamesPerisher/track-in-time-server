@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  {% block head %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+  <title>{% block title %}{% endblock %} - Carnival system</title>
+
+  <div class="topnav">
+    {% if not newpages %}{% set newpages = dict() %}{% endif %}
+    {% set nav_list = dict({"home":"Home","about":"About","discord_bot":"Discord Bot","queue":"Queue","res_pack":"Resource Pack", "shop":"Shop"}, **newpages) %}
+    {% for i in nav_list %}
+    <a class="cat {% if active==i %}active{%endif %} {{i}}" href="{{ url_for(i) }}">{{nav_list[i]}}</a>
+    {% endfor %}
+  </div>
+  {% endblock %}
+</head>
+
+<body>
+
+    <div class="content">{% block content %}{% endblock %}</div>
+    <div class="footer">
+      <table>
+        <tr>
+          <td>
+            <p>aaaaaaa</p>
+          </td><td>
+            <p>aaa</p>
+          </td>
+          <td>
+            <a href="https://github.com/JamesPerisher"><img class="img" src="static/images/github_icon.svg"></a>
+          </td>
+        </tr>
+      </table>
+    </div>
+</body>
+
+</html>
