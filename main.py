@@ -23,7 +23,10 @@ def add_person():
     print(request.args.get('page', default = 1, type = int))
     return render_template("person_form.html")
 
-db.data_entry()
+
+c = db.connection()
+c.data_entry()
+
 
 if __name__ == '__main__':
     app.run()
