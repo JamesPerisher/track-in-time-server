@@ -19,7 +19,8 @@ def home_redirect():
 
 @app.route('/add_person')
 def add_person():
-    print(request.args)
+    if request.args.to_dict() == {}:
+        return render_template("person_form.html")
     name_first = request.args.get('name_first')
     name_last = request.args.get('name_last')
     gender = request.args.get('gender')
@@ -31,6 +32,7 @@ def add_person():
     if None in [name_first, name_last, gender, year, house, dob, teacher, student_id] or "" in [name_first, name_last, gender, year, house, dob, teacher, student_id]:
         return render_template("person_form.html", error="All fields must be filled.")
     return render_template("person_form.html", success="Successfully created user")
+    # TODO: call add to datbase funtion db.funcname(name_first, name_last, gender, year, house, dob, teacher, student_id)
 
 
 c = db.connection()
