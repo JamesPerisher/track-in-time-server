@@ -21,23 +21,21 @@ def home_redirect():
 def add_person():
     if request.args.to_dict() == {}:
         return render_template("person_form.html")
-    name_first = request.args.get('name_first')
-    name_last = request.args.get('name_last')
-    gender = request.args.get('gender')
-    year = request.args.get('year')
-    house = request.args.get('house')
-    dob = request.args.get('dob')
-    teacher = request.args.get('teacher')
-    student_id = request.args.get('student_id')
-    if None in [name_first, name_last, gender, year, house, dob, teacher, student_id] or "" in [name_first, name_last, gender, year, house, dob, teacher, student_id]:
-        return render_template("person_form.html", error="All fields must be filled.")
-    return render_template("person_form.html", success="Successfully created user")
+
+    empty = {"name_first":"", "name_last":"", "gender":"", "year":"", "house":"", "dob":"", "teacher":"", "student_id":""}
+    base = empty.copy()
+    res_data = request.args.to_dict()
+    base.update(res_data)
+
+    if "" in [base[x] for x in base]:
+        return render_template("person_form.html", error="All fields must be filled.", fields=base)
+    return render_template("person_form.html", success="Successfully created user: %s %s"%(base["name_first"], base["name_last"]), fields=empty)
     # TODO: call add to datbase funtion db.funcname(name_first, name_last, gender, year, house, dob, teacher, student_id)
 
 
-c = db.connection()
-c.data_entry()
-print(c.get_name_info("Person"))
+# c = db.connection()
+# c.data_entry()
+# print(c.get_name_info("Person"))
 
 if __name__ == '__main__':
     app.run()
