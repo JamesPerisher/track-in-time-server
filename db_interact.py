@@ -1,6 +1,7 @@
 import sqlite3
 import pandas as pd
 
+
 class connection():
     def __init__(self, database=':memory:'):
         self.conn = sqlite3.connect(database)
@@ -25,9 +26,18 @@ class connection():
             teacher TEXT,
             dob TEXT,
             student_id INTEGER);"""
+
+        self.c.execute(sql_command)
+        sql_command = """CREATE TABLE IF NOT EXISTS events(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            time TEXT,
+            name TEXT,
+            track_feild TEXT,
+            timed_score_distance INTEGER,
+            gender TEXT);"""
         self.c.execute(sql_command)
 
-    def insert(self):
+    def insert(self, data):
         pass
 
     def data_entry(self):
@@ -37,26 +47,26 @@ class connection():
 
         index = read_file.index
         print(index)
-        #print(list(list(df.iterrows())[0][1]))
+        # print(list(list(df.iterrows())[0][1]))
 
         columns = (list(df.columns.values))
-        for index,row in df.iterrows():
+        for index, row in df.iterrows():
 
             details = []
             for i in columns:
                 # print(row[i])
                 details.append(row[i])
-            self.c.execute("INSERT INTO students VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?)", (details[0],details[1],details[2],details[3],details[4],details[5],str(details[6]),details[7]))
-
+            self.c.execute("INSERT INTO students VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?)", (
+                details[0], details[1], details[2], details[3], details[4], details[5], str(details[6]), details[7]))
 
         self.conn.commit()
 
     def get_name_info(self, lookup):
-        lookup = (lookup,lookup,)
-        self.c.execute("SELECT * FROM students WHERE ? = name_first OR ? = name_last", lookup)
-        #print(c.fetchall())
+        lookup = (lookup, lookup,)
+        self.c.execute(
+            "SELECT * FROM students WHERE ? = name_first OR ? = name_last", lookup)
+        # print(c.fetchall())
         return self.c.fetchall()
-
 
 
 # def start():
