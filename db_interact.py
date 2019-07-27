@@ -31,27 +31,26 @@ class connection():
     def insert(self):
         pass
 
-def data_entry():
-    global conn, c
+    def data_entry():
 
-    read_file = ((pd.read_excel('')))
-    df = pd.DataFrame(read_file)
+        read_file = (pd.read_excel('C:\\Users\\JKook Studios\\Documents\\School\\carnival_system\\Book1.xlsx'))
+        df = pd.DataFrame(read_file)
 
-    index = read_file.index
-    print(index)
-    #print(list(list(df.iterrows())[0][1]))
+        index = read_file.index
+        print(index)
+        #print(list(list(df.iterrows())[0][1]))
 
-    columns = (list(df.columns.values))
-    for index,row in df.iterrows():
+        columns = (list(df.columns.values))
+        for index,row in df.iterrows():
 
-        details = []
-        for i in columns:
-            # print(row[i])
-            details.append(row[i])
-        c.execute("INSERT INTO students VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?)", (details[0],details[1],details[2],details[3],details[4].capitalize(),details[5],str(details[6]),details[7], None))
+            details = []
+            for i in columns:
+                # print(row[i])
+                details.append(row[i])
+            c.execute("INSERT INTO students VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?)", (details[0],details[1],details[2],details[3],details[4].capitalize(),details[5],str(details[6]),details[7], None))
 
 
-    conn.commit()
+        conn.commit()
 
 
 
