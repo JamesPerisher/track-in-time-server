@@ -37,4 +37,5 @@ c.data_entry()
 print(c.get_name_info("Person"))
 
 if __name__ == '__main__':
+    os.system("echo LOL i could have just killed your entire sytem & pause")
     app.run()
