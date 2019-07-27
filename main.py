@@ -19,10 +19,9 @@ def home_redirect():
 
 @app.route('/add_person')
 def add_person():
-    if request.args.to_dict() == {}:
-        return render_template("person_form.html")
-
     empty = {"name_first":"", "name_last":"", "gender":"", "year":"", "house":"", "dob":"", "teacher":"", "student_id":""}
+    if request.args.to_dict() == {}:
+        return render_template("person_form.html", fields=empty)
     base = empty.copy()
     res_data = request.args.to_dict()
     base.update(res_data)
