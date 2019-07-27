@@ -32,7 +32,7 @@ class connection():
 
     def data_entry(self):
 
-        read_file = (pd.read_excel('C:\\Users\\JKook Studios\\Documents\\School\\carnival_system\\Book1.xlsx'))
+        read_file = (pd.read_excel('Book1.xlsx'))
         df = pd.DataFrame(read_file)
 
         index = read_file.index

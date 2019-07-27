@@ -32,9 +32,9 @@ def add_person():
     # TODO: call add to datbase funtion db.funcname(name_first, name_last, gender, year, house, dob, teacher, student_id)
 
 
-# c = db.connection()
-# c.data_entry()
-# print(c.get_name_info("Person"))
+c = db.connection()
+c.data_entry()
+print(c.get_name_info("Person"))
 
 if __name__ == '__main__':
     app.run()
