@@ -1,0 +1,182 @@
+html {
+  width: 100%;
+}
+
+body {
+  background: #36393F;
+  font-family: Arial;
+  font-size: 16px;
+  margin-top: 0px;
+  margin-left: 0px;
+  margin-right: 1px;
+  margin-bottom: 0px;
+}
+
+.content {
+  min-height: calc(100vh - 125px);
+}
+
+.fake-link {
+  color: blue;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+html {
+  overflow: scroll;
+  overflow-x: hidden;
+  margin: 0px 0px;
+  padding: 0px 0px;
+}
+
+::-webkit-scrollbar {
+  width: 7px;
+  background-color: #2F3136;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #202225;
+  border-radius: 5px;
+}
+
+.topnav {
+  background-color: #202225;
+  overflow: hidden;
+}
+
+.topnav .right {
+  float: right;
+  color: #7e0000;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 17px;
+}
+
+/* Style the links inside the navigation bar */
+.topnav .cat {
+  float: left;
+  color: #ffffff;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 17px;
+}
+
+.topnav-mobile .cat {
+  float: none;
+}
+
+/* Change the color of links on hover */
+.topnav a:hover {
+  background-color: #ddd;
+  color: black;
+}
+
+/* Add a color to the active/current link */
+.topnav a.active {
+  background-color: #7e0000;
+  color: white;
+}
+
+.footer {
+  background-color: #ff00ff;
+  clear: both;
+  position: relative;
+  height: 40px;
+}
+
+.topnav-mobile {
+  float: none;
+  display: block;
+}
+
+.topnav-mobile a {
+  float: none;
+  display: block;
+}
+
+.topnav #myLinks {
+  display: none;
+}
+
+.font-form h1 {
+  color: #7e0000;
+  padding-left: 7px;
+}
+
+.font-form h2 {
+  color: #ffffff;
+  font-size: 20px;
+  padding-left: 7px;
+}
+
+.font-form p {
+  color: #ffffff;
+  font-size: 17px;
+}
+
+.footer {
+  background-color: #202225;
+  clear: both;
+  position: relative;
+  height: 60px;
+  display: -webkit-flex;
+  -webkit-align-items: center;
+  display: flex;
+  align-items: center;
+  margin-bottom: 0px;
+}
+
+.footer table {
+  width: 100%;
+  margin-left: 5%;
+  margin-right: 2%;
+  text-align: center;
+}
+
+.footer>* {
+  padding: 1px 0px;
+  border: 0px 0px;
+  margin: 0px 0px;
+}
+
+.footer p {
+  text-align: center;
+  display: inline;
+  color: #ffffff;
+}
+
+.footer>p {
+  display: inline-block;
+  display: -moz-inline-box;
+  *display: inline;
+  /* For IE7 */
+  zoom: 1;
+  /* Trigger hasLayout */
+  width: 24%;
+  text-align: center;
+}
+
+.footer img {
+  height: 30px;
+  width: 30px;
+}
+
+.footer a {
+  text-align: center;
+  color: #ffffff;
+  text-decoration: none;
+}
+
+.footer a:hover {
+  color: #7e0000;
+}
+
+/*
+colours:
+202225  = dark
+2F3136  = middle
+36393F  = background
+ffffff  = bright - titles
+*/
