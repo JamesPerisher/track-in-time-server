@@ -1,5 +1,6 @@
 from flask import Flask
 from flask import render_template, redirect
+from flask import request
 import json, sqlite3
 import time, pytz
 import numpy as np
@@ -7,6 +8,7 @@ import os
 
 
 app = Flask(__name__, template_folder='templates')
+app.config['SECRET_KEY'] = 'you-will-never-guess'
 
 @app.route("/")
 def home():
@@ -15,6 +17,12 @@ def home():
 @app.route('/home')
 def home_redirect():
     return redirect("/", code=302)
+
+@app.route('/add_person')
+def add_person():
+    print(request.args)
+    return render_template("person_form.html")
+
 
 if __name__ == '__main__':
     app.run()

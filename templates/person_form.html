@@ -1,0 +1,23 @@
+{% extends "template.html" %}
+{% block title %}Home{% endblock %}
+{% set active='home' %}
+
+{% block head %}
+{{ super() }}
+<link type="text/css" rel="stylesheet" href="static/css/home.css" />
+{% endblock %}
+
+
+
+{% block content %}
+<h1>Add person</h1>
+<form action="">
+  First name:<br>
+  <input type="text" name="firstname" value="Mickey">
+  <br>
+  Last name:<br>
+  <input type="text" name="lastname" value="Mouse">
+  <br><br>
+  <input type="submit" value="Submit">
+</form>
+{% endblock %}
