@@ -5,7 +5,7 @@ import json, sqlite3
 import time, pytz
 import numpy as np
 import os
-
+import db_interact.py
 
 app = Flask(__name__, template_folder='templates')
 app.config['SECRET_KEY'] = 'you-will-never-guess'
