@@ -57,10 +57,7 @@ class connection():
         return self.c.fetchall()
 
 
-# import sqlite3
-# import pandas as pd
-#
-#
+
 # def start():
 #     global conn, c
 #     conn = sqlite3.connect(":memory:")
