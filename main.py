@@ -20,6 +20,7 @@ def home_redirect():
 @app.route('/add_person')
 def add_person():
     print(request.args)
+    print(request.args.get('page', default = 1, type = int))
     return render_template("person_form.html")
 
 
