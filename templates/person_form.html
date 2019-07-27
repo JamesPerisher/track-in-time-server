@@ -11,6 +11,8 @@
 
 {% block content %}
 <h1>Add person</h1>
+{% if error %} <p style="color: #ff0000;">{{error}}</p> {% endif %}
+{% if success %} <p style="color: #00ff00;">{{success}}</p> {% endif %}
 <form action="">
   First name:<br>
   <input type="text" name="name_first" value="">
