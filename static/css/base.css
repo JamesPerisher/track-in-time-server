@@ -172,3 +172,7 @@ html {
 .footer a:hover {
   color: #00007e;
 }
+
+.footer_table td {
+  width: 25%;
+}

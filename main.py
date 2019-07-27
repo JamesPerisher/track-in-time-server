@@ -29,7 +29,7 @@ def add_person():
     if "" in [base[x] for x in base]:
         return render_template("person_form.html", error="All fields must be filled.", fields=base)
     return render_template("person_form.html", success="Successfully created user: %s %s"%(base["name_first"], base["name_last"]), fields=empty)
-    # TODO: call add to datbase funtion db.funcname(name_first, name_last, gender, year, house, dob, teacher, student_id)
+    # TODO: call add to datbase funtion data is in base
 
 
 c = db.connection()
@@ -37,5 +37,4 @@ c.data_entry()
 print(c.get_name_info("Person"))
 
 if __name__ == '__main__':
-    os.system("echo LOL i could have just killed your entire sytem & pause")
     app.run()
