@@ -173,10 +173,10 @@ html {
   color: #00007e;
 }
 
-/*
-colours:
-202225  = dark
-2F3136  = middle
-36393F  = background
-ffffff  = bright - titles
-*/
+.error {
+  color: #ff0000;
+}
+
+.success {
+  color: #00ff00;
+}

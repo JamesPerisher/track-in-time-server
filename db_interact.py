@@ -51,6 +51,10 @@ class connection():
 
         self.conn.commit()
 
+    def get_name_info(self, lookup):
+        self.c.execute("SELECT * FROM students WHERE '%s' = name_first OR '%s' = name_last" %(lookup, lookup))
+        #print(c.fetchall())
+        return self.c.fetchall()
 
 
 # import sqlite3

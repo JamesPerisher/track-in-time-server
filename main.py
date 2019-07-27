@@ -37,7 +37,7 @@ def add_person():
 
 c = db.connection()
 c.data_entry()
-
+print(c.get_name_info("Person"))
 
 if __name__ == '__main__':
     app.run()
