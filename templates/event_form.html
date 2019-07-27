@@ -1,0 +1,67 @@
+{% extends "template.html" %}
+{% block title %}Add{% endblock %}
+{% set active='add_event' %}
+
+{% block head %}
+{{ super() }}
+<link type="text/css" rel="stylesheet" href="static/css/add_values.css" />
+{% endblock %}
+
+
+
+{% block content %}
+<h1>Add event</h1>
+{% if error %} <p class="error">{{error}}</p> {% endif %}
+{% if success %} <p class="success">{{success}}</p> {% endif %}
+<form action="">
+
+
+  <p>Event name:</p>
+  <input type="text" name="name" value="{{fields["name"]}}">
+  <br>
+
+  <p>Event time:</p>
+  <input type="time" name="time" value="{{fields["time"]}}">
+  <br>
+
+  <p>Event age category:</p>
+  <select name="track_feild ">
+    <option value="under12">Under 12 years</option>
+    <option value="under16">Under 16 years</option>
+    <option value="under18">Under 18 years</option>
+  </select>
+  <!-- TODO: get age categorys from database -->
+  <br>
+
+  <p>Track or field:</p>
+  <select name="track_feild ">
+    <option value="track ">Track event</option>
+    <option value="field ">Field event</option>
+  </select>
+  <br>
+
+  <p>Event scoring:</p>
+  <select name="timed_score_distance ">
+    <option value="timed">Timed event</option>
+    <option value="score">Scored event</option>
+    <option value="distance">Distance event</option>
+  </select>
+  <br>
+
+  <p>Event participant gender:</p>
+  <select name="gender">
+    <option value="male">Male</option>
+    <option value="female">Female</option>
+    <option value="both">Both</option>
+    <option value="other">Other</option>
+    <option value="chicken">Chicken</option>
+    <option value="potato">Potato</option>
+  </select>
+  <br>
+
+
+
+  <br>
+  <input type="submit" value="Submit">
+</form>
+{% endblock %}

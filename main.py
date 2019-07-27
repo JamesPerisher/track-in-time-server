@@ -31,6 +31,22 @@ def add_person():
     return render_template("person_form.html", success="Successfully created user: %s %s"%(base["name_first"], base["name_last"]), fields=empty)
     # TODO: call add to datbase funtion data is in base
 
+@app.route('/add_event')
+def add_event():
+    empty = {}
+    return render_template("event_form.html", fields=empty)
+    if request.args.to_dict() == {}:
+        return render_template("person_form.html", fields=empty)
+    return
+    base = empty.copy()
+    res_data = request.args.to_dict()
+    base.update(res_data)
+
+    if "" in [base[x] for x in base]:
+        return render_template("event_form.html", error="All fields must be filled.", fields=base)
+    return render_template("event_form.html", success="Successfully created event: %s"%(base["name"]), fields=empty)
+    # TODO: call add to datbase funtion data is in base
+
 
 c = db.connection()
 c.data_entry()
