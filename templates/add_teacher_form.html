@@ -1,0 +1,68 @@
+{% extends "template.html" %}
+{% block title %}Add{% endblock %}
+{% set active='add_teacher' %}
+
+{% block head %}
+{{ super() }}
+<link type="text/css" rel="stylesheet" href="static/css/add_values.css" />
+{% endblock %}
+
+
+
+{% block content %}
+<h1>Add person</h1>
+{% if error %} <p class="error">{{error}}</p> {% endif %}
+{% if success %} <p class="success">{{success}}</p> {% endif %}
+<form action="">
+  <!-- TODO: get year from yeay groups db -->
+  <!-- TODO: get houses from houses database -->
+
+  <p>First name:</p>
+  <input type="text" name="name_first" value="{{fields["name_first"]}}">
+  <br>
+
+  <p>Last name:</p>
+  <input type="text" name="name_last" value="{{fields["name_last"]}}">
+  <br>
+
+  <p>Gender:</p>
+  <select name="gender">
+    {% set options = dict({"male":"Male", "female":"Female", "both":"Both", "chicken":"Chicken", "potato":"Potato"}) %}
+    {% for i in options %}
+    <option {% if fields["gender"] == i %} selected {% endif %} value="{{i}}">{{options[i]}}</option>
+    {% endfor %}
+    <option {% if fields["gender"] == "idk" %} selected {% endif %} value="idk">It's <script type="text/javascript">
+        document.write(new Date().getFullYear());
+
+      </script> you can't stop me</option>
+  </select>
+  <br>
+
+  <p>Date of birth:</p>
+  <input type="date" name="dob" value="{{fields["dob"]}}">
+  <br>
+
+  <p>Year groups:</p>
+  <select name="year_groups" multiple>
+    {% set options = dict({"year1":"Year1", "year2":"Year2", "year3":"Year3", "year4":"Year4", "year5":"Year5"}) %}
+    {% for i in options %}
+    <option {% if fields["year_groups"] == i %} selected {% endif %} value="{{i}}">{{options[i]}}</option>
+    {% endfor %}
+  </select>
+
+  <p>House (Element):</p>
+  <select name="house">
+    <!-- TODO: get element from database -->
+    {% set options = dict({"earth":"Earth", "slitherin":"Slitherin"}) %}
+    {% for i in options %}
+    <option {% if fields["house"] == i %} selected {% endif %} value="{{i}}">{{options[i]}}</option>
+    {% endfor %}
+  </select>
+  <br>
+
+
+  <br>
+  <input type="submit" value="Submit">
+</form>
+
+{% endblock %}
