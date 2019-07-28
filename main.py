@@ -71,8 +71,11 @@ def add_event():
     return f.call()
 
 
-c = db.connection()
+c = db.connection("test.db")
 c.data_entry()
+print("test")
+c.add_age_group({"start": "2002-11-11", "name": "hello", "end": "2002-11-11"})
+print("test2")
 print(c.get_name_info("Person"))
 
 

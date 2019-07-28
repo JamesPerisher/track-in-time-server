@@ -1,5 +1,7 @@
 import sqlite3
 import pandas as pd
+import datetime
+import time
 
 
 class connection():
@@ -38,7 +40,6 @@ class connection():
             dob INTEGER);"""
         self.c.execute(sql_command)
 
-        self.c.execute(sql_command)
         sql_command = """CREATE TABLE IF NOT EXISTS events(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             time TEXT,
@@ -48,11 +49,51 @@ class connection():
             gender TEXT);"""
         self.c.execute(sql_command)
 
-    def insert(self, data):
+        sql_command = """CREATE TABLE IF NOT EXISTS age_groups(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            display_name STRING,
+            start INTEGER,
+            end INTEGER);"""
+        self.c.execute(sql_command)
+
+        sql_command = """CREATE TABLE IF NOT EXISTS year_groups(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            year INTEGER);"""
+        self.c.execute(sql_command)
+
+        sql_command = """CREATE TABLE IF NOT EXISTS house(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            house TEXT
+            color TEXT);"""
+        self.c.execute(sql_command)
+
+        sql_command = """CREATE TABLE IF NOT EXISTS house(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            house TEXT
+            color TEXT);"""
+        self.c.execute(sql_command)
+        self.commit()
+        print("%s: created databases" % __name__)
+
+    def add_age_group(self, data):
+        data["start"] = time.mktime(datetime.datetime.strptime(data["start"].replace(
+            "-", "/"), "%Y/%m/%d").timetuple())  # looks like this 2002-11-11 convert to unix
+        data["end"] = time.mktime(datetime.datetime.strptime(data["end"].replace(
+            "-", "/"), "%Y/%m/%d").timetuple())  # looks like this 2002-11-11 convert to unix
+        sql_command_1 = "INSERT INTO age_groups VALUES (NULL, \"%s\", \"%s\", \"%s\")" % (
+            data["name"], data["start"], data["end"])
+        self.c.execute(sql_command_1)
+        self.c.execute("SELECT id FROM age_groups ORDER BY id DESC LIMIT 1")
+        sql_command = """CREATE TABLE IF NOT EXISTS table_{table_id}(
+            student_id INTEGER);""".replace("{table_id}", str(self.c.fetchall()[0][0]))
+
+        self.c.execute(sql_command)
+        self.commit()
+
+    def add_house(self, data):
         pass
 
     def data_entry(self):
-
         read_file = (pd.read_excel('Book1.xlsx'))
         df = pd.DataFrame(read_file)
 
