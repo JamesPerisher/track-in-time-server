@@ -1,0 +1,83 @@
+{% extends "template.html" %}
+{% block title %}Add{% endblock %}
+{% set active='add_person' %}
+
+{% block head %}
+{{ super() }}
+<link type="text/css" rel="stylesheet" href="static/css/add_values.css" />
+{% endblock %}
+
+
+
+{% block content %}
+<h1>Add person</h1>
+{% if error %} <p class="error">{{error}}</p> {% endif %}
+{% if success %} <p class="success">{{success}}</p> {% endif %}
+<form action="">
+  <!-- TODO: get teachers from teacher db and add to dropdown -->
+  <!-- TODO: gender in dropdown -->
+  <!-- TODO: year from years/classes database in dropdown -->
+  <!-- TODO: house from houses datbase in dropdown -->
+
+  <p>First name:</p>
+  <input type="text" name="name_first" value="{{fields["name_first"]}}">
+  <br>
+
+  <p>Last name:</p>
+  <input type="text" name="name_last" value="{{fields["name_last"]}}">
+  <br>
+
+  <p>Gender:</p>
+  <select name="gender">
+    {% set options = dict({"male":"Male", "female":"Female", "both":"Both", "chicken":"Chicken", "potato":"Potato"}) %}
+    {% for i in options %}
+    <option {% if fields["gender"] == i %} selected {% endif %} value="{{i}}">{{options[i]}}</option>
+    {% endfor %}
+    <option {% if fields["gender"] == "idk" %} selected {% endif %} value="idk">It's <script type="text/javascript">
+        document.write(new Date().getFullYear());
+
+      </script> you can't stop me</option>
+  </select>
+  <br>
+
+  <p>Year:</p>
+  <input type="text" name="year" value="{{fields["year"]}}">
+  <br>
+
+
+  <p>House (Element):</p>
+  <select name="house">
+    <!-- TODO: get element from database -->
+    {% set options = dict({"earth":"Earth", "slitherin":"Slitherin"}) %}
+    {% for i in options %}
+    <option {% if fields["house"] == i %} selected {% endif %} value="{{i}}">{{options[i]}}</option>
+    {% endfor %}
+  </select>
+  <br>
+
+
+
+  <p>Date of birth:</p>
+  <input type="date" name="dob" value="{{fields["dob"]}}">
+  <br>
+
+  <p>Teacher:</p>
+  <select name="teacher">
+    <!-- TODO: get teachers from database -->
+    {% set options = dict({"1":"dave", "2":"bob"}) %}
+    {% for i in options %}
+    <option {% if fields["teacher"] == i %} selected {% endif %} value="{{i}}">{{options[i]}}</option>
+    {% endfor %}
+  </select>
+  <br>
+
+
+  <p>Student id (from student card):</p>
+  <input type="text" name="student_id" value="{{fields["student_id"]}}">
+  <br>
+
+  <br>
+  <input type="submit" value="Submit">
+</form>
+
+{% endblock %}

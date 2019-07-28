@@ -47,17 +47,24 @@ def home_redirect():
     return redirect("/", code=302)
 
 
-@app.route('/add_person')
+@app.route('/add_student')
 def add_person():
     empty = {"name_first": "", "name_last": "", "gender": "", "year": "",
              "house": "", "dob": "", "teacher": "", "student_id": ""}
-    f = form(request, empty, "person_form.html")
+    f = form(request, empty, "add_student_form.html")
+    return f.call()
+
+@app.route('/add_teacher')
+def add_teacher():
+    empty = {"name_first": "", "name_last": "", "gender": "", "year_groups": "",
+             "house": "", "dob": ""}
+    f = form(request, empty, "add_teacher_form.html")
     return f.call()
 
 @app.route('/add_event')
 def add_event():
     empty = {"name":"", "time":"", "age_group":"", "track_feild":"", "timed_score_distance":"", "gender":""}
-    f = form(request, empty, "event_form.html")
+    f = form(request, empty, "add_event_form.html", event=lambda x: x)
     return f.call()
 
 
