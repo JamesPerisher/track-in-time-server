@@ -20,10 +20,11 @@ class form():
         res_data = self.request.args.to_dict()
         base.update(res_data)  # makse sure all keys in self.empty are included in base
 
+        print("Data: %s"%base)
+
         if "" in [base[x] for x in base]:
             return render_template(self.form, error=("All fields must be filled." if self.error == None else self.error), fields=base)
         self.success = self.event(base) # calls event funtion
-        print("Data: %s"%base)
         return render_template(self.form, success=("Success" if self.success == None else self.success), fields=self.empty)
 
     def __init__(self, request, empty, form, event=lambda x: "data processed but no event has been added", error=None, success=None):
@@ -63,6 +64,7 @@ def add_event():
 c = db.connection()
 c.data_entry()
 print(c.get_name_info("Person"))
+
 
 if __name__ == '__main__':
     app.run()

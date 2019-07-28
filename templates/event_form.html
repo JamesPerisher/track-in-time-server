@@ -50,12 +50,14 @@
 
   <p>Event participant gender:</p>
   <select name="gender">
-    <option value="male">Male</option>
-    <option value="female">Female</option>
-    <option value="both">Both</option>
-    <option value="other">Other</option>
-    <option value="chicken">Chicken</option>
-    <option value="potato">Potato</option>
+    {% set options = dict({"male":"Male", "female":"Female", "both":"Both", "chicken":"Chicken", "potato":"Potato"}) %}
+    {% for i in options %}
+    <option {% if fields["gender"] == i %} selected {% endif %} value="{{i}}">{{options[i]}}</option>
+    {% endfor %}
+    <option {% if fields["gender"] == "idk" %} selected {% endif %} value="idk">It's <script type="text/javascript">
+        document.write(new Date().getFullYear());
+
+      </script> you can't stop me</option>
   </select>
   <br>
 

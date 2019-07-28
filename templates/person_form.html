@@ -16,15 +16,52 @@
 <form action="">
   <!-- TODO: get teachers from teacher db and add to dropdown -->
   <!-- TODO: gender in dropdown -->
-  <!-- TODO: yeah from years/classes database in dropdown -->
+  <!-- TODO: year from years/classes database in dropdown -->
   <!-- TODO: house from houses datbase in dropdown -->
-  {% set form_fields = dict({"name_first":"First name", "name_last":"Last name", "gender":"Gender", "year":"Year", "house":"House (Element)", "dob":"Date of birth", "teacher":"Teacher", "student_id":"Student id (from student card)"}) %}
-  {% for i in form_fields %}
-  <p>{{form_fields[i]}}:</p>
-  <input type="text" name="{{i}}" value="{{fields[i]}}">
+
+  <p>First name:</p>
+  <input type="text" name="name_first" value="">
   <br>
-  {% endfor %}
+
+  <p>Last name:</p>
+  <input type="text" name="name_last" value="">
+  <br>
+
+  <p>Gender:</p>
+  <select name="gender">
+    {% set options = dict({"male":"Male", "female":"Female", "both":"Both", "chicken":"Chicken", "potato":"Potato"}) %}
+    {% for i in options %}
+    <option {% if fields["gender"] == i %} selected {% endif %} value="{{i}}">{{options[i]}}</option>
+    {% endfor %}
+    <option {% if fields["gender"] == "idk" %} selected {% endif %} value="idk">It's <script type="text/javascript">
+        document.write(new Date().getFullYear());
+
+      </script> you can't stop me</option>
+  </select>
+  <br>
+
+  <p>Year:</p>
+  <input type="text" name="year" value="">
+  <br>
+
+  <p>House (Element):</p>
+  <input type="text" name="house" value="">
+  <br>
+
+  <p>Date of birth:</p>
+  <input type="text" name="dob" value="">
+  <br>
+
+  <p>Teacher:</p>
+  <input type="text" name="teacher" value="">
+  <br>
+
+  <p>Student id (from student card):</p>
+  <input type="text" name="student_id" value="">
+  <br>
+
   <br>
   <input type="submit" value="Submit">
 </form>
+
 {% endblock %}
