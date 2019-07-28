@@ -56,7 +56,7 @@ def add_person():
 
 @app.route('/add_event')
 def add_event():
-    empty = {}
+    empty = {"name":"", "time":"", "age_group":"", "track_feild":"", "timed_score_distance":"", "gender":""}
     f = form(request, empty, "event_form.html")
     return f.call()
 

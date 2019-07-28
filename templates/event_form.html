@@ -25,26 +25,31 @@
   <br>
 
   <p>Event age category:</p>
-  <select name="track_feild ">
-    <option value="under12">Under 12 years</option>
-    <option value="under16">Under 16 years</option>
-    <option value="under18">Under 18 years</option>
+  <select name="age_group">
+    <!-- get age-groups(options) from datbase -->
+    {% set options = dict({"under18":"Under 18 years", "under20":"Under 20 years"}) %}
+    {% for i in options %}
+    <option {% if fields["age_group"] == i %} selected {% endif %} value="{{i}}">{{options[i]}}</option>
+    {% endfor %}
   </select>
-  <!-- TODO: get age categorys from database -->
   <br>
 
+
   <p>Track or field:</p>
-  <select name="track_feild ">
-    <option value="track ">Track event</option>
-    <option value="field ">Field event</option>
+  <select name="track_feild">
+    {% set options = dict({"track":"Track event", "field":"Field event"}) %}
+    {% for i in options %}
+    <option {% if fields["track_feild"] == i %} selected {% endif %} value="{{i}}">{{options[i]}}</option>
+    {% endfor %}
   </select>
   <br>
 
   <p>Event scoring:</p>
-  <select name="timed_score_distance ">
-    <option value="timed">Timed event</option>
-    <option value="score">Scored event</option>
-    <option value="distance">Distance event</option>
+  <select name="timed_score_distance">
+    {% set options = dict({"timed":"Timed event", "score":"Scored event", "distance":"Distance event"}) %}
+    {% for i in options %}
+    <option {% if fields["timed_score_distance"] == i %} selected {% endif %} value="{{i}}">{{options[i]}}</option>
+    {% endfor %}
   </select>
   <br>
 
