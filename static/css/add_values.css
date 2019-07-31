@@ -20,3 +20,5 @@ body {
 .success {
   color: #00ff00;
 }
+
+.input[type=text] {}
