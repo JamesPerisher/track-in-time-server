@@ -7,6 +7,8 @@ import pytz
 import numpy as np
 import os
 import db_interact as db
+import datetime
+
 
 app = Flask(__name__, template_folder='templates')
 
@@ -70,22 +72,40 @@ def add_event():
     f = form(request, empty, "add_event_form.html", event=lambda x: x)
     return f.call()
 
+
 @app.route('/cmd')
 def cmd():
     try:
         a = eval(request.args.to_dict()["cmd"])
-        return {"r":a}
+        return {"r": a}
     except Exception as e:
         return e
-
 
 
 c = db.connection()
 c.data_entry()
 print("test")
-c.add_age_group({"start": "2002-11-11", "name": "hello", "end": "2002-11-11"})
+test = c.get_dates()
+print(test)
+test2 = []
+test3 = []
+for i in test:
+    test2.append(i[0].split("-")[0])
+for i in test2:
+    if i not in test3:
+        test3.append(i)
+    else:
+        pass
+test3.sort(reverse=True)
+print(test3)
+for i in test3:
+    print(i)
+    c.add_age_group({"start": ("%s-1-1") %
+                     i, "name": ("Year %s") % str((int(datetime.datetime.now().year) - int(i)) - 6), "end": ("%s-1-1") % i})
+
 print("test2")
-print(c.get_name_info("Person"))
+print(c.get_age_groups())
+# print(c.get_name_info("Person"))
 
 
 if __name__ == '__main__':

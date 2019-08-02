@@ -86,6 +86,14 @@ class connection():
         self.c.execute(sql_command)
         self.commit()
 
+    def get_age_groups(self):
+        self.c.execute("SELECT * FROM age_groups")
+        return self.c.fetchall()
+
+    def get_dates(self):
+        self.c.execute("SELECT dob FROM students")
+        return self.c.fetchall()
+
     def add_house(self, data):
         pass
 
