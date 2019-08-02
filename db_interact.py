@@ -68,11 +68,6 @@ class connection():
             color TEXT);"""
         self.c.execute(sql_command)
 
-        sql_command = """CREATE TABLE IF NOT EXISTS house(
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            house TEXT
-            color TEXT);"""
-        self.c.execute(sql_command)
         self.commit()
         print("%s: created databases" % __name__)
 
