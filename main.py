@@ -101,10 +101,13 @@ print(test3)
 for i in test3:
     print(i)
     c.add_age_group({"start": ("%s-1-1") %
-                     i, "name": ("Year %s") % str((int(datetime.datetime.now().year) - int(i)) - 6), "end": ("%s-1-1") % i})
+                     i, "name": ("Year %s %s") % (str((int(datetime.datetime.now().year) - int(i)) - 6), i), "end": ("%s-1-1") % str(int(i) + 1)})
 
 print("test2")
-print(c.get_age_groups())
+thing = c.get_age_groups()
+for i in thing:
+    print(i[1], datetime.datetime.fromtimestamp(
+        i[2]), datetime.datetime.fromtimestamp(i[3]))
 # print(c.get_name_info("Person"))
 
 

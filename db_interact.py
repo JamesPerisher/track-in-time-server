@@ -18,7 +18,6 @@ class connection():
             print("Database: Commit error.")
 
     def create_db(self):
-        # c = conn.cursor()
 
         sql_command = """CREATE TABLE IF NOT EXISTS students(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
