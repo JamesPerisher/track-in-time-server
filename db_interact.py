@@ -128,25 +128,20 @@ if __name__ == '__main__':
     c = connection()
     c.data_entry()
     # print("test")
-    test = c.get_dates()
-    # print(test)
-    test2 = []
-    test3 = []
-    for i in test:
-        test2.append(i[0].split("-")[0])
-    for i in test2:
-        if i not in test3:
-            test3.append(i)
-        else:
-            pass
-    test3.sort(reverse=True)
-    print(test3)
-    for i in test3:
+
+    years = [y for y in {str(x[0]).split("-")[0]: True for x in c.get_dates()}]
+    years.sort(reverse=True)
+
+    # print(years)
+
+
+
+    for i in years:
         print(i)
         c.add_age_group({"start": ("%s-1-1") %
                          i, "name": ("Year %s %s") % (str((int(datetime.datetime.now().year) - int(i)) - 6), i), "end": ("%s-1-1") % str(int(i) + 1)})
 
-    print("test2")
+
     thing = c.get_age_groups()
     for i in thing:
         print(i[1], datetime.datetime.fromtimestamp(
