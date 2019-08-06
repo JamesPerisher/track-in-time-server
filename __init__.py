@@ -2,6 +2,7 @@ import routes
 import db_interact
 from threading import Thread
 
+
 class web_pages(Thread):
     def __init__(self, database_interact, start=True):
         self.app = routes.app
@@ -13,13 +14,11 @@ class web_pages(Thread):
     def start_app(self):
         self.app.run()
 
+
 class database_management(Thread):
     def __init__(self, connection, pages):
         self.c = connection
         self.pages = pages
-
-
-
 
 
 if __name__ == '__main__':

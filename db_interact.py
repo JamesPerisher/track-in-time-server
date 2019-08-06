@@ -101,7 +101,7 @@ class connection():
         df = pd.DataFrame(read_file)
 
         index = read_file.index
-        print(index)
+        # print(index)
         # print(list(list(df.iterrows())[0][1]))
 
         columns = (list(df.columns.values))
@@ -123,12 +123,13 @@ class connection():
         # print(c.fetchall())
         return self.c.fetchall()
 
+
 if __name__ == '__main__':
     c = connection()
     c.data_entry()
-    print("test")
+    # print("test")
     test = c.get_dates()
-    print(test)
+    # print(test)
     test2 = []
     test3 = []
     for i in test:
