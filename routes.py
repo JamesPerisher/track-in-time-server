@@ -9,7 +9,6 @@ import os
 import db_interact as db
 import datetime
 
-
 app = Flask(__name__, template_folder='templates')
 
 
@@ -22,7 +21,6 @@ class form():
         res_data = self.request.args.to_dict()
         # makse sure all keys in self.empty are included in base
         base.update(res_data)
-
         print("Data: %s" % base)
 
         if "" in [base[x] for x in base]:
@@ -82,33 +80,7 @@ def cmd():
         return e
 
 
-c = db.connection()
-c.data_entry()
-print("test")
-test = c.get_dates()
-print(test)
-test2 = []
-test3 = []
-for i in test:
-    test2.append(i[0].split("-")[0])
-for i in test2:
-    if i not in test3:
-        test3.append(i)
-    else:
-        pass
-test3.sort(reverse=True)
-print(test3)
-for i in test3:
-    print(i)
-    c.add_age_group({"start": ("%s-1-1") %
-                     i, "name": ("Year %s %s") % (str((int(datetime.datetime.now().year) - int(i)) - 6), i), "end": ("%s-1-1") % str(int(i) + 1)})
 
-print("test2")
-thing = c.get_age_groups()
-for i in thing:
-    print(i[1], datetime.datetime.fromtimestamp(
-        i[2]), datetime.datetime.fromtimestamp(i[3]))
-# print(c.get_name_info("Person"))
 
 
 if __name__ == '__main__':

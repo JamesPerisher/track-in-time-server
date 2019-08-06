@@ -122,3 +122,32 @@ class connection():
             "SELECT * FROM students WHERE ? = name_first OR ? = name_last", lookup)
         # print(c.fetchall())
         return self.c.fetchall()
+
+if __name__ == '__main__':
+    c = connection()
+    c.data_entry()
+    print("test")
+    test = c.get_dates()
+    print(test)
+    test2 = []
+    test3 = []
+    for i in test:
+        test2.append(i[0].split("-")[0])
+    for i in test2:
+        if i not in test3:
+            test3.append(i)
+        else:
+            pass
+    test3.sort(reverse=True)
+    print(test3)
+    for i in test3:
+        print(i)
+        c.add_age_group({"start": ("%s-1-1") %
+                         i, "name": ("Year %s %s") % (str((int(datetime.datetime.now().year) - int(i)) - 6), i), "end": ("%s-1-1") % str(int(i) + 1)})
+
+    print("test2")
+    thing = c.get_age_groups()
+    for i in thing:
+        print(i[1], datetime.datetime.fromtimestamp(
+            i[2]), datetime.datetime.fromtimestamp(i[3]))
+    # print(c.get_name_info("Person"))
