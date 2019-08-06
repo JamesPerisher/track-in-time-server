@@ -80,8 +80,5 @@ def cmd():
         return e
 
 
-
-
-
 if __name__ == '__main__':
     app.run()

@@ -101,8 +101,6 @@ class connection():
         df = pd.DataFrame(read_file)
 
         index = read_file.index
-        # print(index)
-        # print(list(list(df.iterrows())[0][1]))
 
         columns = (list(df.columns.values))
         for index, row in df.iterrows():
@@ -127,23 +125,16 @@ class connection():
 if __name__ == '__main__':
     c = connection()
     c.data_entry()
-    # print("test")
 
     years = [y for y in {str(x[0]).split("-")[0]: True for x in c.get_dates()}]
     years.sort(reverse=True)
 
     # print(years)
 
-
-
     for i in years:
         print(i)
-        c.add_age_group({"start": ("%s-1-1") %
-                         i, "name": ("Year %s %s") % (str((int(datetime.datetime.now().year) - int(i)) - 6), i), "end": ("%s-1-1") % str(int(i) + 1)})
+        c.add_age_group({"start": ("%s-1-1") % i, "name": ("Year %s %s") % (str((int(datetime.datetime.now().year) - int(i)) - 6), i), "end": ("%s-1-1") % str(int(i) + 1)})
 
-
-    thing = c.get_age_groups()
-    for i in thing:
-        print(i[1], datetime.datetime.fromtimestamp(
-            i[2]), datetime.datetime.fromtimestamp(i[3]))
+    for i in c.get_age_groups():
+        print(i[1], datetime.datetime.fromtimestamp(i[2]), datetime.datetime.fromtimestamp(i[3]))
     # print(c.get_name_info("Person"))
