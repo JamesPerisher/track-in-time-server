@@ -27,14 +27,11 @@
 
   <p>Gender:</p>
   <select name="gender">
-    {% set options = dict({"male":"Male", "female":"Female", "both":"Both", "chicken":"Chicken", "potato":"Potato"}) %}
+    {% set options = dict({"male":"Male", "female":"Female", "other":"Other"}) %}
     {% for i in options %}
     <option {% if fields["gender"] == i %} selected {% endif %} value="{{i}}">{{options[i]}}</option>
     {% endfor %}
-    <option {% if fields["gender"] == "idk" %} selected {% endif %} value="idk">It's <script type="text/javascript">
-        document.write(new Date().getFullYear());
 
-      </script> you can't stop me</option>
   </select>
   <br>
 
