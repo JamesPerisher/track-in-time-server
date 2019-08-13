@@ -71,16 +71,12 @@ class connection():
         print("%s: created databases" % __name__)
 
     def add_age_group(self, data):
-        data["start"] = time.mktime(datetime.datetime.strptime(data["start"].replace(
-            "-", "/"), "%Y/%m/%d").timetuple())  # looks like this 2002-11-11 convert to unix
-        data["end"] = time.mktime(datetime.datetime.strptime(data["end"].replace(
-            "-", "/"), "%Y/%m/%d").timetuple())  # looks like this 2002-11-11 convert to unix
-        sql_command_1 = "INSERT INTO age_groups VALUES (NULL, \"%s\", \"%s\", \"%s\")" % (
-            data["name"], data["start"], data["end"])
+        data["start"] = time.mktime(datetime.datetime.strptime(data["start"].replace("-", "/"), "%Y/%m/%d").timetuple())  # looks like this 2002-11-11 convert to unix
+        data["end"] = time.mktime(datetime.datetime.strptime(data["end"].replace("-", "/"), "%Y/%m/%d").timetuple())  # looks like this 2002-11-11 convert to unix
+        sql_command_1 = "INSERT INTO age_groups VALUES (NULL, \"%s\", \"%s\", \"%s\")" % (data["name"], data["start"], data["end"])
         self.c.execute(sql_command_1)
         self.c.execute("SELECT id FROM age_groups ORDER BY id DESC LIMIT 1")
-        sql_command = """CREATE TABLE IF NOT EXISTS table_{table_id}(
-            student_id INTEGER);""".replace("{table_id}", str(self.c.fetchall()[0][0]))
+        sql_command = """CREATE TABLE IF NOT EXISTS table_{table_id}(student_id INTEGER);""".replace("{table_id}", str(self.c.fetchall()[0][0]))
 
         self.c.execute(sql_command)
         self.commit()
@@ -109,15 +105,13 @@ class connection():
             for i in columns:
                 # print(row[i])
                 details.append(row[i])
-            self.c.execute("INSERT INTO students VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?)", (
-                details[0], details[1], details[2], details[3], details[4], details[5], str(details[6]), details[7]))
+            self.c.execute("INSERT INTO students VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?)", (details[0], details[1], details[2], details[3], details[4], details[5], str(details[6]), details[7]))
 
         self.conn.commit()
 
     def get_name_info(self, lookup):
         lookup = (lookup, lookup,)
-        self.c.execute(
-            "SELECT * FROM students WHERE ? = name_first OR ? = name_last", lookup)
+        self.c.execute("SELECT * FROM students WHERE ? = name_first OR ? = name_last", lookup)
         # print(c.fetchall())
         return self.c.fetchall()
 
@@ -137,4 +131,4 @@ if __name__ == '__main__':
 
     for i in c.get_age_groups():
         print(i[1], datetime.datetime.fromtimestamp(i[2]), datetime.datetime.fromtimestamp(i[3]))
-    # print(c.get_name_info("Person"))
+    print(c.get_name_info("Person"))
