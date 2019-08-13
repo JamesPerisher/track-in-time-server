@@ -31,15 +31,6 @@ class connection():
             student_id INTEGER);"""
         self.c.execute(sql_command)
 
-        sql_command = """CREATE TABLE IF NOT EXISTS teachers(
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            name_last TEXT,
-            name_first TEXT,
-            gender TEXT,
-            year INTEGER,
-            dob INTEGER);"""
-        self.c.execute(sql_command)
-
         sql_command = """CREATE TABLE IF NOT EXISTS events(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             time TEXT,
@@ -128,11 +119,14 @@ if __name__ == '__main__':
     #     for i in years_born:
 
     # print([(int(datetime.datetime.now().year) - int(i) - 6) for i in years_born])
-    year_group = [(int(datetime.datetime.now().year) - int(i) - 6) for i in years_born]
+    year_group = [(int(datetime.datetime.now().year) - int(i)) for i in years_born]
     max_age = max(year_group)
-    print(max_age)
     print(year_group)
-    while max_age > 12:
+    print(years_born)
+    # print(max_age)
+    # print(year_group)
+    # print(year_group)
+    while max_age > 12+6:
         year_group.remove(max_age)
         max_age = max(year_group)
 
@@ -140,12 +134,13 @@ if __name__ == '__main__':
     # print(max_age)
     # print(year_group)
     year_group.sort(reverse=False)
-    print(years_born)
-    print(years_born[-1])
-    years_born[-1] = (int(datetime.datetime.now().year) + max_age + 6)
-    print(years_born[-1])
-    # for (year, age) in zip(years_born, year_group):
-    #     print(year, age)
+    # print(years_born)
+    # print(years_born[-1])
+    # print("%s\n\n"% max_age)
+    years_born[-1] = (int(datetime.datetime.now().year) - max_age)
+    # print(years_born)
+    for (year, age) in zip(years_born, year_group):
+        print(year, age)
 
     for i in years_born:
         pass
@@ -154,6 +149,6 @@ if __name__ == '__main__':
         # if (int(datetime.datetime.now().year) - int(i)) - 6 <= 12:
         #     c.add_age_group({"start": ("%s-1-1") % i, "name": ("Year %s %s") % (str(int(datetime.datetime.now().year) - int(i) - 6), i), "end": ("%s-1-1") % str(int(i) + 1)})
             # print("Test")
-    for i in c.get_age_groups():
-        print(i[1], datetime.datetime.fromtimestamp(i[2]), datetime.datetime.fromtimestamp(i[3]))
-    print(c.get_name_info("Person"))
+    # for i in c.get_age_groups():
+    #     print(i[1], datetime.datetime.fromtimestamp(i[2]), datetime.datetime.fromtimestamp(i[3]))
+    # print(c.get_name_info("Person"))
