@@ -72,7 +72,7 @@ class connection():
         self.c.execute(sql_command)
         self.commit()
 
-    def get_age_groups(self):
+    def get_year_groups(self):
         self.c.execute("SELECT * FROM age_groups")
         return self.c.fetchall()
 
@@ -111,44 +111,11 @@ if __name__ == '__main__':
     c = connection()
     c.data_entry()
 
-    years_born = [y for y in {str(x[0]).split("-")[0]: True for x in c.get_dates()}]
-    years_born.sort(reverse=True)
 
-    # print(type(years_born))
-    # for i in range(4,13):
-    #     for i in years_born:
-
-    # print([(int(datetime.datetime.now().year) - int(i) - 6) for i in years_born])
-    year_group = [(int(datetime.datetime.now().year) - int(i)) for i in years_born]
-    max_age = max(year_group)
-    print(year_group)
-    print(years_born)
-    # print(max_age)
-    # print(year_group)
-    # print(year_group)
-    while max_age > 12+6:
-        year_group.remove(max_age)
-        max_age = max(year_group)
-
-
-    # print(max_age)
-    # print(year_group)
-    year_group.sort(reverse=False)
-    # print(years_born)
-    # print(years_born[-1])
-    # print("%s\n\n"% max_age)
-    years_born[-1] = (int(datetime.datetime.now().year) - max_age)
-    # print(years_born)
-    for (year, age) in zip(years_born, year_group):
-        print(year, age)
-
-    for i in years_born:
-        pass
-        # print(i)
-
-        # if (int(datetime.datetime.now().year) - int(i)) - 6 <= 12:
-        #     c.add_age_group({"start": ("%s-1-1") % i, "name": ("Year %s %s") % (str(int(datetime.datetime.now().year) - int(i) - 6), i), "end": ("%s-1-1") % str(int(i) + 1)})
-            # print("Test")
-    # for i in c.get_age_groups():
-    #     print(i[1], datetime.datetime.fromtimestamp(i[2]), datetime.datetime.fromtimestamp(i[3]))
+    # for i in range(10):
+    #     c.add_age_group({"start": ("%s-1-1") % i, "name": ("Year %s %s") % (str(int(datetime.datetime.now().year) - int(i)), i), "end": ("%s-1-1") % str(int(i) + 1)})
+    test = c.get_year_groups()
+    print(test)
+    # for i in c.get_year_groups():
+    #     print(i)
     # print(c.get_name_info("Person"))
