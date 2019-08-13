@@ -11,8 +11,10 @@
 
 {% block content %}
 <h1>Add event</h1>
-{% if error %} <p class="error">{{error}}</p> {% endif %}
-{% if success %} <p class="success">{{success}}</p> {% endif %}
+{% if error %}
+<p class="error">{{error}}</p> {% endif %}
+{% if success %}
+<p class="success">{{success}}</p> {% endif %}
 <form action="">
 
 
@@ -20,7 +22,7 @@
   <input type="text" name="name" value="{{fields["name"]}}">
   <br>
 
-  <p>Event time:</p>
+  <p>Event start time:</p>
   <input type="time" name="time" value="{{fields["time"]}}">
   <br>
 
