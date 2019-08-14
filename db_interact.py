@@ -47,16 +47,8 @@ class connection():
             end INTEGER);"""
         self.c.execute(sql_command)
 
-        sql_command = """CREATE TABLE IF NOT EXISTS year_groups(
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            year INTEGER);"""
-        self.c.execute(sql_command)
 
-        sql_command = """CREATE TABLE IF NOT EXISTS house(
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            house TEXT
-            color TEXT);"""
-        self.c.execute(sql_command)
+
 
         self.commit()
         print("%s: created databases" % __name__)
@@ -65,15 +57,11 @@ class connection():
         data["start"] = time.mktime(datetime.datetime.strptime(data["start"].replace("-", "/"), "%Y/%m/%d").timetuple())  # looks like this 2002-11-11 convert to unix
         data["end"] = time.mktime(datetime.datetime.strptime(data["end"].replace("-", "/"), "%Y/%m/%d").timetuple())  # looks like this 2002-11-11 convert to unix
         sql_command_1 = "INSERT INTO age_groups VALUES (NULL, \"%s\", \"%s\", \"%s\")" % (data["name"], data["start"], data["end"])
-        self.c.execute(sql_command_1)
-        self.c.execute("SELECT id FROM age_groups ORDER BY id DESC LIMIT 1")
-        sql_command = """CREATE TABLE IF NOT EXISTS table_{table_id}(student_id INTEGER);""".replace("{table_id}", str(self.c.fetchall()[0][0]))
-
         self.c.execute(sql_command)
         self.commit()
 
-    def get_year_groups(self):
-        self.c.execute("SELECT * FROM age_groups")
+    def get_year_group(self, year):
+        self.c.execute("SELECT * FROM students WHERE year = \"%s\""%(year))
         return self.c.fetchall()
 
     def get_dates(self):
@@ -106,6 +94,12 @@ class connection():
         # print(c.fetchall())
         return self.c.fetchall()
 
+    def testing(self):
+        self.c.execute("""SELECT students.house, house.house
+                FROM house
+                INNER JOIN students
+                ON students.house=house.house;""")
+        return self.c.fetchall()
 
 if __name__ == '__main__':
     c = connection()
@@ -114,8 +108,10 @@ if __name__ == '__main__':
 
     # for i in range(10):
     #     c.add_age_group({"start": ("%s-1-1") % i, "name": ("Year %s %s") % (str(int(datetime.datetime.now().year) - int(i)), i), "end": ("%s-1-1") % str(int(i) + 1)})
-    test = c.get_year_groups()
+    test = c.get_year_group(9)
     print(test)
+    #print(c.testing())
+
     # for i in c.get_year_groups():
     #     print(i)
     # print(c.get_name_info("Person"))
