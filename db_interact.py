@@ -26,7 +26,6 @@ class connection():
             gender TEXT,
             year INTEGER,
             house TEXT,
-            teacher TEXT,
             dob INTEGER,
             student_id INTEGER);"""
         self.c.execute(sql_command)
@@ -73,7 +72,7 @@ class connection():
         self.commit()
 
     def get_year_groups(self):
-        self.c.execute("SELECT * FROM age_groups")
+        self.c.execute("SELECT year FROM students")
         return self.c.fetchall()
 
     def get_dates(self):
@@ -114,8 +113,16 @@ if __name__ == '__main__':
 
     # for i in range(10):
     #     c.add_age_group({"start": ("%s-1-1") % i, "name": ("Year %s %s") % (str(int(datetime.datetime.now().year) - int(i)), i), "end": ("%s-1-1") % str(int(i) + 1)})
-    test = c.get_year_groups()
-    print(test)
+    # year_groups = [for i in c.get_year_groups()]
+
+    year_groups = [x for x in c.get_year_groups()]
+
+    var = []
+    for i in c.get_year_groups():
+        if i[0] not in var:
+            print(i[0])
+            var.append(i[0])
+    print(c.get_year_groups())
     # for i in c.get_year_groups():
     #     print(i)
     # print(c.get_name_info("Person"))
