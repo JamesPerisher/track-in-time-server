@@ -83,7 +83,7 @@ class connection():
             for i in columns:
                 # print(row[i])
                 details.append(row[i])
-            self.c.execute("INSERT INTO students VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?)", (details[0], details[1], details[2], details[3], details[4], details[5], str(details[6]), details[7]))
+            self.c.execute("INSERT INTO students VALUES (NULL, ?, ?, ?, ?, ?, ?, ?)", (details[0], details[1], details[2], details[3], details[4], str(details[6]), details[7]))
 
         self.conn.commit()
 
@@ -107,7 +107,7 @@ if __name__ == '__main__':
 
     # for i in range(10):
     #     c.add_age_group({"start": ("%s-1-1") % i, "name": ("Year %s %s") % (str(int(datetime.datetime.now().year) - int(i)), i), "end": ("%s-1-1") % str(int(i) + 1)})
-    test = c.get_year_group(9)
+    test = c.get_year_group(5)
     print(test)
     #print(c.testing())
 
