@@ -55,8 +55,7 @@ class connection():
     def add_age_group(self, data):
         data["start"] = time.mktime(datetime.datetime.strptime(data["start"].replace("-", "/"), "%Y/%m/%d").timetuple())  # looks like this 2002-11-11 convert to unix
         data["end"] = time.mktime(datetime.datetime.strptime(data["end"].replace("-", "/"), "%Y/%m/%d").timetuple())  # looks like this 2002-11-11 convert to unix
-        sql_command_1 = "INSERT INTO age_groups VALUES (NULL, \"%s\", \"%s\", \"%s\")" % (data["name"], data["start"], data["end"])
-        self.c.execute(sql_command)
+        self.c.execute("INSERT INTO age_groups VALUES (NULL, \"%s\", \"%s\", \"%s\")" % (data["name"], data["start"], data["end"]))
         self.commit()
 
     def get_year_group(self, year):
@@ -88,17 +87,10 @@ class connection():
         self.conn.commit()
 
     def get_name_info(self, lookup):
-        lookup = (lookup, lookup,)
-        self.c.execute("SELECT * FROM students WHERE ? = name_first OR ? = name_last", lookup)
+        self.c.execute("SELECT * FROM students WHERE ? = name_first OR ? = name_last", (lookup, lookup))
         # print(c.fetchall())
         return self.c.fetchall()
 
-    def testing(self):
-        self.c.execute("""SELECT students.house, house.house
-                FROM house
-                INNER JOIN students
-                ON students.house=house.house;""")
-        return self.c.fetchall()
 
 if __name__ == '__main__':
     c = connection()
@@ -109,7 +101,7 @@ if __name__ == '__main__':
     #     c.add_age_group({"start": ("%s-1-1") % i, "name": ("Year %s %s") % (str(int(datetime.datetime.now().year) - int(i)), i), "end": ("%s-1-1") % str(int(i) + 1)})
     test = c.get_year_group(5)
     print(test)
-    #print(c.testing())
+    # print(c.testing())
 
     # for i in c.get_year_groups():
     #     print(i)
