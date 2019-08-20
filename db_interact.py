@@ -46,9 +46,6 @@ class connection():
             end INTEGER);"""
         self.c.execute(sql_command)
 
-
-
-
         self.commit()
         print("%s: created databases" % __name__)
 
@@ -58,6 +55,10 @@ class connection():
         self.c.execute("INSERT INTO age_groups VALUES (NULL, \"%s\", \"%s\", \"%s\")" % (data["name"], data["start"], data["end"]))
         self.commit()
 
+    def get_age_groups(self):
+        self.c.execute("SELECT * FROM age_groups")
+        return self.c.fetchall()
+
     def get_year_group(self, year):
         self.c.execute("SELECT * FROM students WHERE year = \"%s\""%(year))
         return self.c.fetchall()
@@ -65,9 +66,6 @@ class connection():
     def get_dates(self):
         self.c.execute("SELECT dob FROM students")
         return self.c.fetchall()
-
-    def add_house(self, data):
-        pass
 
     def data_entry(self):
         read_file = (pd.read_excel('Book1.xlsx'))
@@ -82,25 +80,59 @@ class connection():
             for i in columns:
                 # print(row[i])
                 details.append(row[i])
-            self.c.execute("INSERT INTO students VALUES (NULL, ?, ?, ?, ?, ?, ?, ?)", (details[0], details[1], details[2], details[3], details[4], str(details[6]), details[7]))
+            # print(details[0], self.get_name_info(details[0]))
+            # print(details[0])
+            # print(self.get_name_info(details[0]))
+            try:
+                print(details, self.get_name_info(details[0]))
+
+
+            except:
+                pass
+
+
+            if self.get_name_info(details[0]) == []:
+                self.c.execute("INSERT INTO students VALUES (NULL, ?, ?, ?, ?, ?, ?, ?)", (details[0], details[1], details[2], details[3], details[4], str(details[6]), details[7]))
+                print("1")
+            #
+            # elif details[0] not in self.get_name_info(details[0])[0] and details[1] not in self.get_name_info(details[1])[0]:
+            #     self.c.execute("INSERT INTO students VALUES (NULL, ?, ?, ?, ?, ?, ?, ?)", (details[0], details[1], details[2], details[3], details[4], str(details[6]), details[7]))
+            #     print("Added")
+            else:
+                for i in range(len(self.get_name_info(details[0]))):
+                    if True:
+                        pass
+                # print(details[0], self.get_name_info(details[0]))
+                # print(details[0])
+                print("Skipped")
+
+                # print("e")
 
         self.conn.commit()
 
     def get_name_info(self, lookup):
         self.c.execute("SELECT * FROM students WHERE ? = name_first OR ? = name_last", (lookup, lookup))
-        # print(c.fetchall())
         return self.c.fetchall()
 
 
 if __name__ == '__main__':
-    c = connection()
+    c = connection("test.db")
     c.data_entry()
 
 
     # for i in range(10):
     #     c.add_age_group({"start": ("%s-1-1") % i, "name": ("Year %s %s") % (str(int(datetime.datetime.now().year) - int(i)), i), "end": ("%s-1-1") % str(int(i) + 1)})
-    test = c.get_year_group(5)
-    print(test)
+    # test = c.get_year_group(5)
+    # print(test)
+    get_dates_var = c.get_dates()
+
+    years = list(dict.fromkeys([num for num in (get_dates_var[year][0].split("-")[0] for year in range(len(get_dates_var)))]))
+    years.sort()
+    print(years)
+    for i in years:
+        c.add_age_group({"start": ("%s-1-1") % i, "name": ("Year %s") % (i), "end": ("%s-1-1") % str(int(i) + 1)})
+
+    print(c.get_age_groups())
     # print(c.testing())
 
     # for i in c.get_year_groups():
