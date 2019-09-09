@@ -80,43 +80,55 @@ class connection():
             for i in columns:
                 # print(row[i])
                 details.append(row[i])
-            # print(details[0], self.get_name_info(details[0]))
+            # print(details[0], self.get_info(details[0]))
             # print(details[0])
-            # print(self.get_name_info(details[0]))
-            try:
-                print(details, self.get_name_info(details[0]))
-
-
-            except:
-                pass
-
-
-            if self.get_name_info(details[0]) == []:
-                self.c.execute("INSERT INTO students VALUES (NULL, ?, ?, ?, ?, ?, ?, ?)", (details[0], details[1], details[2], details[3], details[4], str(details[6]), details[7]))
-                print("1")
+            # print(self.get_info(details[0]))
+            # try:
+            #     print(details, self.get_info(details[0]))
             #
-            # elif details[0] not in self.get_name_info(details[0])[0] and details[1] not in self.get_name_info(details[1])[0]:
+            #
+            # except:
+            #     pass
+
+
+
+            print(details[0], self.get_info(details[0], "name_last"))
+            if self.get_info(details[0], "name_last") == []:
+                self.c.execute("INSERT INTO students VALUES (NULL, ?, ?, ?, ?, ?, ?, ?)", (details[0], details[1], details[2], details[3], details[4], str(details[6]), details[7]))
+                # print("Added to database: %s"%([str(details[1]), str(details[0])]))
+                self.conn.commit()
+            #
+            # elif details[0] not in self.get_info(details[0])[0] and details[1] not in self.get_info(details[1])[0]:
             #     self.c.execute("INSERT INTO students VALUES (NULL, ?, ?, ?, ?, ?, ?, ?)", (details[0], details[1], details[2], details[3], details[4], str(details[6]), details[7]))
             #     print("Added")
             else:
-                for i in range(len(self.get_name_info(details[0]))):
-                    if True:
-                        pass
-                # print(details[0], self.get_name_info(details[0]))
+                # print("DID NOT ADD %s to database"%([str(details[1]), str(details[0])]))
+                # print(details[0], self.get_info(details[0]))
                 # print(details[0])
-                print("Skipped")
-
+                # print("Skipped")
+                pass
                 # print("e")
 
         self.conn.commit()
 
-    def get_name_info(self, lookup):
-        self.c.execute("SELECT * FROM students WHERE ? = name_first OR ? = name_last", (lookup, lookup))
+    def get_info(self, lookup, data_type="name_first"):
+        # print(data_type, lookup)
+
+        self.c.execute("SELECT * FROM students WHERE %s = ?" %(data_type), (lookup, ))
+        # print(self.c.fetchall())
+        #
+        # sql_command = ("SELECT * FROM students WHERE %s = ?" %(data_type), (lookup, ))
+        # print(sql_command)
+        # self.c.execute(sql_command)
+        #
+        # print("\n")
+        # print(self.c.fetchall())
         return self.c.fetchall()
 
 
+
 if __name__ == '__main__':
-    c = connection("test.db")
+    c = connection()
     c.data_entry()
 
 
@@ -137,4 +149,4 @@ if __name__ == '__main__':
 
     # for i in c.get_year_groups():
     #     print(i)
-    # print(c.get_name_info("Person"))
+    # print(c.get_info("Person"))
