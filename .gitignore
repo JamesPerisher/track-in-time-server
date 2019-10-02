@@ -5,6 +5,8 @@ __pycache__/
 
 # files
 Book1.xlsx
+~$Book1.xlsx
+test.db
 config.json
 
 # C extensions
