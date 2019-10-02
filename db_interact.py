@@ -77,36 +77,18 @@ class connection():
         for index, row in df.iterrows():
 
             details = []
+
             for i in columns:
                 # print(row[i])
                 details.append(row[i])
-            # print(details[0], self.get_name_info(details[0]))
-            # print(details[0])
-            # print(self.get_name_info(details[0]))
-            try:
-                print(details, self.get_name_info(details[0]))
 
-
-            except:
-                pass
-
-
-            if self.get_name_info(details[0]) == []:
-                self.c.execute("INSERT INTO students VALUES (NULL, ?, ?, ?, ?, ?, ?, ?)", (details[0], details[1], details[2], details[3], details[4], str(details[6]), details[7]))
-                print("1")
-            #
-            # elif details[0] not in self.get_name_info(details[0])[0] and details[1] not in self.get_name_info(details[1])[0]:
-            #     self.c.execute("INSERT INTO students VALUES (NULL, ?, ?, ?, ?, ?, ?, ?)", (details[0], details[1], details[2], details[3], details[4], str(details[6]), details[7]))
-            #     print("Added")
+            if tuple([x if str(x) != "nan" else "" for x in [details[0], details[1], details[2], details[3], details[4]]]) not in [i[1::][:-2:] for i in self.get_name_info(details[0])]:
+                # print("Added %s %s"%(details[1],details[0]))
+                print("{0: <13} {1: <16} {2: <16}".format("Added:",details[1],details[0]))
+                self.c.execute("INSERT INTO students VALUES (NULL, ?, ?, ?, ?, ?, ?, ?)", ([x if str(x) != "nan" else "" for x in [details[0], details[1], details[2], details[3], details[4], str(details[6]), details[7]]]))
             else:
-                for i in range(len(self.get_name_info(details[0]))):
-                    if True:
-                        pass
-                # print(details[0], self.get_name_info(details[0]))
-                # print(details[0])
-                print("Skipped")
+                print("{0: <13} {1: <16} {2: <16}".format("Did not add:",details[1],details[0]))
 
-                # print("e")
 
         self.conn.commit()
 
