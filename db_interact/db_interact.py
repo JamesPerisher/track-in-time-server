@@ -51,24 +51,36 @@ class connection():
         self.commit()
         print("%s: created databases" % __name__)
 
+    def add_age_groups(self):
+        get_dates_var = c.get_dates()
 
-    def add_age_group(self, data):
-        data["start"] = time.mktime(datetime.datetime.strptime(data["start"].replace("-", "/"), "%Y/%m/%d").timetuple())  # looks like this 2002-11-11 convert to unix
-        data["end"] = time.mktime(datetime.datetime.strptime(data["end"].replace("-", "/"), "%Y/%m/%d").timetuple())  # looks like this 2002-11-11 convert to unix
-        self.c.execute("INSERT INTO age_groups VALUES (NULL, \"%s\", \"%s\", \"%s\")" % (data["name"], data["start"], data["end"]))
-        self.commit()
+        years = list(dict.fromkeys([num for num in (get_dates_var[year][0].split("-")[0] for year in range(len(get_dates_var)))]))
+        years.sort()
+        # log.info(years)
+
+        for i in years:
+            if int(i) not in [x[1] for x in c.get_age_groups()]:
+                data = ({"start": ("%s-1-1") % i, "name": ("%s") % (i), "end": ("%s-1-1") % str(int(i) + 1)})
+                data["start"] = time.mktime(datetime.datetime.strptime(data["start"].replace("-", "/"), "%Y/%m/%d").timetuple())  # looks like this 2002-11-11 convert to unix
+                data["end"] = time.mktime(datetime.datetime.strptime(data["end"].replace("-", "/"), "%Y/%m/%d").timetuple())  # looks like this 2002-11-11 convert to unix
+                self.c.execute("INSERT INTO age_groups VALUES (NULL, \"%s\", \"%s\", \"%s\")" % (data["name"], data["start"], data["end"]))
+            self.commit()
 
     def get_age_groups(self):
         self.c.execute("SELECT * FROM age_groups")
-        return self.c.fetchall()
+        return(self.c.fetchall())
 
-    # def get_year_group(self, year):
-    #     self.c.execute("SELECT * FROM students WHERE year = \"%s\""%(year))
-    #     return self.c.fetchall()
+    def add_event(self, data):
+        self.c.execute("INSERT INTO events VALUES (NULL, ?, ?, ?, ?, ?)", (data))
+        log.info("{0: <12} {1}".format("Event added:",str(data)))
+
+    def get_events(self):
+        self.c.execute("SELECT * FROM events")
+        return(self.c.fetchall())
 
     def get_dates(self):
         self.c.execute("SELECT dob FROM students")
-        return self.c.fetchall()
+        return(self.c.fetchall())
 
     def add_student(self, data):
         self.c.execute("INSERT INTO students VALUES (NULL, ?, ?, ?, ?, ?, ?, ?)", (data))
@@ -106,7 +118,7 @@ class connection():
 
     def get_name_info(self, lookup):
         self.c.execute("SELECT * FROM students WHERE ? = name_first OR ? = name_last", (lookup, lookup))
-        return self.c.fetchall()
+        return(self.c.fetchall())
 
 
 if __name__ == '__main__':
@@ -115,19 +127,15 @@ if __name__ == '__main__':
 
 
     # for i in range(10):
-    #     c.add_age_group({"start": ("%s-1-1") % i, "name": ("Year %s %s") % (str(int(datetime.datetime.now().year) - int(i)), i), "end": ("%s-1-1") % str(int(i) + 1)})
+    #     c.add_age_groups({"start": ("%s-1-1") % i, "name": ("Year %s %s") % (str(int(datetime.datetime.now().year) - int(i)), i), "end": ("%s-1-1") % str(int(i) + 1)})
     # test = c.get_year_group(5)
     # print(test)
-    get_dates_var = c.get_dates()
-
-    years = list(dict.fromkeys([num for num in (get_dates_var[year][0].split("-")[0] for year in range(len(get_dates_var)))]))
-    years.sort()
-    log.info(years)
+    c.add_age_groups()
 
     # for i in
-    for i in years:
-        if int(i) not in [x[1] for x in c.get_age_groups()]:
-            c.add_age_group({"start": ("%s-1-1") % i, "name": ("%s") % (i), "end": ("%s-1-1") % str(int(i) + 1)})
+    # for i in years:
+    #     if int(i) not in [x[1] for x in c.get_age_groups()]:
+    #         c.add_age_groups({"start": ("%s-1-1") % i, "name": ("%s") % (i), "end": ("%s-1-1") % str(int(i) + 1)})
 
     log.info(c.get_age_groups())
     # print(c.testing())
