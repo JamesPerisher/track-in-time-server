@@ -3,13 +3,15 @@ import pandas as pd
 import xlrd
 import datetime
 import time
-
+import logging as log
 
 class connection():
     def __init__(self, database=':memory:'):
+        self.log = log.basicConfig(filename='db_interact.log', level=log.DEBUG, format='%(asctime)s: %(message)s', datefmt='%d-%b-%y %H:%M:%S')
         self.conn = sqlite3.connect(database)
         self.c = self.conn.cursor()
         self.create_db()
+
 
     def commit(self):
         try:
@@ -49,6 +51,7 @@ class connection():
         self.commit()
         print("%s: created databases" % __name__)
 
+
     def add_age_group(self, data):
         data["start"] = time.mktime(datetime.datetime.strptime(data["start"].replace("-", "/"), "%Y/%m/%d").timetuple())  # looks like this 2002-11-11 convert to unix
         data["end"] = time.mktime(datetime.datetime.strptime(data["end"].replace("-", "/"), "%Y/%m/%d").timetuple())  # looks like this 2002-11-11 convert to unix
@@ -59,13 +62,16 @@ class connection():
         self.c.execute("SELECT * FROM age_groups")
         return self.c.fetchall()
 
-    def get_year_group(self, year):
-        self.c.execute("SELECT * FROM students WHERE year = \"%s\""%(year))
-        return self.c.fetchall()
+    # def get_year_group(self, year):
+    #     self.c.execute("SELECT * FROM students WHERE year = \"%s\""%(year))
+    #     return self.c.fetchall()
 
     def get_dates(self):
         self.c.execute("SELECT dob FROM students")
         return self.c.fetchall()
+
+    def add_student(self, data):
+        self.c.execute("INSERT INTO students VALUES (NULL, ?, ?, ?, ?, ?, ?, ?)", (data))
 
     def data_entry(self):
         read_file = (pd.read_excel('Book1.xlsx'))
@@ -74,6 +80,8 @@ class connection():
         index = read_file.index
 
         columns = (list(df.columns.values))
+        added_students = ()
+        passed_students = ()
         for index, row in df.iterrows():
 
             details = []
@@ -81,13 +89,17 @@ class connection():
             for i in columns:
                 # print(row[i])
                 details.append(row[i])
+            student_details = [x if str(x) != "nan" else "" for x in [details[0], details[1], details[2], details[3], details[4], str(details[6]), details[7]]]
 
-            if tuple([x if str(x) != "nan" else "" for x in [details[0], details[1], details[2], details[3], details[4]]]) not in [i[1::][:-2:] for i in self.get_name_info(details[0])]:
-                # print("Added %s %s"%(details[1],details[0]))
-                print("{0: <13} {1: <16} {2: <16}".format("Added:",details[1],details[0]))
-                self.c.execute("INSERT INTO students VALUES (NULL, ?, ?, ?, ?, ?, ?, ?)", ([x if str(x) != "nan" else "" for x in [details[0], details[1], details[2], details[3], details[4], str(details[6]), details[7]]]))
+            if tuple(student_details[:5]) not in [i[1::][:-2:] for i in self.get_name_info(details[0])]:
+                added_students = (added_students+(details[1],details[0]))
+                # self.c.execute("INSERT INTO students VALUES (NULL, ?, ?, ?, ?, ?, ?, ?)", ([x if str(x) != "nan" else "" for x in [details[0], details[1], details[2], details[3], details[4], str(details[6]), details[7]]]))
+                self.add_student(student_details)
             else:
-                print("{0: <13} {1: <16} {2: <16}".format("Did not add:",details[1],details[0]))
+                passed_students = (passed_students+(tuple((details[1],details[0]))))
+
+        log.info("{0: <12} {1}".format("Did not add:",str(passed_students)))
+        log.info("{0: <12} {1}".format("Added:",str(added_students)))
 
 
         self.conn.commit()
@@ -110,11 +122,14 @@ if __name__ == '__main__':
 
     years = list(dict.fromkeys([num for num in (get_dates_var[year][0].split("-")[0] for year in range(len(get_dates_var)))]))
     years.sort()
-    print(years)
-    for i in years:
-        c.add_age_group({"start": ("%s-1-1") % i, "name": ("Year %s") % (i), "end": ("%s-1-1") % str(int(i) + 1)})
+    log.info(years)
 
-    print(c.get_age_groups())
+    # for i in
+    for i in years:
+        if int(i) not in [x[1] for x in c.get_age_groups()]:
+            c.add_age_group({"start": ("%s-1-1") % i, "name": ("%s") % (i), "end": ("%s-1-1") % str(int(i) + 1)})
+
+    log.info(c.get_age_groups())
     # print(c.testing())
 
     # for i in c.get_year_groups():
