@@ -4,10 +4,75 @@ import xlrd
 import datetime
 import time
 import logging as log
+from threading import Thread
+
+
+class EmptyPlacerholder():
+    def __init__(self):
+        pass
+
+
+class DatabaseManager(Thread):
+    """docstring for DatabaseManager by PaulN07."""
+
+    def __init__(self, file=":memory:", timeout=2, *arg):
+        super().__init__()
+        self.file = file
+        self.timeout = timeout # timeout in seconds
+
+        self.command_stack = []
+        self.outvalues = {}
+
+    def execute(self, command):
+        temp_key = time.time()
+        n = temp_key + self.timeout
+
+        self.outvalues[temp_key] = EmptyPlacerholder()
+        self.command_stack.append((temp_key, command))
+
+
+        while type(self.outvalues[temp_key]) == type(EmptyPlacerholder()): # waits till command executed
+
+            if time.time() > n: # it took too long
+                raise TimeoutError("Timed out while waiting for serialised database interaction.")
+
+        temp_out = self.outvalues[temp_key]
+        self.outvalues.pop(temp_key) # clear value from dict
+
+        return temp_out
+
+    def run(self): # auto colled on Thread start
+        self.conn = sqlite3.connect(self.file)
+        self.crsr = self.conn.cursor()
+
+        while True:
+            for i in self.command_stack:
+                try:
+                    current = self.command_stack.pop(0)
+
+                    print("Runing: ", end="")
+                    print(current)
+
+                    self.crsr.execute(current[1])
+
+                    self.outvalues[current[0]] = (self.crsr.fetchall())
+                except Exception as e:
+                    self.outvalues[current[0]] = e
+
+                    raise e
+
+
+
+
+
+
+
+
+
 
 class connection():
     def __init__(self, database=':memory:'):
-        self.log = log.basicConfig(filename='db_interact.log', level=log.DEBUG, format='%(asctime)s: %(message)s', datefmt='%d-%b-%y %H:%M:%S')
+        self.log = log.basicConfig(filename='%s.log'%__name__, level=log.DEBUG, format='%(asctime)s: %(message)s', datefmt='%d-%b-%y %H:%M:%S')
         self.conn = sqlite3.connect(database)
         self.c = self.conn.cursor()
         self.create_db()
