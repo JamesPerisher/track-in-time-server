@@ -62,14 +62,6 @@ class DatabaseManager(Thread):
                     raise e
 
 
-
-
-
-
-
-
-
-
 class connection():
     def __init__(self, database=':memory:'):
         self.log = log.basicConfig(filename='%s.log'%__name__, level=log.DEBUG, format='%(asctime)s: %(message)s', datefmt='%d-%b-%y %H:%M:%S')
@@ -191,21 +183,6 @@ if __name__ == '__main__':
     c = connection()
     c.data_entry()
 
-
-    # for i in range(10):
-    #     c.add_age_groups({"start": ("%s-1-1") % i, "name": ("Year %s %s") % (str(int(datetime.datetime.now().year) - int(i)), i), "end": ("%s-1-1") % str(int(i) + 1)})
-    # test = c.get_year_group(5)
-    # print(test)
     c.add_age_groups()
 
-    # for i in
-    # for i in years:
-    #     if int(i) not in [x[1] for x in c.get_age_groups()]:
-    #         c.add_age_groups({"start": ("%s-1-1") % i, "name": ("%s") % (i), "end": ("%s-1-1") % str(int(i) + 1)})
-
     log.info(c.get_age_groups())
-    # print(c.testing())
-
-    # for i in c.get_year_groups():
-    #     print(i)
-    # print(c.get_info("Person"))
