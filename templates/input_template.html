@@ -1,0 +1,29 @@
+{% extends "template.html" %}
+{% block title %}Home{% endblock %}
+{% set active='home' %}
+
+{% block head %}
+{{ super() }}
+<link type="text/css" rel="stylesheet" href="static/css/add_values.css" />
+{% endblock %}
+
+
+
+{% block content %}
+
+{% if error %}<p class="error">{{ error }}</p> {% endif %}
+{% if success %}<p class="success">{{ success }}</p> {% endif %}
+
+
+{% for i in elements %}
+
+<div class="element">
+  {% with display_name=i.display_name, value=i.value, var_name=i.var_name %}
+  {% include i.template %}
+  {% endwith %}
+  <br>
+</div>
+
+{% endfor %}
+
+{% endblock %}
