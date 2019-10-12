@@ -41,6 +41,9 @@ class DatabaseManager(Thread):
 
         return temp_out
 
+    def commit(self):
+        self.execute(":x:x:commit:x:x:")
+
     def run(self): # auto colled on Thread start
         self.conn = sqlite3.connect(self.file)
         self.crsr = self.conn.cursor()
@@ -49,13 +52,23 @@ class DatabaseManager(Thread):
             for i in self.command_stack:
                 try:
                     current = self.command_stack.pop(0)
+                    if current[1] == ":x:x:commit:x:x:":
+                        self.outvalues[current[0]] = self.conn.commit()
+                        print("Commit to db")
+                        return
+
 
                     print("Runing: ", end="")
                     print(current)
 
-                    self.crsr.execute(current[1])
+                    ee = None
 
-                    self.outvalues[current[0]] = (self.crsr.fetchall())
+                    try:
+                        self.crsr.execute(current[1])
+                    except Exception as e:
+                        ee = e
+
+                    self.outvalues[current[0]] = (self.crsr.fetchall(), ee)
                 except Exception as e:
                     self.outvalues[current[0]] = e
 
@@ -63,25 +76,19 @@ class DatabaseManager(Thread):
 
 
 
-
-
-
-
-
-
-
 class connection():
     def __init__(self, database=':memory:'):
         self.log = log.basicConfig(filename='%s.log'%__name__, level=log.DEBUG, format='%(asctime)s: %(message)s', datefmt='%d-%b-%y %H:%M:%S')
-        self.conn = sqlite3.connect(database)
-        self.c = self.conn.cursor()
+        self.c = DatabaseManager(database)
+        self.c.start()
         self.create_db()
 
 
     def commit(self):
         try:
-            self.conn.commit()
-        except:
+            self.c.commit()
+        except Exception as e:
+            raise e
             print("Database: Commit error.")
 
     def create_db(self):
@@ -132,20 +139,17 @@ class connection():
             self.commit()
 
     def get_age_groups(self):
-        self.c.execute("SELECT * FROM age_groups")
-        return(self.c.fetchall())
+        return self.c.execute("SELECT * FROM age_groups")
 
     def add_event(self, data):
         self.c.execute("INSERT INTO events VALUES (NULL, ?, ?, ?, ?, ?)", (data))
         log.info("{0: <12} {1}".format("Event added:",str(data)))
 
     def get_events(self):
-        self.c.execute("SELECT * FROM events")
-        return(self.c.fetchall())
+        return self.c.execute("SELECT * FROM events")
 
     def get_dates(self):
-        self.c.execute("SELECT dob FROM students")
-        return(self.c.fetchall())
+        return self.c.execute("SELECT dob FROM students")
 
     def add_student(self, data):
         self.c.execute("INSERT INTO students VALUES (NULL, ?, ?, ?, ?, ?, ?, ?)", (data))
@@ -179,11 +183,11 @@ class connection():
         log.info("{0: <12} {1}".format("Added:",str(added_students)))
 
 
-        self.conn.commit()
+        self.c.commit()
 
     def get_name_info(self, lookup):
         self.c.execute("SELECT * FROM students WHERE ? = name_first OR ? = name_last", (lookup, lookup))
-        return(self.c.fetchall())
+        return self.c.execute("SELECT * FROM students WHERE ? = name_first OR ? = name_last", (lookup, lookup))
 
 
 if __name__ == '__main__':
