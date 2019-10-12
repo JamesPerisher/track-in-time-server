@@ -7,13 +7,13 @@ import logging as log
 from threading import Thread
 import os, sys
 
+
 class EmptyPlacerholder():
     def __init__(self):
         pass
 
 
 class DatabaseManager(Thread):
-    """docstring for DatabaseManager by PaulN07."""
 
     def __init__(self, file=":memory:", timeout=2, *arg):
         super().__init__()
@@ -79,11 +79,12 @@ class connection():
     def __init__(self, database=':memory:'):
         # print(datetime.date.today().year)
         # print(datetime.date.today().month)
-        path = ("/db/%s/%s"%(datetime.date.today().year ,datetime.date.today().month))
+        path = ("\\db\\%s\\%s"%(datetime.date.today().year ,datetime.date.today().month))
         print(path)
         print(os.path.exists(path))
         # if not os.path.exists(path):
         os.makedirs(path)
+        # os.chmod(path)
         # os.mkdir(path)
 
         self.log = log.basicConfig(filename='db/%s/%s/%s-%s.log'%(datetime.date.today().year ,datetime.date.today().month, datetime.date.today(), os.path.basename(__file__)[:-3]), level=log.DEBUG, format='%(asctime)s: %(message)s', datefmt='%d-%b-%y %H:%M:%S')
