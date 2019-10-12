@@ -59,7 +59,7 @@ class DatabaseManager(Thread):
 
 
                     print("Runing: ", end="")
-                    print(current)
+                    log.debug(current)
 
                     ee = None
 
@@ -151,7 +151,7 @@ class connection():
         return self.c.execute("SELECT * FROM age_groups")
 
     def add_event(self, data):
-        self.c.execute("INSERT INTO events VALUES (NULL, ?, ?, ?, ?, ?)", (data))
+        self.c.execute("INSERT INTO events VALUES (NULL, %s, %s, %s, %s, %s)" %(data))
         log.info("{0: <12} {1}".format("Event added:",str(data)))
 
     def get_events(self):
@@ -161,7 +161,7 @@ class connection():
         return self.c.execute("SELECT dob FROM students")
 
     def add_student(self, data):
-        self.c.execute("INSERT INTO students VALUES (NULL, ?, ?, ?, ?, ?, ?, ?)", (data))
+        self.c.execute("INSERT INTO students VALUES (NULL, %s, %s, %s, %s, %s, %s, %s)" %(data))
 
     def data_entry(self):
         read_file = (pd.read_excel('Book1.xlsx'))
@@ -183,7 +183,7 @@ class connection():
 
             if tuple(student_details[:5]) not in [i[1::][:-2:] for i in self.get_name_info(details[0])]:
                 added_students = (added_students+(details[1],details[0]))
-                # self.c.execute("INSERT INTO students VALUES (NULL, ?, ?, ?, ?, ?, ?, ?)", ([x if str(x) != "nan" else "" for x in [details[0], details[1], details[2], details[3], details[4], str(details[6]), details[7]]]))
+                # self.c.execute("INSERT INTO students VALUES (NULL, %s, %s, %s, %s, %s, %s, %s)", ([x if str(x) != "nan" else "" for x in [details[0], details[1], details[2], details[3], details[4], str(details[6]), details[7]]]))
                 self.add_student(student_details)
             else:
                 passed_students = (passed_students+(tuple((details[1],details[0]))))
@@ -195,8 +195,8 @@ class connection():
         self.c.commit()
 
     def get_name_info(self, lookup):
-        self.c.execute("SELECT * FROM students WHERE ? = name_first OR ? = name_last", (lookup, lookup))
-        return self.c.execute("SELECT * FROM students WHERE ? = name_first OR ? = name_last", (lookup, lookup))
+        self.c.execute("SELECT * FROM students WHERE %s = name_first OR %s = name_last" %(lookup, lookup))
+        return self.c.execute("SELECT * FROM students WHERE %s = name_first OR %s = name_last" %(lookup, lookup))
 
 
 
