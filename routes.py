@@ -1,6 +1,6 @@
 from flask import Flask
-from flask import render_template, redirect
-from flask import request
+from flask import render_template, redirect, make_response, request, url_for
+# import logging as log
 import json
 import time
 import pytz
@@ -10,6 +10,11 @@ import db_interact as db
 import datetime
 
 app = Flask(__name__, template_folder='templates')
+app.debug = True
+
+
+
+# log.basicConfig(filename='%s.log'%__name__, level=log.DEBUG, format='%(asctime)s: %(message)s', datefmt='%d-%b-%y %H:%M:%S')
 
 
 class form():
@@ -37,6 +42,13 @@ class form():
         self.success = success
 
 
+@app.route("/submitform", methods=['POST'])
+def submitform():
+    print(request.form)
+    return make_response(redirect(url_for('.%s'%request.form["id"])))
+
+
+
 @app.route("/")
 def home():
     return render_template("home.html")
@@ -48,11 +60,8 @@ def home_redirect():
 
 
 @app.route('/add_student')
-def add_person():
-    empty = {"name_first": "", "name_last": "", "gender": "", "year": "",
-             "house": "", "dob": "", "teacher": "", "student_id": ""}
-    f = form(request, empty, "add_student_form.html")
-    return f.call()
+def add_student():
+    return render_template("add_student_form.html", error = None, success=None)
 
 
 @app.route('/add_teacher')
