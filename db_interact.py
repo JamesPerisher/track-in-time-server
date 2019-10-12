@@ -23,7 +23,8 @@ class DatabaseManager(Thread):
         self.command_stack = []
         self.outvalues = {}
 
-    def execute(self, command):
+    def execute(self, command, timeout=-99999):
+        timeout = self.timeout if timeout == -99999 else timeout
         temp_key = time.time()
         n = temp_key + self.timeout
 
