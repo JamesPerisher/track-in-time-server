@@ -88,6 +88,7 @@ class connection():
 
         self.log = log.basicConfig(filename='db/%s/%s/%s-%s.log'%(datetime.date.today().year ,datetime.date.today().month, datetime.date.today(), os.path.basename(__file__)[:-3]), level=log.DEBUG, format='%(asctime)s: %(message)s', datefmt='%d-%b-%y %H:%M:%S')
         self.c = DatabaseManager(database)
+        self.c.start()
 
         self.create_db()
 
