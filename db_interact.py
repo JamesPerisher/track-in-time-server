@@ -57,9 +57,9 @@ class DatabaseManager(Thread):
                         print("Commit to db")
                         return
 
-
-                    print("Runing: ", end="")
-                    log.debug(current)
+                    # print(type(current[0]))
+                    # print(current)
+                    log.debug("{0: <12} {1} {2}".format("Running: ", current[0], current[1].replace("            ", " ").replace("\n", "\n       ")))
 
                     ee = None
 
@@ -77,8 +77,6 @@ class DatabaseManager(Thread):
 
 class connection():
     def __init__(self, database=':memory:'):
-        # print(datetime.date.today().year)
-        # print(datetime.date.today().month)
         path = ("db/%s/%s"%(datetime.date.today().year ,datetime.date.today().month))
         try:
             os.makedirs(path)
@@ -87,7 +85,7 @@ class connection():
 
 
         self.log = log.basicConfig(filename='db/%s/%s/%s-%s.log'%(datetime.date.today().year ,datetime.date.today().month, datetime.date.today(), os.path.basename(__file__)[:-3]), level=log.DEBUG, format='%(asctime)s: %(message)s', datefmt='%d-%b-%y %H:%M:%S')
-        self.c = DatabaseManager(database)
+        self.c = DatabaseManager(database, timeout=20)
         self.c.start()
 
         self.create_db()
