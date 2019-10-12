@@ -5,7 +5,7 @@ import datetime
 import time
 import logging as log
 from threading import Thread
-
+import os, sys
 
 class EmptyPlacerholder():
     def __init__(self):
@@ -64,7 +64,16 @@ class DatabaseManager(Thread):
 
 class connection():
     def __init__(self, database=':memory:'):
-        self.log = log.basicConfig(filename='%s.log'%__name__, level=log.DEBUG, format='%(asctime)s: %(message)s', datefmt='%d-%b-%y %H:%M:%S')
+        # print(datetime.date.today().year)
+        # print(datetime.date.today().month)
+        path = ("/db/%s/%s"%(datetime.date.today().year ,datetime.date.today().month))
+        print(path)
+        print(os.path.exists(path))
+        # if not os.path.exists(path):
+        os.makedirs(path)
+        # os.mkdir(path)
+
+        self.log = log.basicConfig(filename='db/%s/%s/%s-%s.log'%(datetime.date.today().year ,datetime.date.today().month, datetime.date.today(), os.path.basename(__file__)[:-3]), level=log.DEBUG, format='%(asctime)s: %(message)s', datefmt='%d-%b-%y %H:%M:%S')
         self.conn = sqlite3.connect(database)
         self.c = self.conn.cursor()
         self.create_db()
@@ -136,8 +145,7 @@ class connection():
         return(self.c.fetchall())
 
     def get_dates(self):
-        self.c.execute("SELECT dob FROM students")
-        return(self.c.fetchall())
+        return self.c.execute("SELECT dob FROM students")
 
     def add_student(self, data):
         self.c.execute("INSERT INTO students VALUES (NULL, ?, ?, ?, ?, ?, ?, ?)", (data))
