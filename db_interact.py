@@ -79,13 +79,12 @@ class connection():
     def __init__(self, database=':memory:'):
         # print(datetime.date.today().year)
         # print(datetime.date.today().month)
-        path = ("\\db\\%s\\%s"%(datetime.date.today().year ,datetime.date.today().month))
-        print(path)
-        print(os.path.exists(path))
-        # if not os.path.exists(path):
-        os.makedirs(path)
-        # os.chmod(path)
-        # os.mkdir(path)
+        path = ("db/%s/%s"%(datetime.date.today().year ,datetime.date.today().month))
+        try:
+            os.makedirs(path)
+        except:
+            print("%s already exists"%path)
+
 
         self.log = log.basicConfig(filename='db/%s/%s/%s-%s.log'%(datetime.date.today().year ,datetime.date.today().month, datetime.date.today(), os.path.basename(__file__)[:-3]), level=log.DEBUG, format='%(asctime)s: %(message)s', datefmt='%d-%b-%y %H:%M:%S')
         self.conn = sqlite3.connect(database)
