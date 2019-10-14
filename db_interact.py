@@ -27,13 +27,14 @@ class DatabaseManager(Thread):
         timeout = self.timeout if timeout == -99999 else timeout
         temp_key = time.time()
         n = temp_key + self.timeout
+        local_empty = EmptyPlacerholder()
 
-        self.outvalues[temp_key] = EmptyPlacerholder()
+        self.outvalues[temp_key] = local_empty
+        # print((temp_key, command))
         self.command_stack.append((temp_key, command))
 
 
-        while type(self.outvalues[temp_key]) == type(EmptyPlacerholder()): # waits till command executed
-
+        while self.outvalues[temp_key] == local_empty: # waits till command executed
             if time.time() > n: # it took too long
                 raise TimeoutError("Timed out while waiting for serialised database interaction.")
 
@@ -55,8 +56,8 @@ class DatabaseManager(Thread):
                     current = self.command_stack.pop(0)
                     if current[1] == ":x:x:commit:x:x:":
                         self.outvalues[current[0]] = self.conn.commit()
-                        print("Commit to db")
-                        return
+                        log.debug("Commit to db")
+                        continue
 
                     # print(type(current[0]))
                     # print(current)
@@ -67,27 +68,29 @@ class DatabaseManager(Thread):
                     try:
                         self.crsr.execute(current[1])
                     except Exception as e:
-                        ee = e
+                        raise e
+                    self.outvalues[current[0]] = self.crsr.fetchall()
 
-                    self.outvalues[current[0]] = (self.crsr.fetchall(), ee)
                 except Exception as e:
                     self.outvalues[current[0]] = e
-
                     raise e
 
 
 class connection():
     def __init__(self, database=':memory:'):
+
         path = ("db/%s/%s"%(datetime.date.today().year ,datetime.date.today().month))
         try:
             os.makedirs(path)
         except:
-            print("%s already exists"%path)
+            pass
 
 
         self.log = log.basicConfig(filename='db/%s/%s/%s-%s.log'%(datetime.date.today().year ,datetime.date.today().month, datetime.date.today(), os.path.basename(__file__)[:-3]), level=log.DEBUG, format='%(asctime)s: %(message)s', datefmt='%d-%b-%y %H:%M:%S')
+
         self.c = DatabaseManager(database, timeout=2)
         self.c.start()
+        print("started db thread")
 
         self.create_db()
 
@@ -150,7 +153,7 @@ class connection():
         return self.c.execute("SELECT * FROM age_groups")
 
     def add_event(self, data):
-        self.c.execute("INSERT INTO events VALUES (NULL, %s, %s, %s, %s, %s)" %(data))
+        self.c.execute("INSERT INTO events VALUES (NULL, \"%s\", \"%s\", \"%s\", \"%s\", \"%s\")" %(data))
         log.info("{0: <12} {1}".format("Event added:",str(data)))
 
     def get_events(self):
@@ -160,10 +163,12 @@ class connection():
         return self.c.execute("SELECT dob FROM students")
 
     def add_student(self, data):
-        self.c.execute("INSERT INTO students VALUES (NULL, %s, %s, %s, %s, %s, %s, %s)" %(data))
+        print("user %s"%time.time())
+        self.c.execute("INSERT INTO students VALUES (NULL, \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\")" %tuple(data))
 
     def data_entry(self):
         read_file = (pd.read_excel('Book1.xlsx'))
+
         df = pd.DataFrame(read_file)
 
         index = read_file.index
@@ -174,6 +179,9 @@ class connection():
         for index, row in df.iterrows():
 
             details = []
+
+            print("a")
+            continue
 
             for i in columns:
                 # print(row[i])
@@ -194,8 +202,7 @@ class connection():
         self.c.commit()
 
     def get_name_info(self, lookup):
-        self.c.execute("SELECT * FROM students WHERE %s = name_first OR %s = name_last" %(lookup, lookup))
-        return self.c.execute("SELECT * FROM students WHERE %s = name_first OR %s = name_last" %(lookup, lookup))
+        return self.c.execute("SELECT * FROM students WHERE \"%s\" = name_first OR \"%s\" = name_last" %(lookup, lookup))
 
 
 
@@ -206,3 +213,17 @@ if __name__ == '__main__':
     c.add_age_groups()
 
     log.info(c.get_age_groups())
+
+
+exit()
+#
+# Traceback (most recent call last):
+#   File "C:\Users\JKook Studios\Documents\School\IT\carnival_system\db_interact.py", line 209, in <module>
+#     c.add_age_groups()
+#   File "C:\Users\JKook Studios\Documents\School\IT\carnival_system\db_interact.py", line 138, in add_age_groups
+#     get_dates_var = c.get_dates()
+#   File "C:\Users\JKook Studios\Documents\School\IT\carnival_system\db_interact.py", line 163, in get_dates
+#     return self.c.execute("SELECT dob FROM students")
+#   File "C:\Users\JKook Studios\Documents\School\IT\carnival_system\db_interact.py", line 39, in execute
+#     raise TimeoutError("Timed out while waiting for serialised database interaction.")
+# TimeoutError: Timed out while waiting for serialised database interaction.
