@@ -11,19 +11,21 @@
 
 {% block content %}
 
-{% if error %}<p class="error">{{ error }}</p> {% endif %}
-{% if success %}<p class="success">{{ success }}</p> {% endif %}
+{% if request.args.get('error') %}<p class="error">{{ request.args.get('error') }}</p> {% endif %}
+{% if request.args.get('success') %}<p class="success">{{ request.args.get('success') }}</p> {% endif %}
 
 
-{% for i in elements %}
+<form class="input_form" action="" method="post">
+  {% for i in elements %}
+  <div class="element">
+    {% with display_name=i.display_name, value=i.value, var_name=i.var_name, required=i.required, custom=i.custom%}
+    {% include i.template %}
+    {% endwith %}
+    <br>
+  </div>
 
-<div class="element">
-  {% with display_name=i.display_name, value=i.value, var_name=i.var_name %}
-  {% include i.template %}
-  {% endwith %}
-  <br>
-</div>
+  {% endfor %}
+</form>
 
-{% endfor %}
 
 {% endblock %}
