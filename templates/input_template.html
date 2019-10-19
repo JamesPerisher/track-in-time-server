@@ -15,17 +15,19 @@
 {% if request.args.get('success') %}<p class="success">{{ request.args.get('success') }}</p> {% endif %}
 
 
-<form class="input_form" action="" method="post">
-  {% for i in elements %}
-  <div class="element">
-    {% with display_name=i.display_name, value=i.value, var_name=i.var_name, required=i.required, custom=i.custom%}
-    {% include i.template %}
-    {% endwith %}
-    <br>
-  </div>
+<div class="input-container">
+  <form class="input_form" action="" method="post">
+    {% for i in elements %}
+    <div class="element">
+      {% with display_name=i.display_name, value=i.value, var_name=i.var_name, required=i.required, custom=i.custom%}
+      {% include i.template %}
+      {% endwith %}
+      <br>
+    </div>
 
-  {% endfor %}
-</form>
+    {% endfor %}
+  </form>
+</div>
 
 
 {% endblock %}
