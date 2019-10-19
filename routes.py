@@ -98,9 +98,9 @@ def add_age_groups():
         if check_data(request)[0]:
             # success
             # TODO: call db create function
-            return redirect(url_for('.add_event', success="Success passing data."))
+            return redirect(url_for('.add_age_groups', success="Success passing data."))
         else:
-            return redirect(url_for('.add_event', error="All fields are required"))
+            return redirect(url_for('.add_age_groups', error="All fields are required"))
 
 
 @app.route('/add_year_groups', methods = ["GET","POST"])
@@ -116,9 +116,9 @@ def add_year_groups():
         if check_data(request)[0]:
             # success
             # TODO: call db create function
-            return redirect(url_for('.add_event', success="Success passing data."))
+            return redirect(url_for('.add_year_groups', success="Success passing data."))
         else:
-            return redirect(url_for('.add_event', error="All fields are required"))
+            return redirect(url_for('.add_year_groups', error="All fields are required"))
 
 
 @app.route('/cmd')
