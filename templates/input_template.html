@@ -1,6 +1,6 @@
 {% extends "template.html" %}
 {% block title %}Home{% endblock %}
-{% set active='home' %}
+{% set active=(request.path.split("/")[-1].strip()) %}
 
 {% block head %}
 {{ super() }}
