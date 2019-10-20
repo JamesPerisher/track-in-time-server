@@ -79,14 +79,13 @@ class DatabaseManager(Thread):
 class connection():
     def __init__(self, database=':memory:'):
 
-        path = ("db/%s/%s"%(datetime.date.today().year ,datetime.date.today().month))
+        path = ("db/logs/%s/%s"%(datetime.date.today().year ,datetime.date.today().month))
         try:
             os.makedirs(path)
         except:
             pass
 
-
-        self.log = log.basicConfig(filename='db/%s/%s/%s-%s.log'%(datetime.date.today().year ,datetime.date.today().month, datetime.date.today(), os.path.basename(__file__)[:-3]), level=log.DEBUG, format='%(asctime)s: %(message)s', datefmt='%d-%b-%y %H:%M:%S')
+        self.log = log.basicConfig(filename='db/logs/%s/%s/%s-%s.log'%(datetime.date.today().year ,datetime.date.today().month, datetime.date.today(), os.path.basename(__file__)[:-3]), level=log.DEBUG, format='%(asctime)s: %(message)s', datefmt='%d-%b-%y %H:%M:%S')
 
         self.c = DatabaseManager(database, timeout=2)
         self.c.start()
@@ -163,12 +162,11 @@ class connection():
         return self.c.execute("SELECT dob FROM students")
 
     def add_student(self, data):
-        print("user %s"%time.time())
         self.c.execute("INSERT INTO students VALUES (NULL, \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\")" %tuple(data))
 
     def data_entry(self):
-        read_file = (pd.read_excel('Book1.xlsx'))
-
+        read_file = (pd.read_excel('db/Book1.xlsx'))
+        print("after")
         df = pd.DataFrame(read_file)
 
         index = read_file.index
@@ -180,8 +178,6 @@ class connection():
 
             details = []
 
-            print("a")
-            continue
 
             for i in columns:
                 # print(row[i])
