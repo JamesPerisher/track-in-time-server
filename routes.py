@@ -6,7 +6,10 @@ import time
 import pytz
 import numpy as np
 import os
-import db_interact as db
+try:
+    import db_interact as db
+except (ModuleNotFoundError, ImportError):
+    print("Database import error")
 import datetime
 
 from input_classes import *
@@ -59,28 +62,63 @@ def add_student():
         else:
             return redirect(url_for('.add_student', error="All fields are required"))
 
-#
-#     empty = {"age_group": "",
-#              "track_feild": "", "timed_score_distance": ""}
-# @app.route('/add_event', methods = ["GET","POST"])
-# def add_event():
-#     if request.method == "GET":
-#         elements = [
-#         input_text("Event Name", "name"),
-#         input_gender("Gender", "gender"),
-#         input_submit("Submit")
-#         ]
-#         return render_template("add_event.html", elements=elements)
-#
-#     if request.method == "POST":
-#         if check_data(request)[0]:
-#             # success
-#             # TODO: call db create function
-#             return redirect(url_for('.add_event', success="Success passing data."))
-#         else:
-#             return redirect(url_for('.add_event', error="All fields are required"))
-#
 
+@app.route('/add_event', methods = ["GET","POST"])
+def add_event():
+    if request.method == "GET":
+        elements = [
+        input_text("Event Name", "name"),
+        input_gender("Gender", "gender"),
+        input_age_group("Age group", "age_group"),
+        input_event_type("Event type", "event_type"),
+        input_submit("Submit")
+        ]
+        return render_template("input_template.html", elements=elements)
+
+    if request.method == "POST":
+        if check_data(request)[0]:
+            # success
+            # TODO: call db create function
+            return redirect(url_for('.add_event', success="Success passing data."))
+        else:
+            return redirect(url_for('.add_event', error="All fields are required"))
+
+
+@app.route('/add_age_groups', methods = ["GET","POST"])
+def add_age_groups():
+    if request.method == "GET":
+        elements = [
+        input_dob("Age group start date", "start_date"),
+        input_dob("Age group end date", "end_date"),
+        input_submit("Submit")
+        ]
+        return render_template("input_template.html", elements=elements)
+
+    if request.method == "POST":
+        if check_data(request)[0]:
+            # success
+            # TODO: call db create function
+            return redirect(url_for('.add_age_groups', success="Success passing data."))
+        else:
+            return redirect(url_for('.add_age_groups', error="All fields are required"))
+
+
+@app.route('/add_year_groups', methods = ["GET","POST"])
+def add_year_groups():
+    if request.method == "GET":
+        elements = [
+        input_text("Year name", "year_name"),
+        input_submit("Submit")
+        ]
+        return render_template("input_template.html", elements=elements)
+
+    if request.method == "POST":
+        if check_data(request)[0]:
+            # success
+            # TODO: call db create function
+            return redirect(url_for('.add_year_groups', success="Success passing data."))
+        else:
+            return redirect(url_for('.add_year_groups', error="All fields are required"))
 
 
 @app.route('/cmd')

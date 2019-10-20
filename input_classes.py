@@ -22,15 +22,25 @@ class input_gender(input_element):
 class input_yearGroup(input_element):
     def __init__(self, *args, **kwords):
         super().__init__(*args, **kwords)
-        self.custom["data"] = {"7":"Seven", "10":"ten"}
+        self.custom["data"] = {"7":"Seven", "10":"ten"} # get data
         self.template = "input_class.html"
 
 
 class input_house(input_yearGroup):
     def __init__(self, *args, **kwords):
         super().__init__(*args, **kwords)
-        self.custom["data"] = {"earth":"Earth", "fire":"Fire"}
+        self.custom["data"] = {"earth":"Earth", "fire":"Fire"} # get data
 
+
+class input_age_group(input_yearGroup):
+    def __init__(self, *args, **kwords):
+        super().__init__(*args, **kwords)
+        self.custom["data"] = {"2142153-452214123":"date1-date2", "452214123-65435675624":"date2-date3"} # get data
+
+class input_event_type(input_yearGroup):
+    def __init__(self, *args, **kwords):
+        super().__init__(*args, **kwords)
+        self.custom["data"] = {"timed":"Timed", "placed":"Placed", "placed_timed":"Placed and Timed", "novalty":"Novalty"} # get data
 
 class input_dob(input_element):
     def __init__(self, *args, **kwords):
