@@ -211,7 +211,7 @@ if __name__ == '__main__':
     log.info(c.get_age_groups())
 
 
-exit()
+
 #
 # Traceback (most recent call last):
 #   File "C:\Users\JKook Studios\Documents\School\IT\carnival_system\db_interact.py", line 209, in <module>
