@@ -209,17 +209,3 @@ if __name__ == '__main__':
     c.add_age_groups()
 
     log.info(c.get_age_groups())
-
-
-
-#
-# Traceback (most recent call last):
-#   File "C:\Users\JKook Studios\Documents\School\IT\carnival_system\db_interact.py", line 209, in <module>
-#     c.add_age_groups()
-#   File "C:\Users\JKook Studios\Documents\School\IT\carnival_system\db_interact.py", line 138, in add_age_groups
-#     get_dates_var = c.get_dates()
-#   File "C:\Users\JKook Studios\Documents\School\IT\carnival_system\db_interact.py", line 163, in get_dates
-#     return self.c.execute("SELECT dob FROM students")
-#   File "C:\Users\JKook Studios\Documents\School\IT\carnival_system\db_interact.py", line 39, in execute
-#     raise TimeoutError("Timed out while waiting for serialised database interaction.")
-# TimeoutError: Timed out while waiting for serialised database interaction.
