@@ -130,5 +130,10 @@ def cmd():
         return e
 
 
+@app.errorhandler(404)
+def error404(error):
+    elements = []
+    return(render_template("input_template.html", elements=elements))
+
 if __name__ == '__main__':
     app.run()
