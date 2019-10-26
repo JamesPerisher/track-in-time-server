@@ -1,15 +1,43 @@
 {% extends "template.html" %}
 {% block title %}Error{% endblock %}
+
 {% block head %}
 <title>{{ error_num }} Error</title>
 {{ super() }}
+<link type="text/css" rel="stylesheet" href="static/css/error.css" />
 {% endblock %}
 
 
 
 {% block content %}
 
-<h1>Error: {{ error_num }}</h1>
-<img src="\static\images\404.png">
-<p>{{ error_txt }}</p>
+<div class="error-title">
+  <h1>Error {{ error_num }}</h1>
+</div>
+
+
+<div class="error-content">
+  <div class="error-text">
+    <p>{{ error_txt }}</p>
+  </div>
+
+  <div class="return-links">
+    <h2>Return to:</h2>
+    {% for i in [("Home","/home")] %}
+    <a href="{{i[1]}}">{{i[0]}}</a>
+    {% endfor %}
+  </div>
+
+  <div class="image">
+    <img src="\static\images\404.png">
+  </div>
+</div>
+
+
+
+
+
+
+
+
 {% endblock %}
