@@ -1,0 +1,14 @@
+{% extends "template.html" %}
+{% block title %}Error{% endblock %}
+{% block head %}
+{{ super() }}
+<title>{{ error_num }} Error</title>
+{% endblock %}
+
+
+
+{% block content %}
+
+<h1>Error {{ error_num }}</h1>
+<p>{{ error_txt }}</p>
+{% endblock %}
