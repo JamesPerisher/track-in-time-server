@@ -130,5 +130,11 @@ def cmd():
         return e
 
 
+@app.errorhandler(Exception)
+def error404(error):
+    print(error, type(error))
+    error = str(error)
+    return(render_template("error.html", error_num=error.split(":",1)[0], error_txt=error.split(":",1)[1]))
+
 if __name__ == '__main__':
     app.run()

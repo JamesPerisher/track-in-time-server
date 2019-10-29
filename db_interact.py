@@ -99,7 +99,7 @@ class connection():
             self.c.commit()
         except Exception as e:
             raise e
-            print("Database: Commit error.")
+            log.error("Database: Commit error.")
 
     def create_db(self):
 
