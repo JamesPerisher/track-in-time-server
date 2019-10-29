@@ -1,9 +1,0 @@
-<p>{{ display_name }}</p>
-<select name="{{ var_name }}">
-  {% set options = dict(male="Male", female="Female", other="Other", attack="Attack Helicopter") %}
-  {% for i in options %}
-  <option {% if value == i %} selected {% endif %} value="{{ i }}">{{ options[i] }}</option>
-  {% endfor %}
-
-</select>
-<br>

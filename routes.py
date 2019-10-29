@@ -1,32 +1,29 @@
 from flask import Flask
 from flask import render_template, redirect, make_response, request, url_for
+from werkzeug.exceptions import HTTPException
+
 # import logging as log
 import json
 import time
 import pytz
 import numpy as np
 import os
+import secrets as s
 try:
     import db_interact as db
 except (ModuleNotFoundError, ImportError):
     print("Database import error")
 import datetime
 
-from input_classes import *
+from forms import *
 
 app = Flask(__name__, template_folder='templates')
+app.config['SECRET_KEY'] = "".join([s.choice([chr(i) for i in range(32,127)]) for j in range(128)]) # gen random secret probs bad idea
 app.debug = True
 
-
+print("Secret key: %s" %app.config['SECRET_KEY'])
 
 # log.basicConfig(filename='%s.log'%__name__, level=log.DEBUG, format='%(asctime)s: %(message)s', datefmt='%d-%b-%y %H:%M:%S')
-
-
-@app.route("/submitform", methods=['POST'])
-def submitform():
-    print(request.form)
-    return make_response(redirect(url_for('.%s'%request.form["id"])))
-
 
 
 @app.route("/")
@@ -41,84 +38,33 @@ def home_redirect():
 
 @app.route('/add_student', methods = ["GET","POST"])
 def add_student():
-    if request.method == "GET":
-        elements = [
-        input_text("First Name", "name_first"),
-        input_text("Last Name", "name_last"),
-        input_gender("Gender", "gender"),
-        input_yearGroup("Year", "age_group"),
-        input_house("Element", "house"),
-        input_dob("Date of birth", "dob"),
-        input_text("Student id", "stu_id"),
-        input_submit("Submit")
-        ]
-        return render_template("input_template.html", elements=elements)
+    form = AddStudentForm()
+    if form.validate_on_submit(): # sucess passing data do stuff
+        return redirect('/home')
 
-    if request.method == "POST":
-        if check_data(request)[0]:
-            # success
-            # TODO: call db create function
-            return redirect(url_for('.add_student', success="Success passing data."))
-        else:
-            return redirect(url_for('.add_student', error="All fields are required"))
+    return render_template("input_template.html", form=form)
+
 
 
 @app.route('/add_event', methods = ["GET","POST"])
 def add_event():
-    if request.method == "GET":
-        elements = [
-        input_text("Event Name", "name"),
-        input_gender("Gender", "gender"),
-        input_age_group("Age group", "age_group"),
-        input_event_type("Event type", "event_type"),
-        input_submit("Submit")
-        ]
-        return render_template("input_template.html", elements=elements)
+    form = AddEvent()
 
-    if request.method == "POST":
-        if check_data(request)[0]:
-            # success
-            # TODO: call db create function
-            return redirect(url_for('.add_event', success="Success passing data."))
-        else:
-            return redirect(url_for('.add_event', error="All fields are required"))
+    if form.validate_on_submit(): # sucess passing data do stuff
+        return redirect('/home')
+
+    return render_template("input_template.html", form=form)
 
 
 @app.route('/add_age_groups', methods = ["GET","POST"])
 def add_age_groups():
-    if request.method == "GET":
-        elements = [
-        input_dob("Age group start date", "start_date"),
-        input_dob("Age group end date", "end_date"),
-        input_submit("Submit")
-        ]
-        return render_template("input_template.html", elements=elements)
+    form = AddAgeGroups()
 
-    if request.method == "POST":
-        if check_data(request)[0]:
-            # success
-            # TODO: call db create function
-            return redirect(url_for('.add_age_groups', success="Success passing data."))
-        else:
-            return redirect(url_for('.add_age_groups', error="All fields are required"))
+    if form.validate_on_submit(): # sucess passing data do stuff
+        return redirect('/home')
 
+    return render_template("input_template.html", form=form)
 
-@app.route('/add_year_groups', methods = ["GET","POST"])
-def add_year_groups():
-    if request.method == "GET":
-        elements = [
-        input_text("Year name", "year_name"),
-        input_submit("Submit")
-        ]
-        return render_template("input_template.html", elements=elements)
-
-    if request.method == "POST":
-        if check_data(request)[0]:
-            # success
-            # TODO: call db create function
-            return redirect(url_for('.add_year_groups', success="Success passing data."))
-        else:
-            return redirect(url_for('.add_year_groups', error="All fields are required"))
 
 
 @app.route('/cmd')
@@ -130,11 +76,14 @@ def cmd():
         return e
 
 
-@app.errorhandler(Exception)
+@app.errorhandler(HTTPException)
 def error404(error):
     print(error, type(error))
     error = str(error)
-    return(render_template("error.html", error_num=error.split(":",1)[0], error_txt=error.split(":",1)[1]))
+    try:
+        return(render_template("error.html", error_num=error.split(":",1)[0], error_txt=error.split(":",1)[1]))
+    except IndexError:
+        return(render_template("error.html", error_num="Infinity", error_txt="This error SHOULD in theory never be seen by the user."))
 
 if __name__ == '__main__':
     app.run()

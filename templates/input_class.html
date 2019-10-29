@@ -1,8 +1,0 @@
-<p>{{ display_name }}</p>
-<select name="{{ var_name }}">
-  {% for i in custom["data"] %}
-  <option {% if value == i %} selected {% endif %} value="{{ i }}">{{ custom["data"][i] }}</option>
-  {% endfor %}
-
-</select>
-<br>

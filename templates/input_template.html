@@ -1,5 +1,5 @@
 {% extends "template.html" %}
-{% block title %}Home{% endblock %}
+{% block title %}FIX ME{% endblock %}
 {% set active=(request.path.split("/")[-1].strip()) %}
 
 {% block head %}
@@ -17,16 +17,18 @@
 
 <div class="input-container">
   <br><br>
-  <form class="input_form" action="" method="post">
-    {% for i in elements %}
+  <form class="input_form" action="" method="post" novalidate="novalidate">
+    {% for i in form.elements %}
     <div class="element">
-      {% with display_name=i.display_name, value=i.value, var_name=i.var_name, required=i.required, custom=i.custom%}
-      {% include i.template %}
-      {% endwith %}
-      <br>
+      <p>{{ i.label }}</p>
+      {{ i }}
+      {% for error in i.errors %}
+      <span style="color: red;" {{ error }}</span> {% endfor %} <br>
     </div>
+    <br>
 
     {% endfor %}
+    {{ form.submit() }}
   </form>
 </div>
 

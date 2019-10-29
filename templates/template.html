@@ -1,32 +1,32 @@
 <!DOCTYPE html>
 <html>
 
-<head>
-  {% block head %}
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
-  <title>{% block title %}{% endblock %} - Carnival system</title>
+  <head>
+    {% block head %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+    <title>{% block title %}{% endblock %} - Carnival system</title>
 
-  <div class="topnav">
-    {% if not newpages %}{% set newpages = dict() %}{% endif %}
-    {% set nav_list = dict({"home":"Home", "add_student":"Add Student", "add_event":"Add event", "add_age_groups":"Add age group", "add_year_groups":"Add year group"}, **newpages) %}
-    {% for i in nav_list %}
-    <a class="cat {% if active==i %}active{%endif %} {{i}}" href="{{ url_for(i) }}">{{nav_list[i]}}</a>
-    {% endfor %}
-  </div>
-  {% endblock %}
-</head>
+    <div class="topnav">
+      {% if not newpages %}{% set newpages = dict() %}{% endif %}
+      {% set nav_list = dict({"home":"Home", "add_student":"Add Student", "add_event":"Add event", "add_age_groups":"Add age group"}, **newpages) %}
+      {% for i in nav_list %}
+      <a class="cat {% if active==i %}active{%endif %} {{i}}" href="{{ url_for(i) }}">{{nav_list[i]}}</a>
+      {% endfor %}
+    </div>
+    {% endblock %}
+  </head>
 
-<body>
-  <div class="content">{% block content %}{% endblock %}</div>
-  <div class="footer">
-    <table class="footer_table">
-      <tr>
-        <td><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=FEADU4M8YTJNE&source=url">Donate To the creators</a></td>
-        <td><a href="https://github.com/JamesPerisher" target="_blank"><img class="img" src="https://avatars1.githubusercontent.com/u/37967469?s=460&v=4"> </a> </td>
-        <td> <a href="https://github.com/JKookaburra" target="_blank"><img class="img" src="https://avatars3.githubusercontent.com/u/10250087?s=460&v=4"> </a> </td>
-      </tr>
-    </table>
-  </div>
-</body>
+  <body>
+    <div class="content">{% block content %}{% endblock %}</div>
+    <div class="footer">
+      <table class="footer_table">
+        <tr>
+          <td><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=FEADU4M8YTJNE&source=url">Donate To the creators</a></td>
+          <td><a href="https://github.com/JamesPerisher" target="_blank"><img class="img" src="https://avatars1.githubusercontent.com/u/37967469?s=460&v=4"> </a> </td>
+          <td> <a href="https://github.com/JKookaburra" target="_blank"><img class="img" src="https://avatars3.githubusercontent.com/u/10250087?s=460&v=4"> </a> </td>
+        </tr>
+      </table>
+    </div>
+  </body>
 
 </html>
