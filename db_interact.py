@@ -184,7 +184,7 @@ class connection():
                 details.append(row[i])
             student_details = [x if str(x) != "nan" else "" for x in [details[0], details[1], details[2], details[3], details[4], str(details[6]), details[7]]]
 
-            if tuple(student_details[:5]) not in [i[1::][:-2:] for i in self.get_name_info(details[0])]:
+            if tuple(student_details[:5]) not in [i[1::][:-2:] for i in self.get_participant_info(details[0])]:
                 added_students = (added_students+(details[1],details[0]))
                 # self.c.execute("INSERT INTO students VALUES (NULL, %s, %s, %s, %s, %s, %s, %s)", ([x if str(x) != "nan" else "" for x in [details[0], details[1], details[2], details[3], details[4], str(details[6]), details[7]]]))
                 self.add_student(student_details)
@@ -197,8 +197,19 @@ class connection():
 
         self.c.commit()
 
-    def get_name_info(self, lookup):  # search from names
-        return self.c.execute("SELECT * FROM students WHERE \"%s\" = name_first OR \"%s\" = name_last" %(lookup, lookup))
+    def get_participant_info(self, lookup, search_type="first_name"):  # search from names
+        search = {
+        "db_id" : "id",
+        "first_name" : "name_first",
+        "name_last" : "name_last",
+        "gender" : "gender",
+        "year" : "year",
+        "house" : "house",
+        "dob" : "dob",
+        "student_id" : "student_id"
+        }
+
+        return self.c.execute("SELECT * FROM students WHERE \"%s\" = \"%s\""%(lookup, search[search_type]))
 
 
 
