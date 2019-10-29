@@ -30,7 +30,6 @@ class DatabaseManager(Thread):
         local_empty = EmptyPlacerholder()
 
         self.outvalues[temp_key] = local_empty
-        # print((temp_key, command))
         self.command_stack.append((temp_key, command))
 
 
@@ -59,8 +58,6 @@ class DatabaseManager(Thread):
                         log.debug("Commit to db")
                         continue
 
-                    # print(type(current[0]))
-                    # print(current)
                     log.debug("{0: <12} {1} {2}".format("Running: ", current[0], current[1].replace("            ", " ").replace("\n", "\n       ")))
 
                     ee = None
@@ -79,9 +76,9 @@ class DatabaseManager(Thread):
 class connection():
     def __init__(self, database=':memory:'):
 
-        path = ("db/logs/%s/%s"%(datetime.date.today().year ,datetime.date.today().month))
+        path_for_logs = ("db/logs/%s/%s"%(datetime.date.today().year ,datetime.date.today().month))
         try:
-            os.makedirs(path)
+            os.makedirs(path_for_logs)
         except:
             pass
 
@@ -89,7 +86,7 @@ class connection():
 
         self.c = DatabaseManager(database, timeout=2)
         self.c.start()
-        print("started db thread")
+        log.info("started db thread")
 
         self.create_db()
 
@@ -131,7 +128,7 @@ class connection():
         self.c.execute(sql_command)
 
         self.commit()
-        print("%s: created databases" % __name__)
+        log.info("%s: created databases" % __name__)
 
     def add_age_groups(self):
         get_dates_var = c.get_dates()
@@ -166,7 +163,6 @@ class connection():
 
     def data_entry(self):
         read_file = (pd.read_excel('db/Book1.xlsx'))
-        print("after")
         df = pd.DataFrame(read_file)
 
         index = read_file.index
@@ -180,7 +176,6 @@ class connection():
 
 
             for i in columns:
-                # print(row[i])
                 details.append(row[i])
             student_details = [x if str(x) != "nan" else "" for x in [details[0], details[1], details[2], details[3], details[4], str(details[6]), details[7]]]
 
