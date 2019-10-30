@@ -16,14 +16,17 @@
 
 
 <div class="input-container">
-  <br><br>
+  <br>
+  <br>
   <form class="input_form" action="" method="post" novalidate="novalidate">
     {% for i in form.elements %}
     <div class="element">
       <p>{{ i.label }}</p>
       {{ i }}
       {% for error in i.errors %}
-      <span style="color: red;" {{ error }}</span> {% endfor %} <br>
+      <span style="color: red;"> {{ error }}</span>
+      {% endfor %}
+      <br>
     </div>
     <br>
 
