@@ -20,11 +20,13 @@
   <br>
   <form class="input_form" action="" method="post" novalidate="novalidate">
     {% for i in form.elements %}
+    <!-- {for (n,i) in form.elements} -->
     <div class="element">
       <p>{{ i.label }}</p>
-      {{ i }}
+      <!-- { i(id = "form-id%s"%n) } -->
+      {{ i() }}
       {% for error in i.errors %}
-      <span style="color: red;"> {{ error }}</span>
+      <span class="error"> {{ error }}</span>
       {% endfor %}
       <br>
     </div>

@@ -15,6 +15,8 @@ class Form(FlaskForm):
             if isinstance(self.__dict__[i], Field) and not isinstance(self.__dict__[i], SubmitField) and not isinstance(self.__dict__[i], HiddenField):
                 self.elements.append(self.__dict__[i])
 
+        # self.elements = enumerate(self.elements)
+
         return None
 
 class AddStudentForm(Form):
