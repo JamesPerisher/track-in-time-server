@@ -7,3 +7,54 @@ body {
   margin-right: 1px;
   margin-bottom: 0px;
 }
+
+h1 {
+  color: #ffffff;
+  font-size: 500%;
+}
+
+h2 {
+  color: #ffffff;
+  font-size: 250%;
+}
+
+p {
+  color: #ffffff;
+}
+
+a {
+  color: #00007e;
+  text-decorat: none;
+}
+
+a:hover {
+  color: #ffffff;
+}
+
+.error-wraper {
+  margin: 5% 5%;
+  margin-left: 10%;
+}
+
+.error-title {
+  width: 100%;
+}
+
+.error-content {
+  width: 100%;
+}
+
+.error-content .image {
+  width: 40%;
+  float: right;
+}
+
+img {
+  width: 100%;
+  height: auto;
+}
+
+.error-content .error-left {
+  width: 49%;
+  float: left;
+}
