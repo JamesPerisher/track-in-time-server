@@ -130,7 +130,13 @@ class connection():
             student_id INTEGER,
             event_id INTEGER,
             result REAL DEFAULT NULL,
-            UNIQUE(student_id, event_id));"""
+            UNIQUE(student_id, event_id)
+            FOREIGN KEY (student_id) REFERENCES students (student_id)
+                ON UPDATE NO ACTION
+                ON DELETE NO ACTION
+            FOREIGN KEY (event_id) REFERENCES events (event_id)
+                ON UPDATE NO ACTION
+                ON DELETE NO ACTION);"""
         self.c.execute(sql_command)
 
         self.commit()
@@ -144,12 +150,13 @@ class connection():
         #     result REAL DEFAULT NULL,
         #     UNIQUE(student_id, event_id));"""
         print(data)
-        self.c.execute("INSERT INTO results (NULL, %s, %s, %s)")
-
+        self.c.execute("INSERT INTO results VALUES (NULL, %s, %s, %s)"%data)
+        self.commit()
 
     def add_event(self, data):
         self.c.execute("INSERT INTO events VALUES (NULL, \"%s\", \"%s\", \"%s\", \"%s\", \"%s\")" %(data))
         log.info("{0: <12} {1}".format("Event added:",str(data)))
+        self.commit()
 
     def get_events(self):
         return self.c.execute("SELECT * FROM events")
@@ -218,7 +225,9 @@ class connection():
 if __name__ == '__main__':
     c = connection()
     c.data_entry()
-    c.insert_into_results()
+
+    c.add_event(("10am", "test", "track", "timed", "M"))
+    c.insert_into_results(("1000", "54", "400"))
     # c.add_age_groups()
 
     # log.info(c.get_age_groups())
