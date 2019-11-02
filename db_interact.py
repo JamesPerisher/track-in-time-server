@@ -65,8 +65,12 @@ class DatabaseManager(Thread):
                     try:
                         self.crsr.execute(current[1])
                     except Exception as e:
+                        # print("before e.args")
+                        # print(e.args)
                         if "UNIQUE constraint failed:" in e.args[0]:
                             log.error("{0: <12} {1}, {2}".format("Record not unique: ",str(e.args[0]), str(current[1])))
+                        elif "FOREIGN KEY constraint failed" in e.args[0]:
+                            log.error("{0: <12} {1}, {2}".format("Student or event does not exist: ",str(e.args[0]), str(current[1])))
                         else:
                             raise e
 
@@ -91,7 +95,7 @@ class connection():
         self.c = DatabaseManager(database, timeout=2)
         self.c.start()
         log.info("started db thread")
-
+        self.c.execute("PRAGMA foreign_keys = ON;")
         self.create_db()
 
 
@@ -130,13 +134,9 @@ class connection():
             student_id INTEGER,
             event_id INTEGER,
             result REAL DEFAULT NULL,
-            UNIQUE(student_id, event_id)
-            FOREIGN KEY (student_id) REFERENCES students (student_id)
-                ON UPDATE NO ACTION
-                ON DELETE NO ACTION
-            FOREIGN KEY (event_id) REFERENCES events (event_id)
-                ON UPDATE NO ACTION
-                ON DELETE NO ACTION);"""
+            UNIQUE(student_id, event_id),
+            FOREIGN KEY (student_id) REFERENCES students (id),
+            FOREIGN KEY (event_id) REFERENCES events (id));"""
         self.c.execute(sql_command)
 
         self.commit()
@@ -149,7 +149,7 @@ class connection():
         #     event_id INTEGER,
         #     result REAL DEFAULT NULL,
         #     UNIQUE(student_id, event_id));"""
-        print(data)
+        # print(data)
         self.c.execute("INSERT INTO results VALUES (NULL, %s, %s, %s)"%data)
         self.commit()
 
@@ -223,8 +223,17 @@ class connection():
 
 
 if __name__ == '__main__':
+
+    try:
+        os.remove("test.db")
+    except Exception as e:
+        print(e)
+
     c = connection()
+
+
     c.data_entry()
+
 
     c.add_event(("10am", "test", "track", "timed", "M"))
     c.insert_into_results(("1000", "54", "400"))
