@@ -65,7 +65,11 @@ class DatabaseManager(Thread):
                     try:
                         self.crsr.execute(current[1])
                     except Exception as e:
-                        raise e
+                        if "UNIQUE constraint failed:" in e.args[0]:
+                            log.error("{0: <12} {1}, {2}".format("Record not unique: ",str(e.args[0]), str(current[1])))
+                        else:
+                            raise e
+
                     self.outvalues[current[0]] = self.crsr.fetchall()
 
                 except Exception as e:
@@ -74,7 +78,7 @@ class DatabaseManager(Thread):
 
 
 class connection():
-    def __init__(self, database=':memory:'):
+    def __init__(self, database='test.db'):
 
         path_for_logs = ("db/logs/%s/%s"%(datetime.date.today().year ,datetime.date.today().month))
         try:
@@ -108,7 +112,8 @@ class connection():
             year INTEGER,
             house TEXT,
             dob INTEGER,
-            student_id INTEGER);"""
+            student_id INTEGER DEFAULT NULL,
+            UNIQUE(student_id));"""
         self.c.execute(sql_command)
 
         sql_command = """CREATE TABLE IF NOT EXISTS events(
@@ -120,33 +125,27 @@ class connection():
             gender TEXT);"""
         self.c.execute(sql_command)
 
-        sql_command = """CREATE TABLE IF NOT EXISTS age_groups(
+        sql_command = """CREATE TABLE IF NOT EXISTS results(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            display_name STRING,
-            start INTEGER,
-            end INTEGER);"""
+            student_id INTEGER,
+            event_id INTEGER,
+            result REAL DEFAULT NULL,
+            UNIQUE(student_id, event_id));"""
         self.c.execute(sql_command)
 
         self.commit()
         log.info("%s: created databases" % __name__)
 
-    def add_age_groups(self):
-        get_dates_var = c.get_dates()
+    def insert_into_results(self, data):
+        # sql_command = """CREATE TABLE IF NOT EXISTS results(
+        #     id INTEGER PRIMARY KEY AUTOINCREMENT,
+        #     student_id INTEGER,
+        #     event_id INTEGER,
+        #     result REAL DEFAULT NULL,
+        #     UNIQUE(student_id, event_id));"""
+        print(data)
+        self.c.execute("INSERT INTO results (NULL, %s, %s, %s)")
 
-        years = list(dict.fromkeys([num for num in (get_dates_var[year][0].split("-")[0] for year in range(len(get_dates_var)))]))
-        years.sort()
-        # log.info(years)
-
-        for i in years:
-            if int(i) not in [x[1] for x in c.get_age_groups()]:
-                data = ({"start": ("%s-1-1") % i, "name": ("%s") % (i), "end": ("%s-1-1") % str(int(i) + 1)})
-                data["start"] = time.mktime(datetime.datetime.strptime(data["start"].replace("-", "/"), "%Y/%m/%d").timetuple())  # looks like this 2002-11-11 convert to unix
-                data["end"] = time.mktime(datetime.datetime.strptime(data["end"].replace("-", "/"), "%Y/%m/%d").timetuple())  # looks like this 2002-11-11 convert to unix
-                self.c.execute("INSERT INTO age_groups VALUES (NULL, \"%s\", \"%s\", \"%s\")" % (data["name"], data["start"], data["end"]))
-            self.commit()
-
-    def get_age_groups(self):
-        return self.c.execute("SELECT * FROM age_groups")
 
     def add_event(self, data):
         self.c.execute("INSERT INTO events VALUES (NULL, \"%s\", \"%s\", \"%s\", \"%s\", \"%s\")" %(data))
@@ -159,35 +158,44 @@ class connection():
         return self.c.execute("SELECT dob FROM students")
 
     def add_student(self, data):
-        self.c.execute("INSERT INTO students VALUES (NULL, \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\")" %tuple(data))
+        # self.c.execute("INSERT INTO students VALUES (NULL, \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\")" % tuple(data))
+        self.c.execute("INSERT INTO students VALUES (NULL, %s, %s, %s, %s, %s, %s, %s)" % tuple(data))
 
     def data_entry(self):
+        # “The real problem is that programmers have spent far too much time worrying about efficiency in the wrong places
+        # and at the wrong times; premature optimization is the root of all evil (or at least most of it) in programming.” - Donald Knuth
+
+
         read_file = (pd.read_excel('db/Book1.xlsx'))
         df = pd.DataFrame(read_file)
 
         index = read_file.index
 
         columns = (list(df.columns.values))
-        added_students = ()
-        passed_students = ()
+        # added_students = ()
+        # passed_students = ()
+
         for index, row in df.iterrows():
 
             details = []
 
-
             for i in columns:
-                details.append(row[i])
-            student_details = [x if str(x) != "nan" else "" for x in [details[0], details[1], details[2], details[3], details[4], str(details[6]), details[7]]]
-
-            if tuple(student_details[:5]) not in [i[1::][:-2:] for i in self.get_participant_info(details[0])]:
-                added_students = (added_students+(details[1],details[0]))
-                # self.c.execute("INSERT INTO students VALUES (NULL, %s, %s, %s, %s, %s, %s, %s)", ([x if str(x) != "nan" else "" for x in [details[0], details[1], details[2], details[3], details[4], str(details[6]), details[7]]]))
-                self.add_student(student_details)
-            else:
-                passed_students = (passed_students+(tuple((details[1],details[0]))))
-
-        log.info("{0: <12} {1}".format("Did not add:",str(passed_students)))
-        log.info("{0: <12} {1}".format("Added:",str(added_students)))
+                if str(row[i]) != "nan":
+                    details.append("\"" + str(row[i]) + "\"")
+                else:
+                    details.append("NULL")
+            details = [details[0], details[1], details[2], details[3], details[4], details[6], details[7]]
+            # student_details = [x if str(x) != "nan" else "" for x in [details[0], details[1], details[2], details[3], details[4], str(details[6]), details[7]]]
+            #
+            # if tuple(student_details[:5]) not in [i[1::][:-2:] for i in self.get_participant_info(details[0])]:
+            #     added_students = (added_students+(details[1],details[0]))
+            #     # self.c.execute("INSERT INTO students VALUES (NULL, %s, %s, %s, %s, %s, %s, %s)", ([x if str(x) != "nan" else "" for x in [details[0], details[1], details[2], details[3], details[4], str(details[6]), details[7]]]))
+            self.add_student(details)
+            # else:
+            #     passed_students = (passed_students+(tuple((details[1],details[0]))))
+        #
+        # log.info("{0: <12} {1}".format("Did not add:",str(passed_students)))
+        # log.info("{0: <12} {1}".format("Added:",str(added_students)))
 
 
         self.c.commit()
@@ -207,11 +215,10 @@ class connection():
         return self.c.execute("SELECT * FROM students WHERE \"%s\" = \"%s\""%(lookup, search[search_type]))
 
 
-
 if __name__ == '__main__':
     c = connection()
     c.data_entry()
+    c.insert_into_results()
+    # c.add_age_groups()
 
-    c.add_age_groups()
-
-    log.info(c.get_age_groups())
+    # log.info(c.get_age_groups())
