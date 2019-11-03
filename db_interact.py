@@ -124,7 +124,7 @@ class connection():
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             time TEXT,
             name TEXT,
-            track_feild TEXT,
+            track_field TEXT,
             timed_score_distance INTEGER,
             gender TEXT);"""
         self.c.execute(sql_command)
@@ -150,16 +150,34 @@ class connection():
         #     result REAL DEFAULT NULL,
         #     UNIQUE(student_id, event_id));"""
         # print(data)
-        self.c.execute("INSERT INTO results VALUES (NULL, %s, %s, %s)"%data)
+        self.c.execute("INSERT INTO results VALUES (NULL, %s, %s, %s)" % data)
         self.commit()
 
+    def get_results_from_event(self, data):
+        return self.c.execute("SELECT * FROM results WHERE event_id = %s" % data)
+
+    def get_winners_from_event(self, id, amount=5):
+        # what kind of event is this?
+        # SELECT * FROM results WHERE event_id = 1 ORDER BY result DESC LIMIT 2;
+        print(self.get_event_info_by_id(id)[0][4])
+        order_type = {
+        "timed" : "ASC",
+        "score" : "ASC",
+        "distance" : "DESC"
+        }
+        print(order_type["timed"])
+        return self.c.execute("SELECT * FROM results WHERE event_id = %s ORDER BY result %s LIMIT %s" % (id, order_type[self.get_event_info_by_id(id)[0][4]], amount))
+
     def add_event(self, data):
-        self.c.execute("INSERT INTO events VALUES (NULL, \"%s\", \"%s\", \"%s\", \"%s\", \"%s\")" %(data))
+        self.c.execute("INSERT INTO events VALUES (NULL, \"%s\", \"%s\", \"%s\", \"%s\", \"%s\")" % (data))
         log.info("{0: <12} {1}".format("Event added:",str(data)))
         self.commit()
 
     def get_events(self):
         return self.c.execute("SELECT * FROM events")
+
+    def get_event_info_by_id(self, data):
+        return self.c.execute("SELECT * FROM events WHERE id = %s" % data)
 
     def get_dates(self):
         return self.c.execute("SELECT dob FROM students")
@@ -219,7 +237,7 @@ class connection():
         "student_id" : "student_id"
         }
 
-        return self.c.execute("SELECT * FROM students WHERE \"%s\" = \"%s\""%(lookup, search[search_type]))
+        return self.c.execute("SELECT * FROM students WHERE \"%s\" = \"%s\""% (lookup, search[search_type]))
 
 
 if __name__ == '__main__':
@@ -235,8 +253,29 @@ if __name__ == '__main__':
     c.data_entry()
 
 
-    c.add_event(("10am", "test", "track", "timed", "M"))
-    c.insert_into_results(("1000", "54", "400"))
+    c.add_event(("10am", "test_1", "track", "timed", "M"))
+    c.add_event(("12am", "test_2", "track", "score", "F"))
+    c.add_event(("11am", "test_3", "field", "distance", "M"))
+
+    c.insert_into_results(("140", "1", "400"))
+    c.insert_into_results(("5", "1", "100"))
+    c.insert_into_results(("14", "1", "200"))
+    c.insert_into_results(("173", "1", "300"))
+
+
+    c.insert_into_results(("233", "2", "2"))
+    c.insert_into_results(("11", "2", "1"))
+    c.insert_into_results(("161", "2", "4"))
+    c.insert_into_results(("241", "2", "3"))
+
+    c.insert_into_results(("295", "3", "1000"))
+    c.insert_into_results(("80", "3", "20"))
+    c.insert_into_results(("135", "3", "500"))
+    c.insert_into_results(("214", "3", "100"))
+
+    winners = (c.get_winners_from_event("2"))
+    for i in winners:
+        print(c.get_participant_info(i[1], "db_id")[0], i[3])
     # c.add_age_groups()
 
     # log.info(c.get_age_groups())
