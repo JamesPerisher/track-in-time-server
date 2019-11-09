@@ -273,7 +273,13 @@ if __name__ == '__main__':
     c.insert_into_results(("135", "3", "500"))
     c.insert_into_results(("214", "3", "100"))
 
+    winners = (c.get_winners_from_event("1"))
+    for i in winners:
+        print(c.get_participant_info(i[1], "db_id")[0], i[3])
     winners = (c.get_winners_from_event("2"))
+    for i in winners:
+        print(c.get_participant_info(i[1], "db_id")[0], i[3])
+    winners = (c.get_winners_from_event("3"))
     for i in winners:
         print(c.get_participant_info(i[1], "db_id")[0], i[3])
     # c.add_age_groups()
