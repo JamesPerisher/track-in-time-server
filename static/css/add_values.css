@@ -30,15 +30,23 @@ body {
   margin: 0px auto;
 }
 
-input[type=text], select {
+input {
   background: #202225;
   color: #ffffff;
-  border-color: #ccc;
+  border: 1px solid #ccc;
+}
+
+input, select {
+  background: #202225;
+  color: #ffffff;
+  border: 1px solid #ccc;
+}
+
+input[type=text], select {
   width: 100%;
   padding: 12px 20px;
   margin: 8px 0;
   display: inline-block;
-  border: 1px solid #ccc;
   border-radius: 4px;
   box-sizing: border-box;
 }
@@ -48,7 +56,6 @@ input[type=date], select {
   padding: 12px 20px;
   margin: 8px 0;
   display: inline-block;
-  border: 1px solid #ccc;
   border-radius: 4px;
   box-sizing: border-box;
 }

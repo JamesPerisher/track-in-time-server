@@ -24,7 +24,7 @@
     <div class="element">
       <p>{{ i.label }}</p>
       <!-- { i(id = "form-id%s"%n) } -->
-      {{ i() }}
+      {{ i(value="Test") }}
       {% for error in i.errors %}
       <span class="error"> {{ error }}</span>
       {% endfor %}

@@ -1,8 +1,9 @@
 from flask_wtf import FlaskForm
 import wtforms
 from wtforms.fields import Field
-from wtforms import StringField, PasswordField, BooleanField, SelectField, DateField, SubmitField, HiddenField
+from wtforms import StringField, PasswordField, BooleanField, SelectField, SubmitField, HiddenField
 from wtforms.validators import InputRequired
+from wtforms.fields.html5 import DateField
 
 
 class Form(FlaskForm):
@@ -13,7 +14,8 @@ class Form(FlaskForm):
         self.elements = []
         for i in self.__dict__:
             if isinstance(self.__dict__[i], Field) and not isinstance(self.__dict__[i], SubmitField) and not isinstance(self.__dict__[i], HiddenField):
-                self.elements.append(self.__dict__[i])
+                el = self.__dict__[i]
+                self.elements.append(el)
 
         # self.elements = enumerate(self.elements)
 
