@@ -72,15 +72,13 @@ def add_event():
 
     return render_template("input_template.html", form=form)
 
+@app.route("/user_info")
+def user_info():
+    return render_template("user_info.html")
 
-# @app.route('/add_age_groups', methods = ["GET","POST"])
-# def add_age_groups():
-#     form = AddAgeGroups()
-#
-#     if form.validate_on_submit(): # sucess passing data do stuff
-#         return redirect('/home')
-#
-#     return render_template("input_template.html", form=form)
+@app.route("/event_info")
+def event_info():
+    return render_template("event_info.html")
 
 
 
