@@ -168,8 +168,14 @@ class connection():
         print(order_type["timed"])
         return self.c.execute("SELECT * FROM results WHERE event_id = %s ORDER BY result %s LIMIT %s" % (id, order_type[self.get_event_info_by_id(id)[0][4]], amount))
 
-    def update_participant(self, user_id, value, type):
-        self.c.execute("UPDATE participants SET \"%s\"=\"%s\" WHERE id=\"%s\""%(type, value, user_id))
+    def update_participant(self, data, type):
+        self.c.execute("""UPDATE participants SET name_last=\"%s\",
+        name_first=\"%s\",
+        gender=\"%s\",
+        year=\"%s\",
+        house=\"%s\",
+        dob=\"%s\",
+        participant_id=\"%s\"  WHERE id=\"%s\""""%(data, user_id))
         self.commit()
 
     def add_event(self, data):
