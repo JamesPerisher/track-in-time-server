@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 import wtforms
 from wtforms.fields import Field
-from wtforms import StringField, PasswordField, BooleanField, SelectField, SubmitField, HiddenField
+from wtforms import StringField, PasswordField, BooleanField, SelectField, SubmitField, HiddenField, RadioField
 from wtforms.validators import InputRequired
 from wtforms.fields.html5 import DateField
 
@@ -13,13 +13,19 @@ class Form(FlaskForm):
         super().__init__()
         self.elements = []
         for i in self.__dict__:
-            if isinstance(self.__dict__[i], Field) and not isinstance(self.__dict__[i], SubmitField) and not isinstance(self.__dict__[i], HiddenField):
-                el = self.__dict__[i]
+            el = self.__dict__[i]
+            if isinstance(el, Field) and not isinstance(el, SubmitField) and not isinstance(el, HiddenField) and not isinstance(el, RadioField):
+
                 self.elements.append(el)
 
         # self.elements = enumerate(self.elements)
 
         return None
+
+class SearchUserForm(Form):
+    result = RadioField("Search type", choices=[("report","Report"), ("edit","Edit"), ("delete","Delete")], validators=[InputRequired()], default="edit")
+    search = StringField("Search term (user name, event name)", validators=[InputRequired()])
+
 
 class AddStudentForm(Form):
     name_first = StringField("First Name", validators=[InputRequired()])

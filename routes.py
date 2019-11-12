@@ -35,6 +35,24 @@ def home():
 def home_redirect():
     return redirect("/", code=302)
 
+@app.route('/favicon.ico')
+def favicon():
+    return redirect("static/images/favicon.ico")
+
+
+@app.route('/search', methods = ["GET","POST"])
+def search():
+
+    form = SearchUserForm()
+
+    if form.validate_on_submit(): # sucess passing data do stuff
+        return redirect('/home')
+
+    return render_template("search.html", form=form)
+
+
+
+
 
 @app.route('/add_student', methods = ["GET","POST"])
 def add_student():
@@ -43,7 +61,6 @@ def add_student():
         return redirect('/home')
 
     return render_template("input_template.html", form=form)
-
 
 
 @app.route('/add_event', methods = ["GET","POST"])

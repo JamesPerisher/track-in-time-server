@@ -1,0 +1,23 @@
+.results {
+  width: 100%;
+  margin: 0px 0px;
+  border-collapse: collapse;
+}
+
+.result tr, th {
+  border-collapse: collapse;
+  border: 1px solid #ffffff;
+  border-collapse: collapse;
+}
+
+.result .title {
+  color: #00007e;
+}
+
+.bullets {
+  list-style-type: none;
+}
+
+.bullets li {
+  float: left;
+}

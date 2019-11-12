@@ -1,0 +1,65 @@
+{% extends "template.html" %}
+{% block title %}FIX ME{% endblock %}
+{% set active=(request.path.split("/")[-1].strip()) %}
+
+{% block head %}
+{{ super() }}
+<link type="text/css" rel="stylesheet" href="static/css/add_values.css" />
+<link type="text/css" rel="stylesheet" href="static/css/reports.css">
+{% endblock %}
+
+
+
+{% block content %}
+
+{% if request.args.get('error') %}<p class="error">{{ request.args.get('error') }}</p> {% endif %}
+{% if request.args.get('success') %}<p class="success">{{ request.args.get('success') }}</p> {% endif %}
+
+
+<div class="input-container">
+  <br>
+  <br>
+  <form class="input_form" action="" method="post" novalidate="novalidate">
+    {{ form.result(class="bullets") }}
+
+    {% for i in form.elements %}
+    <!-- {for (n,i) in form.elements} -->
+    <div class="element">
+      <p>{{ i.label }}</p>
+      <!-- { i(id = "form-id%s"%n) } -->
+      {{ i(value="Test") }}
+      {% for error in i.errors %}
+      <span class="error"> {{ error }}</span>
+      {% endfor %}
+      <br>
+    </div>
+    <br>
+
+    {% endfor %}
+    {{ form.submit() }}
+  </form>
+  <br><br>
+
+  <table class="results">
+    <thead>
+      <th><b>Name</b></th>
+      <th><b>Year</b></th>
+      <th><b>Date of birth</b></th>
+      <th><b>Select</b></th>
+    </thead>
+    <tbody>
+      {% for i in [("dave",7, "15 oct..."), ("bob",8, "76 nov ..."),("bob",8, "76 nov ..."),("bob",8, "76 nov ..."),("bob",8, "76 nov ..."),("bob",8, "76 nov ..."),("bob",8, "76 nov ..."),("bob",8, "76 nov ..."),("bob",8, "76 nov ...")] %}
+      <tr>
+        <th>{{ i[0] }}</th>
+        <th>{{ i[1] }}</th>
+        <th>{{ i[2] }}</th>
+        <th><a href="#">Select</a></th>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <br>
+</div>
+
+
+{% endblock %}
