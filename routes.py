@@ -74,12 +74,16 @@ def add_event():
 
 @app.route("/user_info")
 def user_info():
-    return render_template("user_info.html")
+    return render_template("user_info.html", name_first="Dave", name_last="Davey", gender="Attack Helicopter", house="Yo mumma", year="65", dob="77 dec 2076")
 
 @app.route("/event_info")
 def event_info():
     return render_template("event_info.html")
 
+
+@app.route("/download")
+def download():
+    return render_template("download_template.html", name="fancy name", data=[("Zip","/hello"),("Zip","/hello"),("Zip","/hello"),("Zip","/hello")])
 
 
 @app.route('/cmd')

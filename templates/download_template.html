@@ -1,0 +1,28 @@
+{% extends "template.html" %}
+{% block title %}FIX ME{% endblock %}
+{% set active=(request.path.split("/")[-1].strip()) %}
+
+{% block head %}
+{{ super() }}
+<link type="text/css" rel="stylesheet" href="static/css/add_values.css" />
+<link type="text/css" rel="stylesheet" href="static/css/reports.css">
+{% endblock %}
+
+
+
+{% block content %}
+
+<div class="input-container">
+  <h1>Download: {{ name }}</h1>
+  <table>
+    {% for i in data %}
+    <tr>
+      <th>{{ i[0] }}</th>
+      <th><a href="{{ i[1] }}">download</a></th>
+    </tr>
+    {% endfor %}
+  </table>
+</div>
+
+
+{% endblock %}

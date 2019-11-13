@@ -1,0 +1,24 @@
+{% extends "template.html" %}
+{% block title %}FIX ME{% endblock %}
+{% set active=(request.path.split("/")[-1].strip()) %}
+
+{% block head %}
+{{ super() }}
+<link type="text/css" rel="stylesheet" href="static/css/add_values.css" />
+<link type="text/css" rel="stylesheet" href="static/css/reports.css">
+{% endblock %}
+
+
+
+{% block content %}
+
+<div class="input-container">
+  <h1>{{ name_first }} {{ name_last }}</h1>
+  <h2>{{ house }}</h2>
+  <h2> {{ gender }}</h2>
+  <h1>{{ year }}</h1>
+  <h2>{{ dob }}</h2>
+</div>
+
+
+{% endblock %}
