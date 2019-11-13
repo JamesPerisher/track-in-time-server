@@ -95,7 +95,9 @@ def user_info():
 def event_info():
     return render_template("event_info.html")
 
-
+@app.route("/license")
+def license():
+    return render_template("license.html")
 
 @app.route('/cmd')
 def cmd():

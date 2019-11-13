@@ -13,8 +13,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Track In Time Server.  If not, see <https://www.gnu.org/licenses/>. -->
 
-{% extends "template_base.html" %}
-{% block title %}Error{% endblock %}
+{% extends "template.html" %}
+{% block title %}Error {{ error_num }}{% endblock %}
 
 {% block head %}
 <title>{{ error_num }} Error</title>
@@ -25,7 +25,7 @@ along with Track In Time Server.  If not, see <https://www.gnu.org/licenses/>. -
 
 
 {% block content %}
-
+{{ super() }}
 <div class="error-wraper">
   <div class="error-title">
     <h1>Error {{ error_num }}</h1>

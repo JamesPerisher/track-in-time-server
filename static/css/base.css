@@ -3,7 +3,8 @@ html {
 }
 
 body {
-  background: #36393F;
+  background: #202225;
+  color: #e3e3e3;
   font-family: Arial;
   font-size: 16px;
   margin-top: 0px;
@@ -20,6 +21,24 @@ body {
   color: #00007e;
   text-decoration: underline;
   cursor: pointer;
+}
+
+.text {
+  color: #e3e3e3;
+  margin-top: 2px;
+  margin-left: 10%;
+  margin-right: 50px;
+  margin-bottom: 0px;
+}
+
+.body a {
+  text-align: center;
+  color: #e3e3e3;
+  text-decoration: none;
+}
+
+.body a:hover {
+  color: #00007e;
 }
 
 html {
@@ -40,7 +59,7 @@ html {
 }
 
 .topnav {
-  background-color: #202225;
+  background-color: #36393F;
   overflow: hidden;
 }
 
@@ -56,7 +75,7 @@ html {
 /* Style the links inside the navigation bar */
 .topnav .cat {
   float: left;
-  color: #ffffff;
+  color: #e3e3e3;
   text-align: center;
   padding: 14px 16px;
   text-decoration: none;
@@ -76,7 +95,17 @@ html {
 /* Add a color to the active/current link */
 .topnav a.active {
   background-color: #00007e;
-  color: white;
+  color: #e3e3e3;
+}
+
+footer {
+  background: #36393F;
+  font-family: Arial;
+  font-size: 16px;
+  margin-top: 0px;
+  margin-left: 0px;
+  margin-right: 1px;
+  margin-bottom: 0px;
 }
 
 .footer {
@@ -106,18 +135,19 @@ html {
 }
 
 .font-form h2 {
-  color: #ffffff;
+  color: #e3e3e3;
   font-size: 20px;
   padding-left: 7px;
 }
 
 .font-form p {
-  color: #ffffff;
+  color: #e3e3e3;
   font-size: 17px;
 }
 
+
 .footer {
-  background-color: #202225;
+  background-color: #36393F;
   clear: both;
   position: relative;
   height: 60px;
@@ -144,7 +174,7 @@ html {
 .footer p {
   text-align: center;
   display: inline;
-  color: #ffffff;
+  color: #e3e3e3;
 }
 
 .footer>p {
@@ -166,7 +196,7 @@ html {
 
 .footer a {
   text-align: center;
-  color: #ffffff;
+  color: #e3e3e3;
   text-decoration: none;
 }
 

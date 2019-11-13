@@ -1,5 +1,5 @@
 body {
-  background: #36393F;
+  background: #202225;
   font-family: Arial;
   font-size: 16px;
   margin-top: 0px;
@@ -9,17 +9,17 @@ body {
 }
 
 h1 {
-  color: #ffffff;
+  color: #e3e3e3;
   font-size: 500%;
 }
 
 h2 {
-  color: #ffffff;
+  color: #e3e3e3;
   font-size: 250%;
 }
 
 p {
-  color: #ffffff;
+  color: #e3e3e3;
 }
 
 a {
@@ -28,7 +28,7 @@ a {
 }
 
 a:hover {
-  color: #ffffff;
+  color: #e3e3e3;
 }
 
 .error-wraper {
