@@ -1,3 +1,18 @@
+# This file is part of Track In Time Server.
+#
+# Track In Time Server is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# Track In Time Server is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with Track In Time Server.  If not, see <https://www.gnu.org/licenses/>.
+
 from flask import Flask
 from flask import render_template, redirect, make_response, request, url_for
 from werkzeug.exceptions import HTTPException
@@ -80,6 +95,7 @@ def user_info():
 def event_info():
     return render_template("event_info.html")
 
+<<<<<<< HEAD
 
 @app.route("/download")
 def download():
@@ -92,6 +108,11 @@ def results():
 @app.route("/evenst")
 def results():
     return render_template("results.html", data=[("100m sprint", "attack helicopter", ""), ("dave", "10000"), ("dave", "10000"), ("dave", "10000"), ("dave", "10000"), ], event_name="100m sprint", gender="attack helicopter", year="10")
+=======
+@app.route("/license")
+def license():
+    return render_template("license.html")
+>>>>>>> b5e084504a630056eba6d99ea9d4010047e50d5c
 
 @app.route('/cmd')
 def cmd():
