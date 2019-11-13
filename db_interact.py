@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 # This file is part of Track In Time Server.
 #
 # Track In Time Server is free software: you can redistribute it and/or modify
