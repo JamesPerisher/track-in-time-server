@@ -170,7 +170,7 @@ class connection():
 
     def update_participant(self, data, type):
         data.append(type)
-        self.c.execute("UPDATE participants SET name_last=\"%s\", name_first=\"%s\", gender=\"%s\", year=\"%s\", house=\"%s\", dob=\"%s\", participant_id=\"%s\"  WHERE id=\"%s\"%(data))
+        self.c.execute("UPDATE participants SET name_last=\"%s\", name_first=\"%s\", gender=\"%s\", year=\"%s\", house=\"%s\", dob=\"%s\", participant_id=\"%s\"  WHERE id=\"%s\""%(data))
         self.commit()
 
     def add_event(self, data):

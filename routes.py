@@ -85,6 +85,10 @@ def event_info():
 def download():
     return render_template("download_template.html", name="fancy name", data=[("Zip","/hello"),("Zip","/hello"),("Zip","/hello"),("Zip","/hello")])
 
+@app.route("/results")
+def results():
+    return render_template("results.html", data=[("dave", "10000"), ("dave", "10000"), ("dave", "10000"), ("dave", "10000"), ("dave", "10000"), ], event_name="100m sprint", gender="attack helicopter", year="10")
+
 
 @app.route('/cmd')
 def cmd():
