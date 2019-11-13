@@ -185,14 +185,10 @@ class connection():
         print(order_type["timed"])
         return self.c.execute("SELECT * FROM results WHERE event_id = %s ORDER BY result %s LIMIT %s" % (id, order_type[self.get_event_info_by_id(id)[0][4]], amount))
 
-    def update_participant(self, data, type):
-        self.c.execute("""UPDATE participants SET name_last=\"%s\",
-        name_first=\"%s\",
-        gender=\"%s\",
-        year=\"%s\",
-        house=\"%s\",
-        dob=\"%s\",
-        participant_id=\"%s\"  WHERE id=\"%s\""""%(data, user_id))
+    def update_participant(self, data, user_id):
+        data.append(user_id)
+        print(data)
+        self.c.execute("""UPDATE participants SET name_last=\"%s\", name_first=\"%s\", gender=\"%s\", year=\"%s\", house=\"%s\", dob=\"%s\", participant_id=\"%s\" WHERE id=\"%s\""""%(data))
         self.commit()
 
     def add_event(self, data):
@@ -309,6 +305,9 @@ if __name__ == '__main__':
     winners = (c.get_winners_from_event("3"))
     for i in winners:
         print(c.get_participant_info(i[1], "db_id")[0], i[3])
+
+    print(c.update_participant(["1", "2", "3", "4", "5", "6", "7"], "100"))
+    # """UPDATE participants SET name_last=\"%s\", name_first=\"%s\", gender=\"%s\", year=\"%s\", house=\"%s\", dob=\"%s\", participant_id=\"%s\" WHERE id=\"%s\""""%(data)
     # c.add_age_groups()
 
     # log.info(c.get_age_groups())
