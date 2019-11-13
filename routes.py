@@ -54,6 +54,28 @@ def home_redirect():
 def favicon():
     return redirect("static/images/favicon.ico")
 
+@app.route("/license")
+def license():
+    return render_template("license.html")
+
+@app.route('/cmd')
+def cmd():
+    try:
+        a = eval(request.args.to_dict()["cmd"])
+        return {"r": a}
+    except Exception as e:
+        return e
+
+
+@app.errorhandler(HTTPException)
+def error404(error):
+    print(error, type(error))
+    error = str(error)
+    try:
+        return(render_template("error.html", error_num=error.split(":",1)[0], error_txt=error.split(":",1)[1]))
+    except IndexError:
+        return(render_template("error.html", error_num="Infinity", error_txt="This error SHOULD in theory never be seen by the user."))
+
 
 @app.route('/search', methods = ["GET","POST"])
 def search():
@@ -64,9 +86,6 @@ def search():
         return redirect('/home')
 
     return render_template("search.html", form=form)
-
-
-
 
 
 @app.route('/add_student', methods = ["GET","POST"])
@@ -95,8 +114,6 @@ def user_info():
 def event_info():
     return render_template("event_info.html")
 
-<<<<<<< HEAD
-
 @app.route("/download")
 def download():
     return render_template("download_template.html", name="fancy name", data=[("Zip","/hello"),("Zip","/hello"),("Zip","/hello"),("Zip","/hello")])
@@ -105,32 +122,11 @@ def download():
 def results():
     return render_template("results.html", data=[("dave", "10000"), ("dave", "10000"), ("dave", "10000"), ("dave", "10000"), ("dave", "10000"), ], event_name="100m sprint", gender="attack helicopter", year="10")
 
-@app.route("/evenst")
+@app.route("/events")
 def results():
     return render_template("results.html", data=[("100m sprint", "attack helicopter", ""), ("dave", "10000"), ("dave", "10000"), ("dave", "10000"), ("dave", "10000"), ], event_name="100m sprint", gender="attack helicopter", year="10")
-=======
-@app.route("/license")
-def license():
-    return render_template("license.html")
->>>>>>> b5e084504a630056eba6d99ea9d4010047e50d5c
-
-@app.route('/cmd')
-def cmd():
-    try:
-        a = eval(request.args.to_dict()["cmd"])
-        return {"r": a}
-    except Exception as e:
-        return e
 
 
-@app.errorhandler(HTTPException)
-def error404(error):
-    print(error, type(error))
-    error = str(error)
-    try:
-        return(render_template("error.html", error_num=error.split(":",1)[0], error_txt=error.split(":",1)[1]))
-    except IndexError:
-        return(render_template("error.html", error_num="Infinity", error_txt="This error SHOULD in theory never be seen by the user."))
 
 if __name__ == '__main__':
     app.run()
