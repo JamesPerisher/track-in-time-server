@@ -187,17 +187,10 @@ class connection():
         print(order_type["timed"])
         return self.c.execute("SELECT * FROM results WHERE event_id = %s ORDER BY result %s LIMIT %s" % (id, order_type[self.get_event_info_by_id(id)[0][4]], amount))
 
-<<<<<<< HEAD
     def update_participant(self, data, user_id):
         data.append(user_id)
         print(data)
         self.c.execute("""UPDATE participants SET name_last=\"%s\", name_first=\"%s\", gender=\"%s\", year=\"%s\", house=\"%s\", dob=\"%s\", participant_id=\"%s\" WHERE id=\"%s\""""%(data))
-=======
-    def update_participant(self, data, type):
-        data.append(type)
-        self.c.execute("UPDATE participants SET name_last=\"%s\", name_first=\"%s\", gender=\"%s\", year=\"%s\", house=\"%s\", dob=\"%s\", participant_id=\"%s\"  WHERE id=\"%s\""%(data))
->>>>>>> 883d6a8236f1ed0e98b9e5d0d94a645880743444
-        self.commit()
 
     def add_event(self, data):
         self.c.execute("INSERT INTO events VALUES (NULL, \"%s\", \"%s\", \"%s\", \"%s\", \"%s\")" % (data))
