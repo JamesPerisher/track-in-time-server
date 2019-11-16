@@ -16,7 +16,7 @@
 # along with Track In Time Server.  If not, see <https://www.gnu.org/licenses/>.
 
 from flask import Flask
-from flask import render_template, redirect, make_response, request, url_for
+from flask import render_template, redirect, make_response, request, url_for, flash
 from werkzeug.exceptions import HTTPException
 
 # import logging as log
@@ -84,11 +84,13 @@ def search():
 
     if form.validate_on_submit(): # sucess passing data
         print(form.data)
-        print("a")
-        print(app.db.get_participant_info(form.data['search'], search_type=form.data['result']))
-        print("b")
 
-    return render_template("search.html", form=form, results = [("dave",7, "15 oct...")])
+        users = app.db.get_participant_info(form.data['search'], search_type=form.data['result'])
+        results = [("%s %s"%(x[2], x[1]), x[4], x[6].split(" ")[0]) for x in users]
+
+        flash(results)
+
+    return render_template("search.html", form=form)
 
 
 @app.route('/add_student', methods = ["GET","POST"])
