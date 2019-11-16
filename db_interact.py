@@ -207,8 +207,8 @@ class connection():
     def get_events(self):
         return self.c.execute("SELECT * FROM events")
 
-    def get_event_info_by_id(self, data):
-        return self.c.execute("SELECT * FROM events WHERE id = %s" % data)
+    def get_event_info_by_id(self, data, search_type="name"):
+        return self.c.execute("SELECT * FROM events WHERE %s = %s" % data)
 
     def get_dates(self):
         return self.c.execute("SELECT dob FROM participants")
