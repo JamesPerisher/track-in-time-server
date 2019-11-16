@@ -18,17 +18,17 @@ Install python modules by running ```pip install ```
 
 Run routes.py
 
-### .exe
+### Executable (Windows)
 
 Download from [releases](https://github.com/JamesPerisher/track-in-time-server/releases)
 
-Run the exe
-
+Run the Executable file
 
 ## Built With
 
 * [Python](https://docs.python.org/3/) - The web framework used
 * [HTML](https://devdocs.io/html/) - HTML
+* [SQLite](https://www.sqlite.org/index.html)
 
 ## Contributing
 
