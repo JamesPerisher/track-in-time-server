@@ -51,15 +51,15 @@ along with Track In Time Server.  If not, see <https://www.gnu.org/licenses/>. -
 
     {% endfor %}
     {{ form.csrf_token }}
-    {{ form.submit(value="Search") }}
+    {{ form.submit() }}
   </form>
   <br><br>
 
   <table class="results">
     <thead>
       <th><b>Name</b></th>
-      <th><b>Year</b></th>
-      <th><b>Date of birth</b></th>
+      <th><b>Event Type</b></th>
+      <th><b>Gender</b></th>
       <th><b>Select</b></th>
     </thead>
 

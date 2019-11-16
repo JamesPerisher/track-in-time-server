@@ -31,22 +31,25 @@ along with Track In Time Server.  If not, see <https://www.gnu.org/licenses/>. -
   <br>
   <br>
 
-  <h1>Heading</h1>
+  <h1>{{ request.args.get('name') }} - {{ request.args.get('type') }} for {{ request.args.get('gender') }}</h1>
 
   <table class="results">
     <thead>
       <th><b>Name</b></th>
       <th><b>Year</b></th>
       <th><b>Date of birth</b></th>
+      <th><b>Result</b></th>
       <th><b>Select</b></th>
     </thead>
     <tbody>
-      {% for i in [("dave",7, "15 oct..."), ("bob",8, "76 nov ..."),("bob",8, "76 nov ..."),("bob",8, "76 nov ..."),("bob",8, "76 nov ..."),("bob",8, "76 nov ..."),("bob",8, "76 nov ..."),("bob",8, "76 nov ..."),("bob",8, "76 nov ...")] %}
+
+      {% for i in get_event_stats(request.args.get('id')) %}
       <tr>
         <th>{{ i[0] }}</th>
         <th>{{ i[1] }}</th>
         <th>{{ i[2] }}</th>
-        <th><a href="#">Select</a></th>
+        <th>{{ i[3] }}</th>
+        <th><a href="{{i[4]}}">Select</a></th>
       </tr>
       {% endfor %}
     </tbody>

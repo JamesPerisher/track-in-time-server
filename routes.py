@@ -20,26 +20,28 @@ from flask import render_template, redirect, make_response, request, url_for, fl
 from werkzeug.exceptions import HTTPException
 
 # import logging as log
-import json
-import time
-import pytz
-import numpy as np
 import os
+import time
+import json
+import pytz
+import datetime
+import numpy as np
 import secrets as s
+
+from forms import *
+
 try:
     import db_interact as custom_db
 except (ModuleNotFoundError, ImportError):
     print("Database import error")
 
-import datetime
-
-from forms import *
 
 app = Flask(__name__, template_folder='templates')
 app.config['SECRET_KEY'] = "".join([s.choice([chr(i) for i in range(32,127)]) for j in range(128)]) # gen random secret probs bad idea
+print("Secret key: %s" %app.config['SECRET_KEY'])
+
 app.db = custom_db.connection()
 
-print("Secret key: %s" %app.config['SECRET_KEY'])
 
 @app.route("/")
 def home():
@@ -77,41 +79,37 @@ def error404(error):
         return(render_template("error.html", error_num="Infinity", error_txt="This error SHOULD in theory never be seen by the user."))
 
 
-@app.route("/search")
-def search():
-    return render_template("index.html", title="search", indexes=["search/user", "search/event"])
+# @app.route("/search")
+# def search():
+#     return render_template("index.html", title="search", indexes=["search/user", "search/event"])
 
-@app.route('/search/user', methods = ["GET","POST"])
+@app.route('/search_user', methods = ["GET","POST"])
 def search_user(): # TODO: add house to user table in return
-
     form = SearchUserForm()
 
     if form.validate_on_submit(): # sucess passing data
-        print(form.data)
-
         users = app.db.get_participant_info(form.data['search'], search_type=form.data['result'])
+<<<<<<< HEAD
         results = [("%s %s"%(x[2], x[1]), x[4], x[6].split(" ")[0], url_for('user_info', name_first=x[2], name_last=x[1], house=x[5], gender={"Male":"Male","Female":"Female"}[x[3]], year=x[4], dob=x[6])) for x in users] # # DEBUG: dict other than m/f
 
 
+=======
+        results = [("%s %s"%(x[2], x[1]), x[4], x[5], x[6].split(" ")[0], url_for('user_info', name_first=x[2], name_last=x[1], house=x[5], gender=x[3], year=x[4], dob=x[6])) for x in users] # # DEBUG: dict other than m/f
+>>>>>>> 379c798270a6ac788e10ef1ebe87bd0fdd20c4a8
         flash(results)
 
-    return render_template("search.html", form=form)
+    return render_template("user_search.html", form=form)
 
-@app.route('/search/event', methods = ["GET","POST"])
+@app.route('/search_event', methods = ["GET","POST"])
 def search_event(): # TODO: add house to user table in return
-
-    form = SearchUserForm()
+    form = SearchEventForm()
 
     if form.validate_on_submit(): # sucess passing data
-        print(form.data)
-
-        users = app.db.get_participant_info(form.data['search'], search_type=form.data['result'])
-        results = [("%s %s"%(x[2], x[1]), x[4], x[6].split(" ")[0], url_for('user_info', name_first=x[2], name_last=x[1], house=x[5], gender={"M":"Male","F":"female"}[x[3]], year=x[4], dob=x[6])) for x in users] # # DEBUG: dict other than m/f
-
-
+        event = app.db.get_event_info(form.data['search'], search_type=form.data['result'])
+        results = [(x[2], x[3], x[5], url_for("event_info", name=x[2], type=x[3], gender=x[5], id = x[0])) for x in event]
         flash(results)
 
-    return render_template("search.html", form=form)
+    return render_template("event_search.html", form=form)
 
 
 @app.route('/add_student', methods = ["GET","POST"])
@@ -153,6 +151,18 @@ def events():
     return render_template("results.html", data=[("100m sprint", "attack helicopter", ""), ("dave", "10000"), ("dave", "10000"), ("dave", "10000"), ("dave", "10000"), ], event_name="100m sprint", gender="attack helicopter", year="10")
 
 
+
+@app.context_processor
+def utility_processor():
+    def get_event_stats(id):
+        out = []
+        for i in app.db.get_results_from_event(id):
+            user = app.db.get_participant_info(i[1], "db_id")[0]
+            out.append(("%s %s"%(user[2], user[1]), user[4], user[6].split(" ")[0], i[3], url_for('user_info', name_first=user[2], name_last=user[1], house=user[5], gender=user[3], year=user[4], dob=user[6])))
+
+        out.sort(key = lambda x: x[3], reverse=True)
+        return out
+    return dict(get_event_stats=get_event_stats)
 
 if __name__ == '__main__':
     app.run(debug = True, use_reloader=True)

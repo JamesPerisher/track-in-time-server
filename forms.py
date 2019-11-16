@@ -43,6 +43,10 @@ class SearchUserForm(Form):
     result = SelectField("Search type", choices=[("name_first","First Name"), ("name_last", "Last Name"), ("year", "Year"), ("house", "House")])
     search = StringField("Search term (user name, event name)", validators=[InputRequired()])
 
+class SearchEventForm(Form):
+    result = SelectField("Search type", choices=[("name","Event Name"), ("track_field", "Event Type"), ("gender", "Gender")])
+    search = StringField("Search term (user name, event name)", validators=[InputRequired()])
+
 
 class AddStudentForm(Form):
     name_first = StringField("First Name", validators=[InputRequired()])

@@ -23,7 +23,7 @@ along with Track In Time Server.  If not, see <https://www.gnu.org/licenses/>. -
 
   <div class="topnav">
     {% if not newpages %}{% set newpages = dict() %}{% endif %}
-    {% set nav_list = dict({"home":"Home", "add_student":"Add Student", "add_event":"Add event"}, **newpages) %}
+    {% set nav_list = dict({"home":"Home", "add_student":"Add Student", "add_event":"Add event", "search_user":"Search Users", "search_event":"Search Events"}, **newpages) %}
     {% for i in nav_list %}
     <a class="cat {% if active==i %}active{%endif %} {{i}}" href="{{ url_for(i) }}">{{nav_list[i]}}</a>
     {% endfor %}
@@ -42,12 +42,20 @@ along with Track In Time Server.  If not, see <https://www.gnu.org/licenses/>. -
       <ul class="list-style-none d-flex flex-wrap">
         <li class="mr-3">&copy; 2019 <span title="JKook On Top">Track In Time</span>, Server.</li>
         <li class="mr-3"><a data-ga-click="Footer, go to License, text:License" href="../license">License</a></li>
-        <li class="mr-3"><a data-ga-click="Footer, Donate To Creators, text:Donate" href="https://www.paypal.me/JKookStudios/5USD">Donate To Creators</a></li>
+        <li class="mr-3"><a data-ga-click="Footer, Donate To Creators, text:Donate" href="https://www.paypal.me/pauln07/5USD" target="_blank">Donate To Creators</a></li>
       </ul>
 
       <a class="logo-white-fill" aria-label="Homepage" title="Track In Time" href="../">
 
-        <svg height="24" width="24" viewBox="0 0 505.36 443.67"><title>Track In Time</title><path d="M464.05,551.51c-4.36,13.4-15.12,20.79-23.32,30.09-7.43,8.44-12.07,17.41-8,29.1,7.68,21.86,31.82,26.6,49.82,8.79,59.45-58.82,84.58-130.9,73.93-213-19.06-147-157.77-242-298-215.24C94.33,222.58,4.68,405.42,81.24,554.12c13.22,25.68,30,48.88,51.6,68.24,11.83,10.61,29.57,10.36,39.94.3,11-10.67,11.15-26.47.18-39.6-3.41-4.08-7.65-7.49-11-11.63-4.71-5.87-8.91-12.14-13.77-18.83l24.09-16.77-16.08-26.29L132.08,520.9c-29.41-36.58-28.48-131.45,1.5-165.29l24.12,12.18L173,341.08,151,324.32c27-45.63,102-85.27,144.68-76.62,1.36,7.23,2.78,14.83,4.35,23.18h28.14c1.53-8.89,2.85-16.5,4.11-23.77,40.95-2.61,117.41,41.16,133.85,83.55l-15.68,13.1,14.34,24.82L483.68,362c26.74,40.41,23.21,128.71-3.61,158.51l-20.82-9.68L443.4,538.07Z" transform="translate(-53.55 -186.73)"/><path d="M307,577.7c-19.27,0-38.54-.35-57.8.1-17.67.41-26.87,9.13-27.48,24.76-.64,16.66,8.72,27.13,26.88,27.4q57.78.85,115.59,0c17.27-.26,26.45-10.13,26.55-25.77.12-16.6-9.39-25.95-27.94-26.37S325.6,577.69,307,577.7Z" transform="translate(-53.55 -186.73)"/><path d="M275.92,465.28c28.89,16.49,47.52,14.79,61.31-4.65,10.42-14.69,6.89-39.74-7.15-50.69-18.73-14.6-38.28-10.06-62.62,14.91l-88.91,32c.14.88.29,1.76.44,2.63Z" transform="translate(-53.55 -186.73)"/></svg>
+        <svg height="24" width="24" viewBox="0 0 505.36 443.67">
+          <title>Track In Time</title>
+          <path
+            d="M464.05,551.51c-4.36,13.4-15.12,20.79-23.32,30.09-7.43,8.44-12.07,17.41-8,29.1,7.68,21.86,31.82,26.6,49.82,8.79,59.45-58.82,84.58-130.9,73.93-213-19.06-147-157.77-242-298-215.24C94.33,222.58,4.68,405.42,81.24,554.12c13.22,25.68,30,48.88,51.6,68.24,11.83,10.61,29.57,10.36,39.94.3,11-10.67,11.15-26.47.18-39.6-3.41-4.08-7.65-7.49-11-11.63-4.71-5.87-8.91-12.14-13.77-18.83l24.09-16.77-16.08-26.29L132.08,520.9c-29.41-36.58-28.48-131.45,1.5-165.29l24.12,12.18L173,341.08,151,324.32c27-45.63,102-85.27,144.68-76.62,1.36,7.23,2.78,14.83,4.35,23.18h28.14c1.53-8.89,2.85-16.5,4.11-23.77,40.95-2.61,117.41,41.16,133.85,83.55l-15.68,13.1,14.34,24.82L483.68,362c26.74,40.41,23.21,128.71-3.61,158.51l-20.82-9.68L443.4,538.07Z"
+            transform="translate(-53.55 -186.73)" />
+          <path d="M307,577.7c-19.27,0-38.54-.35-57.8.1-17.67.41-26.87,9.13-27.48,24.76-.64,16.66,8.72,27.13,26.88,27.4q57.78.85,115.59,0c17.27-.26,26.45-10.13,26.55-25.77.12-16.6-9.39-25.95-27.94-26.37S325.6,577.69,307,577.7Z"
+            transform="translate(-53.55 -186.73)" />
+          <path d="M275.92,465.28c28.89,16.49,47.52,14.79,61.31-4.65,10.42-14.69,6.89-39.74-7.15-50.69-18.73-14.6-38.28-10.06-62.62,14.91l-88.91,32c.14.88.29,1.76.44,2.63Z" transform="translate(-53.55 -186.73)" />
+        </svg>
       </a>
 
       <ul class="list-style-none d-flex flex-wrap">
@@ -58,7 +66,7 @@ along with Track In Time Server.  If not, see <https://www.gnu.org/licenses/>. -
       <div class="d-flex flex-justify-center pb-6">
         <span class="f6 text-gray-light"></span>
       </div>
-      
+
     </div>
   </div>
 
