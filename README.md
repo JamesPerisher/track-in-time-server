@@ -28,7 +28,7 @@ Run the Executable file
 
 * [Python](https://docs.python.org/3/) - The web framework used
 * [HTML](https://devdocs.io/html/) - HTML
-* [SQLite](https://www.sqlite.org/index.html)
+* [SQLite](https://www.sqlite.org/index.html) - Database used
 
 ## Contributing
 
