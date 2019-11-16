@@ -16,7 +16,7 @@ Download the .zip folder and extract it.
 
 Install python modules by running ```pip install ```
 
-Run routes.py
+Run ```__init__.py```
 
 ### Executable (Windows)
 
