@@ -59,6 +59,7 @@ along with Track In Time Server.  If not, see <https://www.gnu.org/licenses/>. -
     <thead>
       <th><b>Name</b></th>
       <th><b>Year</b></th>
+      <th><b>House</b></th>
       <th><b>Date of birth</b></th>
       <th><b>Select</b></th>
     </thead>
@@ -72,7 +73,8 @@ along with Track In Time Server.  If not, see <https://www.gnu.org/licenses/>. -
         <td>{{ i[0] }}</td>
         <td>{{ i[1] }}</td>
         <td>{{ i[2] }}</td>
-        <td><a href="{{ i[3] }}">Select</a></td>
+        <td>{{ i[3] }}</td>
+        <td><a href="{{ i[4] }}">Select</a></td>
       </tr>
       {% endfor %}
     </tbody>
