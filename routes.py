@@ -79,11 +79,11 @@ def error404(error):
         return(render_template("error.html", error_num="Infinity", error_txt="This error SHOULD in theory never be seen by the user."))
 
 
-@app.route("/search")
-def search():
-    return render_template("index.html", title="search", indexes=["search/user", "search/event"])
+# @app.route("/search")
+# def search():
+#     return render_template("index.html", title="search", indexes=["search/user", "search/event"])
 
-@app.route('/search/user', methods = ["GET","POST"])
+@app.route('/search_user', methods = ["GET","POST"])
 def search_user(): # TODO: add house to user table in return
     form = SearchUserForm()
 
@@ -94,7 +94,7 @@ def search_user(): # TODO: add house to user table in return
 
     return render_template("user_search.html", form=form)
 
-@app.route('/search/event', methods = ["GET","POST"])
+@app.route('/search_event', methods = ["GET","POST"])
 def search_event(): # TODO: add house to user table in return
     form = SearchEventForm()
 
