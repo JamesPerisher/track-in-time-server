@@ -39,7 +39,7 @@ along with Track In Time Server.  If not, see <https://www.gnu.org/licenses/>. -
     <div class="element">
       <p>{{ i.label }}</p>
       <!-- { i(id = "form-id%s"%n) } -->
-      {{ i(value="Test") }}
+      {{ i() }}
       {% for error in i.errors %}
       <span class="error"> {{ error }}</span>
       {% endfor %}
@@ -48,6 +48,7 @@ along with Track In Time Server.  If not, see <https://www.gnu.org/licenses/>. -
     <br>
 
     {% endfor %}
+    {{ form.csrf_token }}
     {{ form.submit() }}
   </form>
 </div>

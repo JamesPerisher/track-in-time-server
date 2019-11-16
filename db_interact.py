@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/python3
 
 # This file is part of Track In Time Server.
 #
@@ -42,6 +42,12 @@ class DatabaseManager(Thread):
         self.command_stack = []
         self.outvalues = {}
 
+        self.working = True
+
+    def kill(self):
+        print("kill")
+        self.working = False
+
     def execute(self, command, timeout=-99999):
         timeout = self.timeout if timeout == -99999 else timeout
         temp_key = time.time()
@@ -68,7 +74,7 @@ class DatabaseManager(Thread):
         self.conn = sqlite3.connect(self.file)
         self.crsr = self.conn.cursor()
 
-        while True:
+        while self.working:
             for i in self.command_stack:
                 try:
                     current = self.command_stack.pop(0)
@@ -98,24 +104,33 @@ class DatabaseManager(Thread):
                 except Exception as e:
                     self.outvalues[current[0]] = e
                     raise e
+        print("killed: %s"%self)
 
 
 class connection():
     def __init__(self, database='test.db'):
-
+        super().__init__()
+        self.database = database
         path_for_logs = ("db/logs/%s/%s"%(datetime.date.today().year ,datetime.date.today().month))
         try:
             os.makedirs(path_for_logs)
         except:
             pass
 
-        self.log = log.basicConfig(filename='db/logs/%s/%s/%s-%s.log'%(datetime.date.today().year ,datetime.date.today().month, datetime.date.today(), os.path.basename(__file__)[:-3]), level=log.DEBUG, format='%(asctime)s: %(message)s', datefmt='%d-%b-%y %H:%M:%S')
 
-        self.c = DatabaseManager(database, timeout=2)
+        self.log = log.basicConfig(filename='db/logs/%s/%s/%s-%s.log'%(datetime.date.today().year ,datetime.date.today().month, datetime.date.today(), os.path.basename(__file__)[:-3]), level=log.DEBUG, format='%(asctime)s: %(message)s', datefmt='%d-%b-%y %H:%M:%S')
+        # self.start()
+
+    def start(self):
+        self.c = DatabaseManager(self.database, timeout=2)
         self.c.start()
         log.info("started db thread")
         self.c.execute("PRAGMA foreign_keys = ON;")
         self.create_db()
+        print("Started database")
+
+    def kill(slef):
+        self.c.kill()
 
 
     def commit(self):
@@ -264,6 +279,13 @@ class connection():
         return self.c.execute("SELECT * FROM participants WHERE \"%s\" = \"%s\""% (lookup, search[search_type]))
 
 
+class test(object):
+    """docstring for test."""
+    def __init__(self, arg):
+        super(test, self).__init__()
+        self.arg = arg
+
+
 if __name__ == '__main__':
 
     try:
@@ -272,6 +294,7 @@ if __name__ == '__main__':
         print(e)
 
     c = connection()
+    c.start()
 
 
     c.data_entry()
@@ -307,7 +330,7 @@ if __name__ == '__main__':
     for i in winners:
         print(c.get_participant_info(i[1], "db_id")[0], i[3])
 
-    print(c.update_participant(["1", "2", "3", "4", "5", "6", "7"], "100"))
+    # print(c.update_participant(["1", "2", "3", "4", "5", "6", "7"], "100"))
     # """UPDATE participants SET name_last=\"%s\", name_first=\"%s\", gender=\"%s\", year=\"%s\", house=\"%s\", dob=\"%s\", participant_id=\"%s\" WHERE id=\"%s\""""%(data)
     # c.add_age_groups()
 
