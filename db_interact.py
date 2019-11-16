@@ -161,24 +161,17 @@ class connection():
         self.commit()
         log.info("%s: created databases" % __name__)
 
+    def get_data_types(self, type="year"):
+        return self.c.execute("SELECT DISTINCT \"%s\" FROM participants"%(type))
+
     def insert_into_results(self, data):
-        # sql_command = """CREATE TABLE IF NOT EXISTS results(
-        #     id INTEGER PRIMARY KEY AUTOINCREMENT,
-        #     participant_id INTEGER,
-        #     event_id INTEGER,
-        #     result REAL DEFAULT NULL,
-        #     UNIQUE(participant_id, event_id));"""
-        # print(data)
-        self.c.execute("INSERT INTO results VALUES (NULL, %s, %s, %s)" % data)
+        self.c.execute("INSERT INTO results VALUES (NULL, \"%s\", \"%s\", \"%s\")" % data)
         self.commit()
 
     def get_results_from_event(self, data):
         return self.c.execute("SELECT * FROM results WHERE event_id = %s" % data)
 
     def get_winners_from_event(self, id, amount=5):
-        # what kind of event is this?
-        # SELECT * FROM results WHERE event_id = 1 ORDER BY result DESC LIMIT 2;
-        print(self.get_event_info_by_id(id)[0][4])
         order_type = {
         "timed" : "ASC",
         "score" : "ASC",
@@ -189,8 +182,7 @@ class connection():
 
     def update_participant(self, data, user_id):
         data.append(user_id)
-        print(data)
-        self.c.execute("""UPDATE participants SET name_last=\"%s\", name_first=\"%s\", gender=\"%s\", year=\"%s\", house=\"%s\", dob=\"%s\", participant_id=\"%s\" WHERE id=\"%s\""""%(data))
+        self.c.execute("UPDATE participants SET name_last=\"%s\", name_first=\"%s\", gender=\"%s\", year=\"%s\", house=\"%s\", dob=\"%s\", participant_id=\"%s\" WHERE id=\"%s\""%tuple(data))
 
     def add_event(self, data):
         self.c.execute("INSERT INTO events VALUES (NULL, \"%s\", \"%s\", \"%s\", \"%s\", \"%s\")" % (data))
@@ -207,44 +199,29 @@ class connection():
         return self.c.execute("SELECT dob FROM participants")
 
     def add_participant(self, data):
-        # self.c.execute("INSERT INTO participants VALUES (NULL, \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\")" % tuple(data))
+        print(data)
         self.c.execute("INSERT INTO participants VALUES (NULL, %s, %s, %s, %s, %s, %s, %s)" % tuple(data))
 
     def data_entry(self):
+
         # “The real problem is that programmers have spent far too much time worrying about efficiency in the wrong places
         # and at the wrong times; premature optimization is the root of all evil (or at least most of it) in programming.” - Donald Knuth
 
-
         read_file = (pd.read_excel('db/Book1.xlsx'))
         df = pd.DataFrame(read_file)
-
         index = read_file.index
-
         columns = (list(df.columns.values))
-        # added_participants = ()
-        # passed_participants = ()
 
         for index, row in df.iterrows():
-
             details = []
-
             for i in columns:
                 if str(row[i]) != "nan":
                     details.append("\"" + str(row[i]) + "\"")
                 else:
                     details.append("NULL")
             details = [details[0], details[1], details[2], details[3], details[4], details[6], details[7]]
-            # participant_details = [x if str(x) != "nan" else "" for x in [details[0], details[1], details[2], details[3], details[4], str(details[6]), details[7]]]
-            #
-            # if tuple(participant_details[:5]) not in [i[1::][:-2:] for i in self.get_participant_info(details[0])]:
-            #     added_participants = (added_participants+(details[1],details[0]))
-            #     # self.c.execute("INSERT INTO participants VALUES (NULL, %s, %s, %s, %s, %s, %s, %s)", ([x if str(x) != "nan" else "" for x in [details[0], details[1], details[2], details[3], details[4], str(details[6]), details[7]]]))
             self.add_participant(details)
-            # else:
-            #     passed_participants = (passed_participants+(tuple((details[1],details[0]))))
-        #
-        # log.info("{0: <12} {1}".format("Did not add:",str(passed_participants)))
-        # log.info("{0: <12} {1}".format("Added:",str(added_participants)))
+
 
 
         self.c.commit()
@@ -261,7 +238,7 @@ class connection():
         "participant_id" : "participant_id"
         }
 
-        return self.c.execute("SELECT * FROM participants WHERE \"%s\" = \"%s\""% (lookup, search[search_type]))
+        return self.c.execute("SELECT * FROM participants WHERE \"%s\" = \"%s\" COLLATE NOCASE"% (lookup, search[search_type]))
 
 
 if __name__ == '__main__':
@@ -276,7 +253,7 @@ if __name__ == '__main__':
 
     c.data_entry()
 
-
+    print(c.get_data_types())
     c.add_event(("10am", "test_1", "track", "timed", "M"))
     c.add_event(("12am", "test_2", "track", "score", "F"))
     c.add_event(("11am", "test_3", "field", "distance", "M"))
