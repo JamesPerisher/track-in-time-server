@@ -90,7 +90,7 @@ def search_user(): # TODO: add house to user table in return
         print(form.data)
 
         users = app.db.get_participant_info(form.data['search'], search_type=form.data['result'])
-        results = [("%s %s"%(x[2], x[1]), x[4], x[6].split(" ")[0], url_for('user_info', name_first=x[2], name_last=x[1], house=x[5], gender={"M":"Male","F":"female"}[x[3]], year=x[4], dob=x[6])) for x in users] # # DEBUG: dict other than m/f
+        results = [("%s %s"%(x[2], x[1]), x[4], x[6].split(" ")[0], url_for('user_info', name_first=x[2], name_last=x[1], house=x[5], gender={"Male":"Male","Female":"Female"}[x[3]], year=x[4], dob=x[6])) for x in users] # # DEBUG: dict other than m/f
 
 
         flash(results)
