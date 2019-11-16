@@ -44,7 +44,7 @@ See also the list of [contributors](https://github.com/JamesPerisher/track-in-ti
 
 ## License
 
-This project is licensed under the GNU Affero General Public License v3.0 - see the [COPYING.md](.COPYING.md) file for details
+This project is licensed under the GNU Affero General Public License v3.0 - see the [COPYING.md](..COPYING.md) file for details
 
 ## Acknowledgments
 
