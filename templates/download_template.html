@@ -30,10 +30,14 @@ along with Track In Time Server.  If not, see <https://www.gnu.org/licenses/>. -
 <div class="input-container">
   <h1>Download: {{ name }}</h1>
   <table>
+    <tr>
+      <th>Type</th>
+      <th>Link</th>
+    </tr>
     {% for i in data %}
     <tr>
-      <th>{{ i[0] }}</th>
-      <th><a href="{{ i[1] }}">download</a></th>
+      <td>{{ i[0] }}</td>
+      <td><a href="{{ i[1] }}">download</a></td>
     </tr>
     {% endfor %}
   </table>
