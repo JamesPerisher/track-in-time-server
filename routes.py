@@ -77,8 +77,12 @@ def error404(error):
         return(render_template("error.html", error_num="Infinity", error_txt="This error SHOULD in theory never be seen by the user."))
 
 
-@app.route('/search', methods = ["GET","POST"])
+@app.route("/search")
 def search():
+    return render_template("index.html", title="search", indexes=["search/user", "search/event"])
+
+@app.route('/search/user', methods = ["GET","POST"])
+def search_user(): # TODO: add house to user table in return
 
     form = SearchUserForm()
 
@@ -86,7 +90,24 @@ def search():
         print(form.data)
 
         users = app.db.get_participant_info(form.data['search'], search_type=form.data['result'])
-        results = [("%s %s"%(x[2], x[1]), x[4], x[6].split(" ")[0]) for x in users]
+        results = [("%s %s"%(x[2], x[1]), x[4], x[6].split(" ")[0], url_for('user_info', name_first=x[2], name_last=x[1], house=x[5], gender={"M":"Male","F":"female"}[x[3]], year=x[4], dob=x[6])) for x in users] # # DEBUG: dict other than m/f
+
+
+        flash(results)
+
+    return render_template("search.html", form=form)
+
+@app.route('/search/event', methods = ["GET","POST"])
+def search_event(): # TODO: add house to user table in return
+
+    form = SearchUserForm()
+
+    if form.validate_on_submit(): # sucess passing data
+        print(form.data)
+
+        users = app.db.get_participant_info(form.data['search'], search_type=form.data['result'])
+        results = [("%s %s"%(x[2], x[1]), x[4], x[6].split(" ")[0], url_for('user_info', name_first=x[2], name_last=x[1], house=x[5], gender={"M":"Male","F":"female"}[x[3]], year=x[4], dob=x[6])) for x in users] # # DEBUG: dict other than m/f
+
 
         flash(results)
 
@@ -113,7 +134,7 @@ def add_event():
 
 @app.route("/user_info")
 def user_info():
-    return render_template("user_info.html", name_first="Dave", name_last="Davey", gender="Attack Helicopter", house="Yo mumma", year="65", dob="77 dec 2076")
+    return render_template("user_info.html")
 
 @app.route("/event_info")
 def event_info():

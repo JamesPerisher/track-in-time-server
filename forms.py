@@ -40,7 +40,7 @@ class Form(FlaskForm):
         return None
 
 class SearchUserForm(Form):
-    result = SelectField("Search type", choices=[("first_name", "name_first"), ("name_last", "name_last"), ("gender", "gender"), ("year", "year"), ("house", "house"), ("dob", "dob")])
+    result = SelectField("Search type", choices=[("name_first","First Name"), ("name_last", "Last Name"), ("year", "Year"), ("house", "House")])
     search = StringField("Search term (user name, event name)", validators=[InputRequired()])
 
 

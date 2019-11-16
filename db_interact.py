@@ -244,7 +244,7 @@ class connection():
     def get_participant_info(self, lookup, search_type="first_name"):  # search from names
         search = {
         "db_id" : "id",
-        "first_name" : "name_first",
+        "name_first" : "name_first",
         "name_last" : "name_last",
         "gender" : "gender",
         "year" : "year",
