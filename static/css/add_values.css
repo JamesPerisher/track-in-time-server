@@ -3,7 +3,7 @@ html {
 }
 
 body {
-  background: #36393F;
+  background: #202225;
   color: #d1d1d1;
   font-family: Arial;
   font-size: 16px;
@@ -31,13 +31,13 @@ body {
 }
 
 input {
-  background: #202225;
+  background: #36393F;
   color: #ffffff;
   border: 1px solid #ccc;
 }
 
 input, select {
-  background: #202225;
+  background: #36393F;
   color: #ffffff;
   border: 1px solid #ccc;
 }
@@ -62,7 +62,7 @@ input[type=date], select {
 
 input[type=submit] {
   width: 100%;
-  background-color: #202225;
+  background-color: #36393F;
   color: white;
   padding: 14px 20px;
   margin: 8px 0;
