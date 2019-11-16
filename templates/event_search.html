@@ -1,0 +1,88 @@
+<!-- This file is part of Track In Time Server.
+
+Track In Time Server is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+Track In Time Server is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Track In Time Server.  If not, see <https://www.gnu.org/licenses/>. -->
+
+{% extends "template.html" %}
+{% block title %}FIX ME{% endblock %}
+{% set active=(request.path.split("/")[-1].strip()) %}
+
+{% block head %}
+{{ super() }}
+<link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='css/add_values.css') }}" />
+<link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='css/reports.css') }}">
+{% endblock %}
+
+
+
+{% block content %}
+
+{% if request.args.get('error') %}<p class="error">{{ request.args.get('error') }}</p> {% endif %}
+{% if request.args.get('success') %}<p class="success">{{ request.args.get('success') }}</p> {% endif %}
+
+
+<div class="input-container">
+  <br>
+  <br>
+  <form class="input_form" action="" method="post" novalidate="novalidate">
+
+    {% for i in form.elements %}
+    <!-- {for (n,i) in form.elements} -->
+    <div class="element">
+      <p>{{ i.label }}</p>
+      <!-- { i(id = "form-id%s"%n) } -->
+      {{ i() }}
+      {% for error in i.errors %}
+      <span class="error"> {{ error }}</span>
+      {% endfor %}
+      <br>
+    </div>
+    <br>
+
+    {% endfor %}
+    {{ form.csrf_token }}
+    {{ form.submit() }}
+  </form>
+  <br><br>
+
+  <table class="results">
+    <thead>
+      <th><b>Name</b></th>
+      <th><b>Event Type</b></th>
+      <th><b>Gender</b></th>
+      <th><b>Select</b></th>
+    </thead>
+
+    {% with results = get_flashed_messages()[0] %}
+    {% if results %}
+
+    <tbody>
+      {% for i in results %}
+      <tr>
+        <td>{{ i[0] }}</td>
+        <td>{{ i[1] }}</td>
+        <td>{{ i[2] }}</td>
+        <td><a href="{{ i[3] }}">Select</a></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+
+    {% endif %}
+    {% endwith %}
+
+  </table>
+  <br>
+</div>
+
+
+{% endblock %}
