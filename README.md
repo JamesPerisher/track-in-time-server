@@ -24,9 +24,6 @@ Download from [releases](https://github.com/JamesPerisher/track-in-time-server/r
 
 Run the exe
 
-## Deployment
-
-Add additional notes about how to deploy this on a live system
 
 ## Built With
 
