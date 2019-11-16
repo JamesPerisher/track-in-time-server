@@ -24,15 +24,14 @@ along with Track In Time Server.  If not, see <https://www.gnu.org/licenses/>. -
 {% endblock %}
 
 
-
 {% block content %}
 
+<h1>Index of: {{ title }}</h1>
+
 <div class="input-container">
-  <h1>{{ request.args.get('name_first') }} {{ request.args.get('name_last') }}</h1>
-  <h2>{{ request.args.get('house') }}</h2>
-  <h2> {{ request.args.get('gender') }}</h2>
-  <h1>{{ request.args.get('year') }}</h1>
-  <h2>{{ request.args.get('dob') }}</h2>
+  {% for i in indexes %}
+  <a href="/{{i}}">{{i}}</a>
+  {% endfor %}
 </div>
 
 
