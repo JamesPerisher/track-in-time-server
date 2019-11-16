@@ -28,7 +28,7 @@ Run the Executable file
 
 * [Python](https://docs.python.org/3/) - The web framework used
 * [HTML](https://devdocs.io/html/) - HTML
-* [SQLite](https://www.sqlite.org/index.html)
+* [SQLite](https://www.sqlite.org/index.html) - Database used
 
 ## Contributing
 
@@ -44,11 +44,11 @@ See also the list of [contributors](https://github.com/JamesPerisher/track-in-ti
 
 ## License
 
-This project is licensed under the GNU Affero General Public License v3.0 - see the [COPYING.md](COPYING.md) file for details
+This project is licensed under the GNU Affero General Public License v3.0 - see the [COPYING.md](https://github.com/JamesPerisher/track-in-time-server/blob/master/COPYING.txt) file for details
 
 ## Acknowledgments
 
-* Hat tip to anyone whose answers questions on Stack Overflow
+* Hat tip to anyone who answers questions on Stack Overflow
 
 ## Donations
 
