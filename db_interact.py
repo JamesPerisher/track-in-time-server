@@ -226,7 +226,11 @@ class connection():
         df = pd.DataFrame(read_file)
         index = read_file.index
         columns = (list(df.columns.values))
-
+        convert = {
+            '"M"' : '"Male"',
+            '"m"' : '"Male"',
+            '"F"' : '"Female"',
+            '"f"' : '"Female"'}
         for index, row in df.iterrows():
             details = []
             for i in columns:
@@ -234,9 +238,8 @@ class connection():
                     details.append("\"" + str(row[i]) + "\"")
                 else:
                     details.append("NULL")
-            details = [details[0], details[1], details[2], details[3], details[4], details[6], details[7]]
+            details = [details[0], details[1], convert.get(details[2].strip(),details[2]), details[3], details[4], details[6], details[7]]
             self.add_participant(details)
-
 
 
         self.c.commit()
