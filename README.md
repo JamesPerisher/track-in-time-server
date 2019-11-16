@@ -48,7 +48,7 @@ This project is licensed under the GNU Affero General Public License v3.0 - see 
 
 ## Acknowledgments
 
-* Hat tip to anyone whose answers questions on Stack Overflow
+* Hat tip to anyone who answers questions on Stack Overflow
 
 ## Donations
 
