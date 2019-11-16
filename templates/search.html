@@ -35,15 +35,13 @@ along with Track In Time Server.  If not, see <https://www.gnu.org/licenses/>. -
   <br>
   <br>
   <form class="input_form" action="" method="post" novalidate="novalidate">
-    {{ form.result(class="bullets") }}
-    <br><br>
 
     {% for i in form.elements %}
     <!-- {for (n,i) in form.elements} -->
     <div class="element">
       <p>{{ i.label }}</p>
       <!-- { i(id = "form-id%s"%n) } -->
-      {{ i(value="Test") }}
+      {{ i() }}
       {% for error in i.errors %}
       <span class="error"> {{ error }}</span>
       {% endfor %}
@@ -52,6 +50,7 @@ along with Track In Time Server.  If not, see <https://www.gnu.org/licenses/>. -
     <br>
 
     {% endfor %}
+    {{ form.csrf_token }}
     {{ form.submit() }}
   </form>
   <br><br>
@@ -64,7 +63,7 @@ along with Track In Time Server.  If not, see <https://www.gnu.org/licenses/>. -
       <th><b>Select</b></th>
     </thead>
     <tbody>
-      {% for i in [("dave",7, "15 oct..."), ("bob",8, "76 nov ..."),("bob",8, "76 nov ..."),("bob",8, "76 nov ..."),("bob",8, "76 nov ..."),("bob",8, "76 nov ..."),("bob",8, "76 nov ..."),("bob",8, "76 nov ..."),("bob",8, "76 nov ...")] %}
+      {% for i in results %}
       <tr>
         <th>{{ i[0] }}</th>
         <th>{{ i[1] }}</th>

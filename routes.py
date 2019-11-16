@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/python3
 
 # This file is part of Track In Time Server.
 #
@@ -27,21 +27,19 @@ import numpy as np
 import os
 import secrets as s
 try:
-    import db_interact as db
+    import db_interact as custom_db
 except (ModuleNotFoundError, ImportError):
     print("Database import error")
+
 import datetime
 
 from forms import *
 
 app = Flask(__name__, template_folder='templates')
 app.config['SECRET_KEY'] = "".join([s.choice([chr(i) for i in range(32,127)]) for j in range(128)]) # gen random secret probs bad idea
-app.debug = True
+app.db = custom_db.connection()
 
 print("Secret key: %s" %app.config['SECRET_KEY'])
-
-# log.basicConfig(filename='%s.log'%__name__, level=log.DEBUG, format='%(asctime)s: %(message)s', datefmt='%d-%b-%y %H:%M:%S')
-
 
 @app.route("/")
 def home():
@@ -84,16 +82,19 @@ def search():
 
     form = SearchUserForm()
 
-    if form.validate_on_submit(): # sucess passing data do stuff
-        return redirect('/home')
+    if form.validate_on_submit(): # sucess passing data
+        print(form.data)
+        print("a")
+        print(app.db.get_participant_info(form.data['search'], search_type=form.data['result']))
+        print("b")
 
-    return render_template("search.html", form=form)
+    return render_template("search.html", form=form, results = [("dave",7, "15 oct...")])
 
 
 @app.route('/add_student', methods = ["GET","POST"])
 def add_student():
     form = AddStudentForm()
-    if form.validate_on_submit(): # sucess passing data do stuff
+    if form.validate_on_submit(): # sucess passing data
         return redirect('/home')
 
     return render_template("input_template.html", form=form)
@@ -103,7 +104,7 @@ def add_student():
 def add_event():
     form = AddEvent()
 
-    if form.validate_on_submit(): # sucess passing data do stuff
+    if form.validate_on_submit(): # sucess passing data
         return redirect('/home')
 
     return render_template("input_template.html", form=form)
@@ -131,4 +132,4 @@ def events():
 
 
 if __name__ == '__main__':
-    app.run()
+    app.run(debug = True, use_reloader=True)
