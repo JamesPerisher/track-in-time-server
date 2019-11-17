@@ -43,11 +43,27 @@ class DatabaseManager(Thread):
         self.outvalues = {}
 
         self.working = True
+        self.doing = True
+        self.paused = False
 
     def kill(self):
         self.working = False
 
+    def pause(self):
+        self.paused = True
+
+        while self.doing:
+            time.sleep(0.1)
+        return
+
+    def play(self):
+        self.paused = False
+
     def execute(self, command, timeout=-99999):
+        if self.paused:
+            while not self.paused:
+                time.sleep(0.1)
+
         timeout = self.timeout if timeout == -99999 else timeout
         temp_key = time.time()
         n = temp_key + self.timeout
@@ -74,6 +90,8 @@ class DatabaseManager(Thread):
         self.crsr = self.conn.cursor()
 
         while self.working:
+            if len(command_stack) == 0:
+                self.doing = False
             for i in self.command_stack:
                 try:
                     current = self.command_stack.pop(0)
@@ -103,6 +121,8 @@ class DatabaseManager(Thread):
                 except Exception as e:
                     self.outvalues[current[0]] = e
                     raise e
+
+
         print("killed: %s"%self)
 
 
@@ -129,7 +149,13 @@ class connection():
         print("Started database")
 
     def kill(self):
-        self.c.kill()
+        return self.c.kill()
+
+    def pause(self):
+        return self.c.pause()
+
+    def play(self):
+        return self.c.play()
 
 
     def commit(self):
