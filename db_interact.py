@@ -90,7 +90,7 @@ class DatabaseManager(Thread):
         self.crsr = self.conn.cursor()
 
         while self.working:
-            if len(command_stack) == 0:
+            if len(self.command_stack) == 0:
                 self.doing = False
             for i in self.command_stack:
                 try:
@@ -230,7 +230,7 @@ class connection():
         self.c.execute("UPDATE participants SET name_last=\"%s\", name_first=\"%s\", gender=\"%s\", year=\"%s\", house=\"%s\", dob=\"%s\", participant_id=\"%s\" WHERE id=\"%s\""%tuple(data))
 
     def add_event(self, data):
-        self.c.execute("INSERT INTO events VALUES (NULL, \"%s\", \"%s\", \"%s\", \"%s\", \"%s\")" % (data))
+        self.c.execute("INSERT INTO events VALUES (NULL, \"%s\", \"%s\", \"%s\", \"%s\", \"%s\")" % tuple(data))
         log.info("{0: <12} {1}".format("Event added:",str(data)))
         self.commit()
 
@@ -245,7 +245,8 @@ class connection():
 
     def add_participant(self, data):
         print(data)
-        self.c.execute("INSERT INTO participants VALUES (NULL, %s, %s, %s, %s, %s, %s, %s)" % tuple(data))
+        sql_command = "INSERT INTO participants VALUES (NULL, \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\")" % tuple(data)
+        self.c.execute(sql_command)
 
     def data_entry(self):
 

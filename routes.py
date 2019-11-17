@@ -112,6 +112,7 @@ def search_event(): # TODO: add house to user table in return
 def add_student():
     form = AddStudentForm()
     if form.validate_on_submit(): # sucess passing data
+        app.db.add_participant([form.data.get("name_last"),form.data.get("name_first"),form.data.get("gender"),78,form.data.get("house"),str(form.data.get("dob")), form.data.get("stu_id")]) # TODO: fix year
         flash(("s", "Success Adding: %s %s"%(form.data.get("name_first"), form.data.get("name_last")))) # TODO: db stuff
 
     return render_template("input_template.html", form=form)
@@ -145,7 +146,10 @@ def add_event():
     form = AddEvent()
 
     if form.validate_on_submit(): # sucess passing data
-        return redirect('/home')
+        app.db.add_event(["time", form.data.get("name"),form.data.get("age_group"),form.data.get("event_type"),form.data.get("gender")])
+        # TODO: rename track_field to age_group, rename timed_score_distance to event_type in db_interact.py
+        flash(("s", "Success Adding: %s"%form.data.get("name"))) # TODO: db stuff
+
 
     return render_template("input_template.html", form=form)
 
