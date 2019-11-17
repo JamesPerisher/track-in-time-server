@@ -266,7 +266,7 @@ class connection():
             details = []
             for i in columns:
                 if str(row[i]) != "nan":
-                    details.append("\"" + str(row[i]) + "\"")
+                    details.append(row[i])
                 else:
                     details.append("NULL")
             details = [details[0], details[1], convert.get(details[2].strip(),details[2]), details[3], details[4].lower(), details[6], details[7]]
