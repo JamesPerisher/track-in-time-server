@@ -38,9 +38,9 @@ except (ModuleNotFoundError, ImportError):
     print("Database import error")
 
 
-app = Flask(__name__, template_folder='templates')
-app.config['SECRET_KEY'] = "".join([s.choice([chr(i) for i in range(32,127)]) for j in range(128)]) # gen random secret probs bad idea
-print("Secret key: %s" %app.config['SECRET_KEY'])
+app = Flask(__name__, template_folder="templates")
+app.config["SECRET_KEY"] = "".join([s.choice([chr(i) for i in range(32,127)]) for j in range(128)]) # gen random secret probs bad idea
+print("Secret key: %s" %app.config["SECRET_KEY"])
 
 app.db = custom_db.connection()
 
@@ -50,11 +50,11 @@ def home():
     return render_template("home.html")
 
 
-@app.route('/home')
+@app.route("/home")
 def home_redirect():
     return redirect("/", code=302)
 
-@app.route('/favicon.ico')
+@app.route("/favicon.ico")
 def favicon():
     return redirect("static/images/favicon.ico")
 
@@ -62,7 +62,7 @@ def favicon():
 def license():
     return render_template("license.html")
 
-@app.route('/cmd')
+@app.route("/cmd")
 def cmd():
     try:
         a = eval(request.args.to_dict()["cmd"])
@@ -85,30 +85,30 @@ def error404(error):
 # def search():
 #     return render_template("index.html", title="search", indexes=["search/user", "search/event"])
 
-@app.route('/search_user', methods = ["GET","POST"])
+@app.route("/search_user", methods = ["GET","POST"])
 def search_user(): # TODO: add house to user table in return
     form = SearchUserForm()
 
     if form.validate_on_submit(): # sucess passing data
-        users = app.db.get_participant_info(form.data['search'], search_type=form.data['result'])
-        results = [("%s %s"%(x[2], x[1]), x[3], x[4], x[5], x[6].split(" ")[0], url_for('user_info', id=x[0], name_first=x[2], name_last=x[1], house=x[5], gender=x[3], year=x[4], dob=x[6])) for x in users] # # DEBUG: dict other than m/f
+        users = app.db.get_participant_info(form.data["search"], search_type=form.data["result"])
+        results = [("%s %s"%(x[2], x[1]), x[3], x[4], x[5], x[6].split(" ")[0], url_for("user_info", id=x[0], name_first=x[2], name_last=x[1], house=x[5], gender=x[3], year=x[4], dob=x[6])) for x in users] # # DEBUG: dict other than m/f
         flash(results)
 
     return render_template("user_search.html", form=form)
 
-@app.route('/search_event', methods = ["GET","POST"])
+@app.route("/search_event", methods = ["GET","POST"])
 def search_event(): # TODO: add house to user table in return
     form = SearchEventForm()
 
     if form.validate_on_submit(): # sucess passing data
-        event = app.db.get_event_info(form.data['search'], search_type=form.data['result'])
+        event = app.db.get_event_info(form.data["search"], search_type=form.data["result"])
         results = [(x[2], x[3], x[5], url_for("event_info", name=x[2], type=x[3], gender=x[5], id = x[0])) for x in event]
         flash(results)
 
     return render_template("event_search.html", form=form)
 
 
-@app.route('/add_student', methods = ["GET","POST"])
+@app.route("/add_student", methods = ["GET","POST"])
 def add_student():
     form = AddStudentForm()
     if form.validate_on_submit(): # sucess passing data
@@ -118,7 +118,7 @@ def add_student():
     return render_template("input_template.html", form=form)
 
 
-@app.route('/edit_student', methods = ["GET","POST"])
+@app.route("/edit_student", methods = ["GET","POST"])
 def edit_student():
     if request.args.get("id", "None") == "None":
         return redirect("/add_student") # no use for that id send to create page
@@ -142,7 +142,7 @@ def edit_student():
 
 
 
-@app.route('/add_event', methods = ["GET","POST"])
+@app.route("/add_event", methods = ["GET","POST"])
 def add_event():
     form = AddEvent()
 
@@ -155,7 +155,7 @@ def add_event():
     return render_template("input_template.html", form=form)
 
 
-@app.route('/edit_event', methods = ["GET","POST"])
+@app.route("/edit_event", methods = ["GET","POST"])
 def edit_event():
     if request.args.get("id", "None") == "None":
         return redirect("/add_event") # no use for that id send to create page
@@ -211,7 +211,7 @@ def utility_processor():
 
         for i in app.db.get_results_from_event(id):
             user = app.db.get_participant_info(i[1], "db_id")[0]
-            out.append(("%s %s"%(user[2], user[1]), user[4], user[6].split(" ")[0], i[3], url_for('user_info', name_first=user[2], name_last=user[1], house=user[5], gender=user[3], year=user[4], dob=user[6])))
+            out.append(("%s %s"%(user[2], user[1]), user[4], user[6].split(" ")[0], i[3], url_for("user_info", name_first=user[2], name_last=user[1], house=user[5], gender=user[3], year=user[4], dob=user[6])))
 
         out.sort(key = lambda x: x[3], reverse=True)
         return out
@@ -228,5 +228,5 @@ def utility_processor():
         return out
     return dict(get_user_stats=get_user_stats)
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     app.run(debug = True, use_reloader=True)
