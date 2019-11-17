@@ -157,6 +157,11 @@ class connection():
     def play(self):
         return self.c.play()
 
+    def update(self):
+        self.pause()
+        # TODO: reload forms somehow
+        self.play()
+
 
     def commit(self):
         try:
