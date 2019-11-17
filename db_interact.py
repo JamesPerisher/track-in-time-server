@@ -25,6 +25,7 @@ import time
 import logging as log
 from threading import Thread
 import os, sys
+import importlib
 
 
 class EmptyPlacerholder():
@@ -123,7 +124,7 @@ class DatabaseManager(Thread):
                     raise e
 
 
-        print("killed: %s"%self)
+        log.debug("{0: <12} {1}".format("Killed:",  str(self)))
 
 
 class connection():
@@ -147,6 +148,7 @@ class connection():
         self.c.execute("PRAGMA foreign_keys = ON;")
         self.create_db()
         print("Started database")
+        log.debug("Started database")
 
     def kill(self):
         return self.c.kill()
@@ -159,7 +161,7 @@ class connection():
 
     def update(self):
         self.pause()
-        # TODO: reload forms somehow
+        importlib.reload(forms)
         self.play()
 
 
@@ -222,17 +224,21 @@ class connection():
         "score" : "ASC",
         "distance" : "DESC"
         }
-        print(order_type["timed"])
         return self.c.execute("SELECT * FROM results WHERE event_id = %s ORDER BY result %s LIMIT %s" % (id, order_type[self.get_event_info_by_id(id)[0][4]], amount))
 
     def update_participant(self, data, user_id):
         data.append(user_id)
         self.c.execute("UPDATE participants SET name_last=\"%s\", name_first=\"%s\", gender=\"%s\", year=\"%s\", house=\"%s\", dob=\"%s\", participant_id=\"%s\" WHERE id=\"%s\""%tuple(data))
+        self.commit()
+        self.c.update()
+
 
     def add_event(self, data):
         self.c.execute("INSERT INTO events VALUES (NULL, \"%s\", \"%s\", \"%s\", \"%s\", \"%s\")" % tuple(data))
-        log.info("{0: <12} {1}".format("Event added:",str(data)))
+        log.info("{0: <12} {1}".format("Event added:", str(data)))
         self.commit()
+        self.c.update()
+
 
     def get_events(self):
         return self.c.execute("SELECT * FROM events")
@@ -244,16 +250,17 @@ class connection():
         return self.c.execute("SELECT dob FROM participants")
 
     def add_participant(self, data):
-        print(data)
         sql_command = "INSERT INTO participants VALUES (NULL, \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\")" % tuple(data)
         self.c.execute(sql_command)
+        self.commit()
+        self.c.update()
 
-    def data_entry(self):
+
+    def data_entry(self, file_location="db/Book1.xlsx"):
 
         # “The real problem is that programmers have spent far too much time worrying about efficiency in the wrong places
         # and at the wrong times; premature optimization is the root of all evil (or at least most of it) in programming.” - Donald Knuth
-
-        read_file = (pd.read_excel('db/Book1.xlsx'))
+        read_file = (pd.read_excel("db/Book1.xlsx"))
         df = pd.DataFrame(read_file)
         index = read_file.index
         columns = (list(df.columns.values))
@@ -272,8 +279,10 @@ class connection():
             details = [details[0], details[1], convert.get(details[2].strip(),details[2]), details[3], details[4].lower(), details[6], details[7]]
             self.add_participant(details)
 
+        log.info("{0: <12} {1}".format("Added participants from:", file_location)
+        self.commit()
+        self.c.update()
 
-        self.c.commit()
 
     def get_participant_info(self, lookup, search_type="first_name"):  # search from names
         search = {
@@ -288,13 +297,6 @@ class connection():
         }
 
         return self.c.execute("SELECT * FROM participants WHERE \"%s\" = \"%s\" COLLATE NOCASE"% (lookup, search[search_type]))
-
-
-class test(object):
-    """docstring for test."""
-    def __init__(self, arg):
-        super(test, self).__init__()
-        self.arg = arg
 
 
 if __name__ == '__main__':
