@@ -238,7 +238,7 @@ class connection():
                     details.append("\"" + str(row[i]) + "\"")
                 else:
                     details.append("NULL")
-            details = [details[0], details[1], convert.get(details[2].strip(),details[2]), details[3], details[4], details[6], details[7]]
+            details = [details[0], details[1], convert.get(details[2].strip(),details[2]), details[3], details[4].lower(), details[6], details[7]]
             self.add_participant(details)
 
 
