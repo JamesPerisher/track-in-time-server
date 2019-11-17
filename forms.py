@@ -26,12 +26,12 @@ from wtforms.fields.html5 import DateField
 class Form(FlaskForm):
     submit = SubmitField("Submit")
 
-    def init(self, app, args, **kwargs):
-        super().init(args, **kwargs)
-        self.app = app
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
         self.elements = []
-        for i in self.dict:
-            el = self.dict[i]
+        for i in self.__dict__:
+            el = self.__dict__[i]
             if isinstance(el, Field) and not isinstance(el, SubmitField) and not isinstance(el, HiddenField) and not isinstance(el, RadioField):
 
                 self.elements.append(el)

@@ -108,17 +108,14 @@ def search_event(): # TODO: add house to user table in return
     return render_template("event_search.html", form=form)
 
 
-
-
-
 @app.route('/add_student', methods = ["GET","POST"])
 def add_student():
     form = AddStudentForm()
-
     if form.validate_on_submit(): # sucess passing data
         flash(("s", "Success Adding: %s %s"%(form.data.get("name_first"), form.data.get("name_last"))))
 
     return render_template("input_template.html", form=form)
+
 
 @app.route('/edit_student', methods = ["GET","POST"])
 def edit_student():
