@@ -60,7 +60,7 @@ class AddStudentForm(Form):
     name_last = StringField("Last Name", validators=[InputRequired()])
     class_ = SelectField("Class", choices=[("%s"%x[0],"%s"%x[0]) for x in app.get_data_types("year")])
     gender = SelectField("Gender", choices=[("male","Male"), ("female","Female"), ("other","Other")])
-    house = SelectField("House", choices=[("earth","Earth"), ("fire","Fire")]) # TODO: get from database
+    house = SelectField("House", choices=[("%s"%x[0],"%s"%x[0]) for x in app.get_data_types("house")]) # TODO: get from database
     dob = DateField("Date of Birth", validators=[InputRequired()])
 
     stu_id = StringField("Student id")
