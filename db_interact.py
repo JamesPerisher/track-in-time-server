@@ -45,7 +45,6 @@ class DatabaseManager(Thread):
         self.working = True
 
     def kill(self):
-        print("kill")
         self.working = False
 
     def execute(self, command, timeout=-99999):
