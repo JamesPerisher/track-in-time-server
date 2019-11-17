@@ -89,7 +89,7 @@ def search_user(): # TODO: add house to user table in return
 
     if form.validate_on_submit(): # sucess passing data
         users = app.db.get_participant_info(form.data['search'], search_type=form.data['result'])
-        results = [("%s %s"%(x[2], x[1]), x[4], x[5], x[6].split(" ")[0], url_for('user_info', name_first=x[2], name_last=x[1], house=x[5], gender=x[3], year=x[4], dob=x[6])) for x in users] # # DEBUG: dict other than m/f
+        results = [("%s %s"%(x[2], x[1]), x[3], x[4], x[5], x[6].split(" ")[0], url_for('user_info', name_first=x[2], name_last=x[1], house=x[5], gender=x[3], year=x[4], dob=x[6])) for x in users] # # DEBUG: dict other than m/f
         flash(results)
 
     return render_template("user_search.html", form=form)
@@ -150,6 +150,10 @@ def events():
 def utility_processor():
     def get_event_stats(id):
         out = []
+
+        if id == None:
+            return out
+            
         for i in app.db.get_results_from_event(id):
             user = app.db.get_participant_info(i[1], "db_id")[0]
             out.append(("%s %s"%(user[2], user[1]), user[4], user[6].split(" ")[0], i[3], url_for('user_info', name_first=user[2], name_last=user[1], house=user[5], gender=user[3], year=user[4], dob=user[6])))
