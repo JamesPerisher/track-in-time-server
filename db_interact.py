@@ -129,7 +129,7 @@ class connection():
         self.create_db()
         print("Started database")
 
-    def kill(slef):
+    def kill(self):
         self.c.kill()
 
 
