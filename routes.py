@@ -89,7 +89,8 @@ def search_user(): # TODO: add house to user table in return
 
     if form.validate_on_submit(): # sucess passing data
         users = app.db.get_participant_info(form.data['search'], search_type=form.data['result'])
-        results = [("%s %s"%(x[2], x[1]), x[3], x[4], x[5], x[6].split(" ")[0], url_for('user_info', name_first=x[2], name_last=x[1], house=x[5], gender=x[3], year=x[4], dob=x[6])) for x in users] # # DEBUG: dict other than m/f
+        # datetime.datetime.fromtimestamp().strftime("%d-%b-%Y")
+        results = [("%s %s"%(x[2], x[1]), x[3], x[4], x[5], x[6].split(" ")[0], ) for x in users] # # DEBUG: dict other than m/f
         flash(results)
 
     return render_template("user_search.html", form=form)
@@ -161,6 +162,17 @@ def utility_processor():
         out.sort(key = lambda x: x[3], reverse=True)
         return out
     return dict(get_event_stats=get_event_stats)
+
+@app.context_processor
+def utility_processor():
+    def get_user_stats(id):
+        out = []
+
+        if id == None:
+            return out
+
+        return out
+    return dict(get_user_stats=get_user_stats)
 
 if __name__ == '__main__':
     app.run(debug = True, use_reloader=True)
