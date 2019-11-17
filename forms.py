@@ -58,7 +58,7 @@ class SearchEventForm(Form):
 class AddStudentForm(Form):
     name_first = StringField("First Name", validators=[InputRequired()])
     name_last = StringField("Last Name", validators=[InputRequired()])
-    clas = SelectField("Class", choices=[("n_1","n_1"), ("n_2","n_2"), ("n_3","n_3"), ("n_5","n_5")])
+    class_ = SelectField("Class", choices=[("n_1","n_1"), ("n_2","n_2"), ("n_3","n_3"), ("n_5","n_5")])
     gender = SelectField("Gender", choices=[("male","Male"), ("female","Female"), ("other","Other"), ("attack","Attack Helicopter")])
     house = SelectField("House", choices=[("earth","Earth"), ("fire","Fire")]) # TODO: get from database
     dob = DateField("Date of Birth", validators=[InputRequired()])
