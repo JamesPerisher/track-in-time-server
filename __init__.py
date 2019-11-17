@@ -33,7 +33,6 @@ if __name__ == '__main__':
     m.start()
     time.sleep(1)
     app.db.start()
-    time.sleep(2)
 
     if input("Add users Y/N > ").strip().lower() == "y":
         app.db.data_entry()
