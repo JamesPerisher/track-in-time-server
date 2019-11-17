@@ -58,8 +58,8 @@ class SearchEventForm(Form):
 class AddStudentForm(Form):
     name_first = StringField("First Name", validators=[InputRequired()])
     name_last = StringField("Last Name", validators=[InputRequired()])
-    class_ = SelectField("Class", choices=[("n_1","n_1"), ("n_2","n_2"), ("n_3","n_3"), ("n_5","n_5")])
-    gender = SelectField("Gender", choices=[("male","Male"), ("female","Female"), ("other","Other"), ("attack","Attack Helicopter")])
+    class_ = SelectField("Class", choices=[("%s"%x[0],"%s"%x[0]) for x in app.get_data_types("year")])
+    gender = SelectField("Gender", choices=[("male","Male"), ("female","Female"), ("other","Other")])
     house = SelectField("House", choices=[("earth","Earth"), ("fire","Fire")]) # TODO: get from database
     dob = DateField("Date of Birth", validators=[InputRequired()])
 
@@ -70,7 +70,7 @@ class AddEvent(Form):
     name_first = StringField("Event Name", validators=[InputRequired()])
     gender = SelectField("Gender", choices=[("Male","Male"), ("Female","Female"), ("Other","Other")])
     age_group = SelectField("AgeGroup", choices=[("%s"%x[0],"%s"%x[0]) for x in app.get_data_types("year")])
-    event_type = SelectField("Event type", choices=[("t","Timed"), ("s","Scored"), ("p","Placed"), ("tp","Timed and Placed"), ])
+    event_type = SelectField("Event type", choices=[("t","Timed"), ("s","Scored"), ("p","Placed"), ])
 
 class AddAgeGroups(Form):
     name_first = StringField("Name / Associated year group", validators=[InputRequired()])
