@@ -208,7 +208,7 @@ class connection():
         return self.c.execute("SELECT * FROM events")
 
     def get_event_info(self, data, search_type="name"): # name, track_field, gender
-        return self.c.execute("SELECT * FROM events WHERE \"%s\" = \"%s\"" %(search_type, data))
+        return self.c.execute("SELECT * FROM events WHERE \"%s\" = \"%s\" COLLATE NOCASE" %(search_type, data))
 
     def get_dates(self):
         return self.c.execute("SELECT dob FROM participants")
