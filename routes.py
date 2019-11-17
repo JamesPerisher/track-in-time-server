@@ -135,7 +135,8 @@ def edit_student():
     form = AddStudentForm(ImmutableMultiDict(a))
 
     if form.validate_on_submit(): # sucess passing data
-        flash(("s", "Success editing: %s %s"%(user[2],user[1]))) # TODO: db stuff
+        app.db.update_participant([form.data.get("name_last"),form.data.get("name_first"),form.data.get("gender"),78,form.data.get("house"),str(form.data.get("dob")), form.data.get("stu_id")], request.args.get("id")) # TODO: fix year
+        flash(("s", "Success editing: %s %s"%(form.data.get("name_first"),form.data.get("name_last")))) # TODO: db stuff
 
     return render_template("input_template.html", form=form)
 
