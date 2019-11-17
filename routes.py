@@ -189,5 +189,16 @@ def utility_processor():
         return out
     return dict(get_event_stats=get_event_stats)
 
+@app.context_processor
+def utility_processor():
+    def get_user_stats(id):
+        out = []
+
+        if id == None:
+            return out
+
+        return out
+    return dict(get_user_stats=get_user_stats)
+
 if __name__ == '__main__':
     app.run(debug = True, use_reloader=True)

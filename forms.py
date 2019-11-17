@@ -26,12 +26,12 @@ from wtforms.fields.html5 import DateField
 class Form(FlaskForm):
     submit = SubmitField("Submit")
 
-    def __init__(self, app, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def init(self, app, args, **kwargs):
+        super().init(args, **kwargs)
         self.app = app
         self.elements = []
-        for i in self.__dict__:
-            el = self.__dict__[i]
+        for i in self.dict:
+            el = self.dict[i]
             if isinstance(el, Field) and not isinstance(el, SubmitField) and not isinstance(el, HiddenField) and not isinstance(el, RadioField):
 
                 self.elements.append(el)
@@ -62,7 +62,7 @@ class AddStudentForm(Form):
 
 class AddEvent(Form):
     name_first = StringField("Event Name", validators=[InputRequired()])
-    gender = SelectField("Gender", choices=[("male","Male"), ("female","Female"), ("other","Other"), ("attack","Attack Helicopter")])
+    gender = SelectField("Gender", choices=[("Male","Male"), ("Female","Female"), ("Other","Other")])
     age_group = SelectField("AgeGroup", choices=[("age1-age2","age1-age2"), ("age2-age3","age2-age3")])
     event_type = SelectField("Event type", choices=[("t","Timed"), ("s","Scored"), ("p","Placed"), ("tp","Timed and Placed"), ("ts","Timed and Scored"), ("sp","Scored and Placed"), ])
 
