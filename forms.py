@@ -27,7 +27,7 @@ except (ModuleNotFoundError, ImportError):
     print("Database import error")
 
 app = custom_db.connection()
-app.start()
+app.start() # start db thread to get inital config data
 
 class Form(FlaskForm):
     submit = SubmitField("Submit")
@@ -78,4 +78,4 @@ class AddAgeGroups(Form):
     end_date = DateField("Age group start end")
 
 
-app.kill()
+app.kill() # kill thread to allow main db thread to not have errors
