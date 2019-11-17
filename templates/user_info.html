@@ -27,12 +27,13 @@ along with Track In Time Server.  If not, see <https://www.gnu.org/licenses/>. -
 
 {% block content %}
 
-<div class="input-container">
-  <h1>{{ request.args.get('name_first') }} {{ request.args.get('name_last') }}</h1>
-  <h2>{{ request.args.get('house') }}</h2>
-  <h2> {{ request.args.get('gender') }}</h2>
-  <h1>{{ request.args.get('year') }}</h1>
-  <h2>{{ request.args.get('dob') }}</h2>
+<div class="input-container white_text">
+  <h1 class="name">{{ request.args.get('name_first') }} {{ request.args.get('name_last') }}</h1>
+  <h2 class="info_text">House: {{ request.args.get('house') }}<br>
+  Gender: {{ request.args.get('gender') }}<br>
+  Year Group: {{ request.args.get('year') }}<br>
+  Date Of Birth: {{ request.args.get('dob') }}</h2>
+  
 </div>
 
 
