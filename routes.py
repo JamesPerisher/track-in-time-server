@@ -85,7 +85,7 @@ def error404(error):
 
 @app.route('/search_user', methods = ["GET","POST"])
 def search_user(): # TODO: add house to user table in return
-    form = SearchUserForm()
+    form = SearchUserForm(app)
 
     if form.validate_on_submit(): # sucess passing data
         users = app.db.get_participant_info(form.data['search'], search_type=form.data['result'])
@@ -97,7 +97,7 @@ def search_user(): # TODO: add house to user table in return
 
 @app.route('/search_event', methods = ["GET","POST"])
 def search_event(): # TODO: add house to user table in return
-    form = SearchEventForm()
+    form = SearchEventForm(app)
 
     if form.validate_on_submit(): # sucess passing data
         event = app.db.get_event_info(form.data['search'], search_type=form.data['result'])
@@ -109,7 +109,7 @@ def search_event(): # TODO: add house to user table in return
 
 @app.route('/add_student', methods = ["GET","POST"])
 def add_student():
-    form = AddStudentForm()
+    form = AddStudentForm(app)
     if form.validate_on_submit(): # sucess passing data
         return redirect('/home')
 
@@ -118,7 +118,7 @@ def add_student():
 
 @app.route('/add_event', methods = ["GET","POST"])
 def add_event():
-    form = AddEvent()
+    form = AddEvent(app)
 
     if form.validate_on_submit(): # sucess passing data
         return redirect('/home')
