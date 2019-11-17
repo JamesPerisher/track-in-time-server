@@ -65,10 +65,10 @@ class AddStudentForm(Form):
     stu_id = StringField("Student id")
 
 
-class AddEvent(Form, app):
+class AddEvent(Form):
     name_first = StringField("Event Name", validators=[InputRequired()])
     gender = SelectField("Gender", choices=[("Male","Male"), ("Female","Female"), ("Other","Other")])
-    age_group = SelectField("AgeGroup", choices=[app.db.get_data_types("year")])
+    age_group = SelectField("AgeGroup", choices=[])
     event_type = SelectField("Event type", choices=[("t","Timed"), ("s","Scored"), ("p","Placed"), ("tp","Timed and Placed"), ("ts","Timed and Scored"), ("sp","Scored and Placed"), ])
 
 class AddAgeGroups(Form):
