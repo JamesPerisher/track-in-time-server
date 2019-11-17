@@ -112,7 +112,7 @@ def search_event(): # TODO: add house to user table in return
 def add_student():
     form = AddStudentForm()
     if form.validate_on_submit(): # sucess passing data
-        flash(("s", "Success Adding: %s %s"%(form.data.get("name_first"), form.data.get("name_last"))))
+        flash(("s", "Success Adding: %s %s"%(form.data.get("name_first"), form.data.get("name_last")))) # TODO: db stuff
 
     return render_template("input_template.html", form=form)
 
@@ -120,20 +120,21 @@ def add_student():
 @app.route('/edit_student', methods = ["GET","POST"])
 def edit_student():
     if request.args.get("id", "None") == "None":
-        return redirect("/add_student")
+        return redirect("/add_student") # no use for that id send to create page
+    try:
+        user = app.db.get_participant_info(request.args.get("id"), "db_id")[0]
+    except IndexError:
+        return redirect("/add_student") # no use for that id send to create page
 
 
-    user = app.db.get_participant_info(request.args.get("id"), "db_id")[0]
     a = {"name_first":user[2], "name_last":user[1], "clas":user[4], "gender":user[3], "house":user[5], "dob":user[6], "stu_id":user[7]}
     b = {k: v for k, v in request.form.items() if v is not ""}
-    a.update(b)
+    a.update(b) # use new form data to override default
+
     form = AddStudentForm(ImmutableMultiDict(a))
 
-    print(request.form)
-    print(form.data)
-
     if form.validate_on_submit(): # sucess passing data
-        flash(("s", "Success editing: %s %s"%(user[2],user[1])))
+        flash(("s", "Success editing: %s %s"%(user[2],user[1]))) # TODO: db stuff
 
     return render_template("input_template.html", form=form)
 
@@ -147,6 +148,31 @@ def add_event():
         return redirect('/home')
 
     return render_template("input_template.html", form=form)
+
+
+@app.route('/edit_event', methods = ["GET","POST"])
+def edit_event():
+    if request.args.get("id", "None") == "None":
+        return redirect("/add_event") # no use for that id send to create page
+    try:
+        event = app.db.get_event_info(request.args.get("id"), "id")[0]
+
+    except IndexError:
+        return redirect("/add_event") # no use for that id send to create page
+
+
+    a = {"name":event[2], "gender":event[5], "age_group":0, "event_type":event[3]} # TODO: age_group
+    b = {k: v for k, v in request.form.items() if v is not ""}
+    a.update(b) # use new form data to override default
+
+    form = AddEvent(ImmutableMultiDict(a))
+
+    if form.validate_on_submit(): # sucess passing data
+        flash(("s", "Success editing: %s %s"%(user[2],user[1]))) # TODO: db stuff
+
+    return render_template("input_template.html", form=form)
+
+
 
 @app.route("/user_info")
 def user_info():
