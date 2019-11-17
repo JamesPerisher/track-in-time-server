@@ -26,8 +26,8 @@ from wtforms.fields.html5 import DateField
 class Form(FlaskForm):
     submit = SubmitField("Submit")
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         self.elements = []
         for i in self.__dict__:
             el = self.__dict__[i]
@@ -51,9 +51,10 @@ class SearchEventForm(Form):
 class AddStudentForm(Form):
     name_first = StringField("First Name", validators=[InputRequired()])
     name_last = StringField("Last Name", validators=[InputRequired()])
+    clas = SelectField("Class", choices=[("n_1","n_1"), ("n_2","n_2"), ("n_3","n_3"), ("n_5","n_5")])
     gender = SelectField("Gender", choices=[("male","Male"), ("female","Female"), ("other","Other"), ("attack","Attack Helicopter")])
-    house = SelectField("House", choices=[{"earth":"Earth", "fire":"Fire"}]) # TODO: get from database
-    dob = DateField("Date of Birth")
+    house = SelectField("House", choices=[("earth","Earth"), ("fire","Fire")]) # TODO: get from database
+    dob = DateField("Date of Birth", validators=[InputRequired()])
 
     stu_id = StringField("Student id")
 
