@@ -21,7 +21,12 @@ from wtforms.fields import Field
 from wtforms import StringField, PasswordField, BooleanField, SelectField, SubmitField, HiddenField, RadioField
 from wtforms.validators import InputRequired
 from wtforms.fields.html5 import DateField
+try:
+    import db_interact as custom_db
+except (ModuleNotFoundError, ImportError):
+    print("Database import error")
 
+app = custom_db.connection()
 
 class Form(FlaskForm):
     submit = SubmitField("Submit")
@@ -59,10 +64,10 @@ class AddStudentForm(Form):
     stu_id = StringField("Student id")
 
 
-class AddEvent(Form):
+class AddEvent(Form, app):
     name_first = StringField("Event Name", validators=[InputRequired()])
     gender = SelectField("Gender", choices=[("Male","Male"), ("Female","Female"), ("Other","Other")])
-    age_group = SelectField("AgeGroup", choices=[("age1-age2","age1-age2"), ("age2-age3","age2-age3")])
+    age_group = SelectField("AgeGroup", choices=[app.db.get_data_types("year")])
     event_type = SelectField("Event type", choices=[("t","Timed"), ("s","Scored"), ("p","Placed"), ("tp","Timed and Placed"), ("ts","Timed and Scored"), ("sp","Scored and Placed"), ])
 
 class AddAgeGroups(Form):
