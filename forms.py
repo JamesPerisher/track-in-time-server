@@ -70,7 +70,7 @@ class AddEvent(Form):
     name_first = StringField("Event Name", validators=[InputRequired()])
     gender = SelectField("Gender", choices=[("Male","Male"), ("Female","Female"), ("Other","Other")])
     age_group = SelectField("AgeGroup", choices=[("%s"%x[0],"%s"%x[0]) for x in app.get_data_types("year")])
-    event_type = SelectField("Event type", choices=[("t","Timed"), ("s","Scored"), ("p","Placed"), ("tp","Timed and Placed"), ("ts","Timed and Scored"), ("sp","Scored and Placed"), ])
+    event_type = SelectField("Event type", choices=[("t","Timed"), ("s","Scored"), ("p","Placed"), ("tp","Timed and Placed"), ])
 
 class AddAgeGroups(Form):
     name_first = StringField("Name / Associated year group", validators=[InputRequired()])
