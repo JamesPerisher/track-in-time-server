@@ -33,6 +33,7 @@ along with Track In Time Server.  If not, see <https://www.gnu.org/licenses/>. -
   <h2> {{ request.args.get('gender') }}</h2>
   <h1>{{ request.args.get('year') }}</h1>
   <h2>{{ request.args.get('dob') }}</h2>
+  <a href="/add_student?id={{request.args.get('id')}}">Edit info</a>
 </div>
 
 

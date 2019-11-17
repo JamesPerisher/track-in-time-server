@@ -26,9 +26,13 @@ along with Track In Time Server.  If not, see <https://www.gnu.org/licenses/>. -
 
 {% block content %}
 
-{% if request.args.get('error') %}<p class="error">{{ request.args.get('error') }}</p> {% endif %}
-{% if request.args.get('success') %}<p class="success">{{ request.args.get('success') }}</p> {% endif %}
-
+{% for i in get_flashed_messages() %}
+{% if i[0] == "s" %}
+<span class="success"> {{ i[1] }}</span>
+{% else %}
+<span class="error"> {{ i[1] }}</span>
+{% endif %}
+{% endfor %}
 
 <div class="input-container">
   <br>

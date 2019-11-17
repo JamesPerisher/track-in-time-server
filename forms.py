@@ -26,8 +26,9 @@ from wtforms.fields.html5 import DateField
 class Form(FlaskForm):
     submit = SubmitField("Submit")
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, app, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.app = app
         self.elements = []
         for i in self.__dict__:
             el = self.__dict__[i]

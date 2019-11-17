@@ -36,9 +36,9 @@ Feel free to create a fork of this repository and modify it. If you are to redis
 
 ## Authors
 
-* **JKook** - [GitHub](https://github.com/JKookaburra)
-
 * **PaulN07** - [GitHub](https://github.com/JamesPerisher)
+
+* **JKook** - [GitHub](https://github.com/JKookaburra)
 
 See also the list of [contributors](https://github.com/JamesPerisher/track-in-time-server/graphs/contributors) who participated in this project.
 
@@ -54,7 +54,7 @@ This project is licensed under the GNU Affero General Public License v3.0 - see 
 
 If you would like to donate to us that would be greatly appreciated.
 
-* [Paypal](https://www.paypal.me/JKookStudios/5USD)
+* [Paypal](https://www.paypal.me/pauln07/5USD)
 
 * If you are to donate a large amount please get in contact with one of us.
 

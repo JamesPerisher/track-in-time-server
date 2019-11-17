@@ -17,7 +17,9 @@
 
 from flask import Flask
 from flask import render_template, redirect, make_response, request, url_for, flash
+
 from werkzeug.exceptions import HTTPException
+from werkzeug.datastructures import ImmutableMultiDict
 
 # import logging as log
 import os
@@ -89,7 +91,7 @@ def search_user(): # TODO: add house to user table in return
 
     if form.validate_on_submit(): # sucess passing data
         users = app.db.get_participant_info(form.data['search'], search_type=form.data['result'])
-        results = [("%s %s"%(x[2], x[1]), x[3], x[4], x[5], x[6].split(" ")[0], url_for('user_info', name_first=x[2], name_last=x[1], house=x[5], gender=x[3], year=x[4], dob=x[6])) for x in users] # # DEBUG: dict other than m/f
+        results = [("%s %s"%(x[2], x[1]), x[3], x[4], x[5], x[6].split(" ")[0], url_for('user_info', id=x[0], name_first=x[2], name_last=x[1], house=x[5], gender=x[3], year=x[4], dob=x[6])) for x in users] # # DEBUG: dict other than m/f
         flash(results)
 
     return render_template("user_search.html", form=form)
@@ -106,13 +108,38 @@ def search_event(): # TODO: add house to user table in return
     return render_template("event_search.html", form=form)
 
 
+
+
+
 @app.route('/add_student', methods = ["GET","POST"])
 def add_student():
     form = AddStudentForm()
+
     if form.validate_on_submit(): # sucess passing data
-        return redirect('/home')
+        flash(("s", "Success Adding: %s %s"%(form.data.get("name_first"), form.data.get("name_last"))))
 
     return render_template("input_template.html", form=form)
+
+@app.route('/edit_student', methods = ["GET","POST"])
+def edit_student():
+    if request.args.get("id", "None") == "None":
+        return redirect("/add_student")
+
+
+    user = app.db.get_participant_info(request.args.get("id"), "db_id")[0]
+    a = {"name_first":user[2], "name_last":user[1], "clas":user[4], "gender":user[3], "house":user[5], "dob":user[6], "stu_id":user[7]}
+    b = {k: v for k, v in request.form.items() if v is not ""}
+    a.update(b)
+    form = AddStudentForm(ImmutableMultiDict(a))
+
+    print(request.form)
+    print(form.data)
+
+    if form.validate_on_submit(): # sucess passing data
+        flash(("s", "Success editing: %s %s"%(user[2],user[1])))
+
+    return render_template("input_template.html", form=form)
+
 
 
 @app.route('/add_event', methods = ["GET","POST"])
@@ -153,7 +180,7 @@ def utility_processor():
 
         if id == None:
             return out
-            
+
         for i in app.db.get_results_from_event(id):
             user = app.db.get_participant_info(i[1], "db_id")[0]
             out.append(("%s %s"%(user[2], user[1]), user[4], user[6].split(" ")[0], i[3], url_for('user_info', name_first=user[2], name_last=user[1], house=user[5], gender=user[3], year=user[4], dob=user[6])))
