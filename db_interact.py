@@ -188,8 +188,8 @@ class connection():
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             time TEXT,
             name TEXT,
-            track_field TEXT,
-            timed_score_distance INTEGER,
+            age_group TEXT,
+            event_type INTEGER,
             gender TEXT);"""
         self.c.execute(sql_command)
 
