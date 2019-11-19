@@ -43,3 +43,15 @@ a {
 a:hover {
   color: #00007e;
 }
+
+.white_text{
+  color: #e3e3e3;
+}
+
+.name {
+  font-size: 60px;
+}
+
+.info_text {
+
+}
