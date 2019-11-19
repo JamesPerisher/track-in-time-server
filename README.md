@@ -1,6 +1,6 @@
 # Track In Time Server
 
-Track In Time Server is a python web server used for carnivals with recording times and participants.
+Track In Time Server is a python web server used for sporting events with recording times and participants.
 
 ## Getting Started
 
