@@ -230,14 +230,14 @@ class connection():
         data.append(user_id)
         self.c.execute("UPDATE participants SET name_last=\"%s\", name_first=\"%s\", gender=\"%s\", year=\"%s\", house=\"%s\", dob=\"%s\", participant_id=\"%s\" WHERE id=\"%s\""%tuple(data))
         self.commit()
-        self.c.update()
+        self.update()
 
 
     def add_event(self, data):
         self.c.execute("INSERT INTO events VALUES (NULL, \"%s\", \"%s\", \"%s\", \"%s\", \"%s\")" % tuple(data))
         log.info("{0: <12} {1}".format("Event added:", str(data)))
         self.commit()
-        self.c.update()
+        self.update()
 
 
     def get_events(self):
@@ -253,7 +253,7 @@ class connection():
         sql_command = "INSERT INTO participants VALUES (NULL, \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\")" % tuple(data)
         self.c.execute(sql_command)
         self.commit()
-        self.c.update()
+        self.update()
 
 
     def data_entry(self, file_location="db/Book1.xlsx"):
@@ -281,7 +281,7 @@ class connection():
 
         log.info("{0: <12} {1}".format("Added participants from:", file_location))
         self.commit()
-        self.c.update()
+        self.update()
 
 
     def get_participant_info(self, lookup, search_type="first_name"):  # search from names
@@ -343,7 +343,7 @@ if __name__ == '__main__':
     for i in winners:
         print(c.get_participant_info(i[1], "db_id")[0], i[3])
 
-    # print(c.update_participant(["1", "2", "3", "4", "5", "6", "7"], "100"))
+    # print(self.update_participant(["1", "2", "3", "4", "5", "6", "7"], "100"))
     # """UPDATE participants SET name_last=\"%s\", name_first=\"%s\", gender=\"%s\", year=\"%s\", house=\"%s\", dob=\"%s\", participant_id=\"%s\" WHERE id=\"%s\""""%(data)
     # c.add_age_groups()
 
