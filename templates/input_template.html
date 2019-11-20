@@ -20,6 +20,7 @@ along with Track In Time Server.  If not, see <https://www.gnu.org/licenses/>. -
 {% block head %}
 {{ super() }}
 <link type="text/css" rel="stylesheet" href="static/css/add_values.css" />
+<script src="static/js/select_change.js"></script>
 {% endblock %}
 
 
@@ -43,7 +44,7 @@ along with Track In Time Server.  If not, see <https://www.gnu.org/licenses/>. -
     <div class="element">
       <p>{{ i.label }}</p>
       <!-- { i(id = "form-id%s"%n) } -->
-      {{ i() }}
+      {{ i(onchange="myfunction(\"%s\");"%i.id) }}
       {% for error in i.errors %}
       <span class="error"> {{ error }}</span>
       {% endfor %}

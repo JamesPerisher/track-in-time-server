@@ -21,10 +21,7 @@ from wtforms.fields import Field
 from wtforms import StringField, PasswordField, BooleanField, SelectField, SubmitField, HiddenField, RadioField
 from wtforms.validators import InputRequired
 from wtforms.fields.html5 import DateField
-try:
-    import db_interact as custom_db
-except (ModuleNotFoundError, ImportError):
-    print("Database import error")
+import db_interact as custom_db
 
 app = custom_db.connection()
 app.start() # start db thread to get inital config data

@@ -279,7 +279,7 @@ class connection():
             details = [details[0], details[1], convert.get(details[2].strip(),details[2]), details[3], details[4].lower(), details[6], details[7]]
             self.add_participant(details)
 
-        log.info("{0: <12} {1}".format("Added participants from:", file_location)
+        log.info("{0: <12} {1}".format("Added participants from:", file_location))
         self.commit()
         self.c.update()
 
