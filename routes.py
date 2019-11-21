@@ -232,8 +232,7 @@ def results():
 
 @app.route("/events")
 def events():
-    return render_template("results.html", data=[("100m sprint", "attack helicopter", ""), ("dave", "10000"), ("dave", "10000"), ("dave", "10000"), ("dave", "10000"), ], event_name="100m sprint", gender="attack helicopter", year="10")
-
+    return render_template("results.html", data=[(x[0], x[2], x[5], x[3], url_for("event_info", name=x[2], type=x[3], gender=x[5], age_group=x[4], id = x[0])) for x in app.db.get_events()])
 
 
 @app.context_processor
