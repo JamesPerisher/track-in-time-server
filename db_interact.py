@@ -219,7 +219,6 @@ class connection():
         "d" : "DESC",
         "distance" : "DESC"
         }
-        print(self.get_event_info(event_id, "id"))
         return self.c.execute("SELECT * FROM results WHERE event_id = %s ORDER BY result %s" % (event_id, order_type[self.get_event_info(event_id, "id")[0][4]]))
 
     def get_winners_from_event(self, event_id, amount=5):
@@ -238,7 +237,7 @@ class connection():
         data.append(user_id)
         self.c.execute("UPDATE participants SET name_last=\"%s\", name_first=\"%s\", gender=\"%s\", year=\"%s\", house=\"%s\", dob=\"%s\", participant_id=\"%s\" WHERE id=\"%s\""%tuple(data))
         self.commit()
-        self.update()
+
 
     def update_results(self, user_id, event_id, result):
         self.c.execute("UPDATE results SET event_id=\"%s\" result=\"%s\" WHERE id=\"%s\""%(event_id, result, user_id))
@@ -248,14 +247,13 @@ class connection():
         self.c.execute("INSERT INTO events VALUES (NULL, \"%s\", \"%s\", \"%s\", \"%s\", \"%s\")" % tuple(data))
         log.info("{0: <12} {1}".format("Event added:", str(data)))
         self.commit()
-        self.update()
+
 
 
     def get_events(self):
         return self.c.execute("SELECT * FROM events")
 
     def get_event_info(self, data, search_type="name"): # name, track_field, gender
-        print(data, search_type)
         return self.c.execute("SELECT * FROM events WHERE \"%s\" = \"%s\" COLLATE NOCASE" %(search_type, data))
 
     def get_dates(self):
@@ -265,7 +263,7 @@ class connection():
         sql_command = "INSERT INTO participants VALUES (NULL, \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\")" % tuple(data)
         self.c.execute(sql_command)
         self.commit()
-        self.update()
+
 
 
     def data_entry(self, file_location="db/Book1.xlsx"):
@@ -293,7 +291,7 @@ class connection():
 
         log.info("{0: <12} {1}".format("Added participants from:", file_location))
         self.commit()
-        self.update()
+
 
 
     def get_participant_info(self, lookup, search_type="first_name"):  # search from names
