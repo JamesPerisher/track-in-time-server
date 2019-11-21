@@ -28,23 +28,32 @@ along with Track In Time Server.  If not, see <https://www.gnu.org/licenses/>. -
 {% block content %}
 
 <div class="input-container">
-  <h1>Results for: {{ event_name }} {{ gender }} {{ year }}</h1>
+  {% for i in data %}
+
+  <br><br>
+  <h1>Results for: {{ i[1] }} {{ i[2] }} {{ i[3] }}</h1>
   <table>
     <thead>
-      <tr>
-        <th>Name</th>
-        <th>result</th>
-      </tr>
+      <th><b>Name</b></th>
+      <th><b>Year</b></th>
+      <th><b>Date of birth</b></th>
+      <th><b>Result</b></th>
+      <th><b><a href="{{ i[4] }}">Edit table</a></b></th>
     </thead>
     <tbody>
-      {% for i in data %}
+      {% for i in get_event_stats(i[0]) %}
       <tr>
-        <td>{{ i[0] }}</td>
-        <td>{{ i[1] }}</td>
+        <th>{{ i[0] }}</th>
+        <th>{{ i[1] }}</th>
+        <th>{{ i[2] }}</th>
+        <th>{{ i[3] }}</th>
+        <th><a href="{{i[4]}}">Select</a></th>
       </tr>
       {% endfor %}
     </tbody>
   </table>
+
+  {% endfor %}
 </div>
 
 
