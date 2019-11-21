@@ -231,8 +231,10 @@ def event_info():
         for i in app.db.get_results_from_event(event_id):
             if str(i[1]) == user_id:
                 f = True
-                app.db.update_results(user_id, event_id, form.data["result"])
-        if not f:
+                break
+        if f:
+            app.db.update_results(user_id, event_id, form.data["result"])
+        else:
             app.db.insert_into_results((user_id, event_id, form.data["result"]))
 
     return render_template("event_info.html", form=form)

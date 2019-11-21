@@ -92,6 +92,7 @@ class DatabaseManager(Thread):
                     ee = None
 
                     try:
+                        log.info("SQL Command: %s" %current[1])
                         self.crsr.execute(current[1])
                     except Exception as e:
                         # print("before e.args")
