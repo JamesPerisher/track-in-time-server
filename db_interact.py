@@ -44,26 +44,12 @@ class DatabaseManager(Thread):
 
         self.working = True
         self.doing = True
-        self.paused = False
 
     def kill(self):
+        log.info("killed thread: %s"%str(self))
         self.working = False
 
-    def pause(self):
-        self.paused = True
-
-        while self.doing:
-            time.sleep(0.1)
-        return
-
-    def play(self):
-        self.paused = False
-
     def execute(self, command, timeout=-99999):
-        if self.paused:
-            while not self.paused:
-                time.sleep(0.1)
-
         timeout = self.timeout if timeout == -99999 else timeout
         temp_key = time.time()
         n = temp_key + self.timeout
@@ -86,6 +72,7 @@ class DatabaseManager(Thread):
         self.execute(":x:x:commit:x:x:")
 
     def run(self): # auto colled on Thread start
+        log.info("Started thread: %s"%str(self))
         self.conn = sqlite3.connect(self.file)
         self.crsr = self.conn.cursor()
 
@@ -152,12 +139,6 @@ class connection():
 
     def kill(self):
         return self.c.kill()
-
-    def pause(self):
-        return self.c.pause()
-
-    def play(self):
-        return self.c.play()
 
     def commit(self):
         try:
