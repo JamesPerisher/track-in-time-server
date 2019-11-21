@@ -21,6 +21,7 @@ from flask import render_template, redirect, make_response, request, url_for, fl
 from werkzeug.exceptions import HTTPException
 from werkzeug.datastructures import ImmutableMultiDict
 
+from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SelectField, SubmitField, HiddenField, RadioField
 from wtforms.validators import InputRequired
 
@@ -87,7 +88,7 @@ def error404(error):
 
 
 @app.route("/search_user", methods = ["GET","POST"])
-def search_user(): # TODO: add house to user table in return
+def search_user():
     form = forms.SearchUserForm()
 
     if form.validate_on_submit(): # sucess passing data
@@ -98,12 +99,12 @@ def search_user(): # TODO: add house to user table in return
     return render_template("user_search.html", form=form)
 
 @app.route("/search_event", methods = ["GET","POST"])
-def search_event(): # TODO: add house to user table in return
+def search_event():
     form = forms.SearchEventForm()
 
     if form.validate_on_submit(): # sucess passing data
         event = app.db.get_event_info(form.data["search"], search_type=form.data["result"])
-        results = [(x[2], x[3], x[5], url_for("event_info", name=x[2], type=x[3], gender=x[5], id = x[0])) for x in event]
+        results = [(x[2], x[3], x[5], url_for("event_info", name=x[2], type=x[3], gender=x[5], age_group=x[4], id = x[0])) for x in event]
         flash(results)
 
     return render_template("event_search.html", form=form)
@@ -203,9 +204,23 @@ def edit_event():
 def user_info():
     return render_template("user_info.html")
 
-@app.route("/event_info")
+@app.route("/event_info", methods=["GET","POST"])
 def event_info():
-    return render_template("event_info.html")
+    class AddResults(FlaskForm):
+        if request.args.get("age_group","None") == "None":
+            name = SelectField("Class", choices=[], validators=[InputRequired()])
+        else:
+            idiots = [("id_%s"%x[0], "%s %s %s %s"%(x[1],x[2], x[3], x[6])) for x in app.db.get_participant_info(request.args.get("age_group","None"), "year")]
+            name = SelectField("Class", choices=idiots, validators=[InputRequired()])
+        result = StringField("Result")
+        submit = SubmitField("Add")
+
+    form = AddResults()
+    if form.validate_on_submit(): # sucess passing data
+        print(form.data)
+        app.db.insert_into_results((form.data["name"].split("_")[1], request.args.get("id", "None"), form.data["result"]))
+
+    return render_template("event_info.html", form=form)
 
 @app.route("/download")
 def download():

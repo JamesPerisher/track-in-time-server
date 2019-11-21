@@ -16,7 +16,7 @@ function event() {
 }
 
 
-var body = document.getElementsByTagName("body")[0];
+var body = document.getElementsByTagName("body")[0]; // get body and attach lost of events
 console.log(body);
 body.addEventListener("load", event, false);
 body.addEventListener("keyup", event, false);

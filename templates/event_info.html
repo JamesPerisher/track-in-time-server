@@ -52,6 +52,22 @@ along with Track In Time Server.  If not, see <https://www.gnu.org/licenses/>. -
         <th><a href="{{i[4]}}">Select</a></th>
       </tr>
       {% endfor %}
+      <form class="" action="" method="post" novalidate="novalidate">
+        <tr>
+          <th>{{ form.name() }}</th>
+          {% for error in form.name.errors %}
+          <span class="error"> {{ error }}</span>
+          {% endfor %}
+          <th></th>
+          <th></th>
+          <th>{{ form.result() }}</th>
+          {% for error in form.result.errors %}
+          <span class="error"> {{ error }}</span>
+          {% endfor %}
+          <th>{{ form.submit() }}</th>
+        </tr>
+        {{ form.csrf_token }}
+      </form>
     </tbody>
   </table>
   <br>

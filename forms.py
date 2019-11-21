@@ -70,10 +70,5 @@ class AddEvent(Form):
     age_group = SelectField("AgeGroup", choices=[("%s"%x[0],"%s"%x[0]) for x in app.get_data_types("year")])
     event_type = SelectField("Event type", choices=[("t","Timed"), ("s","Scored"), ("p","Placed"), ])
 
-class AddAgeGroups(Form):
-    name_first = StringField("Name / Associated year group", validators=[InputRequired()])
-    start_date = DateField("Age group start date")
-    end_date = DateField("Age group start end")
-
 
 app.kill() # kill thread to allow main db thread to not have errors
