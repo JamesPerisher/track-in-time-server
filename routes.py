@@ -218,7 +218,18 @@ def event_info():
 
     form = AddResults()
     if form.validate_on_submit(): # sucess passing data
-        app.db.insert_into_results((form.data["name"].split("_")[1], request.args.get("id", "None"), form.data["result"]))
+        user_id = form.data["name"].split("_")[1] # TODO: edit/add checks
+        event_id = request.args.get("id", "None")
+
+        print(form.data)
+
+        f = False
+        for i in app.db.get_results_from_event(event_id):
+            if str(i[1]) == user_id:
+                f = True
+                app.db.update_results(user_id, event_id, form.data["result"])
+        if not f:
+            app.db.insert_into_results((user_id, event_id, form.data["result"]))
 
     return render_template("event_info.html", form=form)
 
