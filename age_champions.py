@@ -20,6 +20,8 @@ import db_interact as db
 app = db.connection()
 app.start()
 
+test_list = [5,4,2]
+
 class age_champion():
     def __init__(self):
         super().__init__()
@@ -32,6 +34,12 @@ class age_champion():
             for i in events:
                 users = app.get_results_from_event(i[0])
                 print(users)
+                for a,b in zip(test_list, users):
+                    print(app.get_participant_info(b[0], "db_id"), a)
+                for j in users[len(test_list)::]:
+                    print(app.get_participant_info(j[0], "db_id"), str(1))
+                print()
+
 
 
 
