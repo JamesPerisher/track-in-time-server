@@ -131,11 +131,10 @@ class connection():
     def start(self):
         self.c = DatabaseManager(self.database, timeout=2)
         self.c.start()
-        log.info("started db thread")
+
+        log.info("Reload")
         self.c.execute("PRAGMA foreign_keys = ON;")
-        self.create_db()
-        print("Started database")
-        log.debug("Started database")
+        print("Reload")
 
     def kill(self):
         return self.c.kill()
@@ -299,6 +298,8 @@ if __name__ == '__main__':
 
     c = connection()
     c.start()
+
+    c.create_db()
 
 
     c.data_entry()
