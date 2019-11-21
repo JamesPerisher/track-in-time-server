@@ -37,10 +37,7 @@ import importlib
 
 import forms
 
-try:
-    import db_interact as custom_db
-except (ModuleNotFoundError, ImportError):
-    print("Database import error")
+import db_interact as custom_db
 
 
 app = Flask(__name__, template_folder="templates")
@@ -217,7 +214,6 @@ def event_info():
 
     form = AddResults()
     if form.validate_on_submit(): # sucess passing data
-        print(form.data)
         app.db.insert_into_results((form.data["name"].split("_")[1], request.args.get("id", "None"), form.data["result"]))
 
     return render_template("event_info.html", form=form)
@@ -248,7 +244,11 @@ def utility_processor():
             user = app.db.get_participant_info(i[1], "db_id")[0]
             out.append(("%s %s"%(user[2], user[1]), user[4], user[6].split(" ")[0], i[3], url_for("user_info", name_first=user[2], name_last=user[1], house=user[5], gender=user[3], year=user[4], dob=user[6])))
 
-        out.sort(key = lambda x: x[3], reverse=True)
+        try:
+            out.sort(key = lambda x: x[3], reverse=True)
+        except TypeError:
+            out.sort(key = lambda x: len(str(x[3])), reverse=True)
+
         return out
     return dict(get_event_stats=get_event_stats)
 
