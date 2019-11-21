@@ -218,16 +218,21 @@ class connection():
         self.c.execute("INSERT INTO results VALUES (NULL, \"%s\", \"%s\", \"%s\")" % data)
         self.commit()
 
-    def get_results_from_event(self, data):
-        return self.c.execute("SELECT * FROM results WHERE event_id = %s" % data)
-
-    def get_winners_from_event(self, id, amount=5):
+    def get_results_from_event(self, event_id):
         order_type = {
         "timed" : "ASC",
         "score" : "ASC",
         "distance" : "DESC"
         }
-        return self.c.execute("SELECT * FROM results WHERE event_id = %s ORDER BY result %s LIMIT %s" % (id, order_type[self.get_event_info_by_id(id)[0][4]], amount))
+        return self.c.execute("SELECT * FROM results WHERE event_id = %s ORDER BY results %s" % (event_id, order_type[self.get_event_info_by_id(event_id)[0][4]]))
+
+    def get_winners_from_event(self, event_id, amount=5):
+        order_type = {
+        "timed" : "ASC",
+        "score" : "ASC",
+        "distance" : "DESC"
+        }
+        return self.c.execute("SELECT * FROM results WHERE event_id = %s ORDER BY result %s LIMIT %s" % (event_id, order_type[self.get_event_info_by_id(event_id)[0][4]], amount))
 
     def update_participant(self, data, user_id):
         data.append(user_id)
