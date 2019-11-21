@@ -69,6 +69,10 @@ def license():
 def donate():
     return redirect("https://www.paypal.me/pauln07/5USD")
 
+@app.route("/champs")
+def champs():
+    pass
+
 @app.route("/cmd")
 def cmd():
     try:

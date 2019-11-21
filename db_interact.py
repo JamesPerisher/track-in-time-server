@@ -222,6 +222,7 @@ class connection():
         order_type = {
         "timed" : "ASC",
         "score" : "ASC",
+        "scored" : "ASC",
         "distance" : "DESC"
         }
         return self.c.execute("SELECT * FROM results WHERE event_id = %s ORDER BY result %s" % (event_id, order_type[self.get_event_info(event_id, "id")[0][4]]))
@@ -230,6 +231,7 @@ class connection():
         order_type = {
         "timed" : "ASC",
         "score" : "ASC",
+        "scored" : "ASC",
         "distance" : "DESC"
         }
         return self.c.execute("SELECT * FROM results WHERE event_id = %s ORDER BY result %s LIMIT %s" % (event_id, order_type[self.get_event_info(event_id, "id")[0][4]], amount))
@@ -255,6 +257,7 @@ class connection():
         return self.c.execute("SELECT * FROM events")
 
     def get_event_info(self, data, search_type="name"): # name, track_field, gender
+        print(data, search_type)
         return self.c.execute("SELECT * FROM events WHERE \"%s\" = \"%s\" COLLATE NOCASE" %(search_type, data))
 
     def get_dates(self):
