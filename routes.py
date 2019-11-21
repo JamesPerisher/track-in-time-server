@@ -65,6 +65,10 @@ def favicon():
 def license():
     return render_template("license.html")
 
+@app.route("/donate")
+def donate():
+    return redirect("https://www.paypal.me/pauln07/5USD")
+
 @app.route("/cmd")
 def cmd():
     try:
@@ -79,9 +83,9 @@ def error404(error):
     print(error, type(error))
     error = str(error)
     try:
-        return(render_template("error.html", error_num=error.split(":",1)[0], error_txt=error.split(":",1)[1]))
+        return render_template("error.html", error_num=error.split(":",1)[0], error_txt=error.split(":",1)[1])
     except IndexError:
-        return(render_template("error.html", error_num="Infinity", error_txt="This error SHOULD in theory never be seen by the user."))
+        return render_template("error.html", error_num="Infinity", error_txt="This error SHOULD in theory never be seen by the user.")
 
 
 @app.route("/search_user", methods = ["GET","POST"])

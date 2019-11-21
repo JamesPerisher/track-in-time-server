@@ -28,7 +28,7 @@ body {
 }
 
 .content {
-  min-height: calc(100vh - 129px);
+  min-height: calc(100vh - 150px);
 }
 
 .fake-link {
