@@ -247,7 +247,7 @@ class connection():
         data.append(user_id)
         self.c.execute("UPDATE participants SET name_last=\"%s\", name_first=\"%s\", gender=\"%s\", year=\"%s\", house=\"%s\", dob=\"%s\", participant_id=\"%s\" WHERE id=\"%s\""%tuple(data))
         self.commit()
-        self.update()
+
 
     def update_results(self, user_id, event_id, result):
         self.c.execute("UPDATE results SET event_id=\"%s\" result=\"%s\" WHERE id=\"%s\""%(event_id, result, user_id))
@@ -257,7 +257,7 @@ class connection():
         self.c.execute("INSERT INTO events VALUES (NULL, \"%s\", \"%s\", \"%s\", \"%s\", \"%s\")" % tuple(data))
         log.info("{0: <12} {1}".format("Event added:", str(data)))
         self.commit()
-        self.update()
+
 
 
     def get_events(self):
@@ -274,7 +274,7 @@ class connection():
         sql_command = "INSERT INTO participants VALUES (NULL, \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\")" % tuple(data)
         self.c.execute(sql_command)
         self.commit()
-        self.update()
+
 
 
     def data_entry(self, file_location="db/Book1.xlsx"):
@@ -302,7 +302,7 @@ class connection():
 
         log.info("{0: <12} {1}".format("Added participants from:", file_location))
         self.commit()
-        self.update()
+
 
 
     def get_participant_info(self, lookup, search_type="first_name"):  # search from names
