@@ -235,6 +235,9 @@ class connection():
         self.commit()
         self.update()
 
+    def update_results(self, user_id, event_id, db_id, result):
+        self.c.execute("UPDATE results SET participant_id=\"%s\" event_id=\"%s\" result=\"%s\" WHERE id=\"%s\""%tuple(user_id, event_id, result, db_id))
+
 
     def add_event(self, data):
         self.c.execute("INSERT INTO events VALUES (NULL, \"%s\", \"%s\", \"%s\", \"%s\", \"%s\")" % tuple(data))
