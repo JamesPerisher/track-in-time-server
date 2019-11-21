@@ -228,7 +228,6 @@ class connection():
         "d" : "DESC",
         "distance" : "DESC"
         }
-        print(self.get_event_info(event_id, "id"))
         return self.c.execute("SELECT * FROM results WHERE event_id = %s ORDER BY result %s" % (event_id, order_type[self.get_event_info(event_id, "id")[0][4]]))
 
     def get_winners_from_event(self, event_id, amount=5):
@@ -264,7 +263,6 @@ class connection():
         return self.c.execute("SELECT * FROM events")
 
     def get_event_info(self, data, search_type="name"): # name, track_field, gender
-        print(data, search_type)
         return self.c.execute("SELECT * FROM events WHERE \"%s\" = \"%s\" COLLATE NOCASE" %(search_type, data))
 
     def get_dates(self):
