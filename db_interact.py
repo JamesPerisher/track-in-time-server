@@ -25,7 +25,6 @@ import time
 import logging as log
 from threading import Thread
 import os, sys
-import importlib
 
 
 class EmptyPlacerholder():
@@ -128,9 +127,10 @@ class DatabaseManager(Thread):
 
 
 class connection():
-    def __init__(self, database='test.db'):
+    def __init__(self, database='test.db', app=None):
         super().__init__()
         self.database = database
+        self.app = app
         path_for_logs = ("db/logs/%s/%s"%(datetime.date.today().year ,datetime.date.today().month))
         try:
             os.makedirs(path_for_logs)
@@ -161,7 +161,7 @@ class connection():
 
     def update(self):
         self.pause()
-        importlib.reload(forms)
+        self.app.form_update()
         self.play()
 
 

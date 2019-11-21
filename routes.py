@@ -29,8 +29,9 @@ import pytz
 import datetime
 import numpy as np
 import secrets as s
+import importlib
 
-from forms import *
+import forms
 
 try:
     import db_interact as custom_db
@@ -42,7 +43,8 @@ app = Flask(__name__, template_folder="templates")
 app.config["SECRET_KEY"] = "".join([s.choice([chr(i) for i in range(32,127)]) for j in range(128)]) # gen random secret probs bad idea
 print("Secret key: %s" %app.config["SECRET_KEY"])
 
-app.db = custom_db.connection()
+app.form_update = lambda : importlib.reload(forms)
+app.db = custom_db.connection(app=app)
 
 
 @app.route("/")
@@ -81,13 +83,9 @@ def error404(error):
         return(render_template("error.html", error_num="Infinity", error_txt="This error SHOULD in theory never be seen by the user."))
 
 
-# @app.route("/search")
-# def search():
-#     return render_template("index.html", title="search", indexes=["search/user", "search/event"])
-
 @app.route("/search_user", methods = ["GET","POST"])
 def search_user(): # TODO: add house to user table in return
-    form = SearchUserForm()
+    form = forms.SearchUserForm()
 
     if form.validate_on_submit(): # sucess passing data
         users = app.db.get_participant_info(form.data["search"], search_type=form.data["result"])
@@ -98,7 +96,7 @@ def search_user(): # TODO: add house to user table in return
 
 @app.route("/search_event", methods = ["GET","POST"])
 def search_event(): # TODO: add house to user table in return
-    form = SearchEventForm()
+    form = forms.SearchEventForm()
 
     if form.validate_on_submit(): # sucess passing data
         event = app.db.get_event_info(form.data["search"], search_type=form.data["result"])
@@ -110,7 +108,7 @@ def search_event(): # TODO: add house to user table in return
 
 @app.route("/add_student", methods = ["GET","POST"])
 def add_student():
-    form = AddStudentForm()
+    form = forms.AddStudentForm()
     if form.validate_on_submit(): # sucess passing data
         app.db.add_participant([form.data.get("name_last"),form.data.get("name_first"),form.data.get("gender"),78,form.data.get("house"),str(form.data.get("dob")), form.data.get("stu_id")]) # TODO: fix year
         flash(("s", "Success Adding: %s %s"%(form.data.get("name_first"), form.data.get("name_last")))) # TODO: db stuff
@@ -132,7 +130,7 @@ def edit_student():
     b = {k: v for k, v in request.form.items() if v is not ""}
     a.update(b) # use new form data to override default
 
-    form = AddStudentForm(ImmutableMultiDict(a))
+    form = forms.AddStudentForm(ImmutableMultiDict(a))
 
     if form.validate_on_submit(): # sucess passing data
         app.db.update_participant([form.data.get("name_last"),form.data.get("name_first"),form.data.get("gender"),78,form.data.get("house"),str(form.data.get("dob")), form.data.get("stu_id")], request.args.get("id")) # TODO: fix year
@@ -144,7 +142,7 @@ def edit_student():
 
 @app.route("/add_event", methods = ["GET","POST"])
 def add_event():
-    form = AddEvent()
+    form = forms.AddEvent()
 
     if form.validate_on_submit(): # sucess passing data
         app.db.add_event(["time", form.data.get("name"),form.data.get("age_group"),form.data.get("event_type"),form.data.get("gender")])
@@ -170,7 +168,7 @@ def edit_event():
     b = {k: v for k, v in request.form.items() if v is not ""}
     a.update(b) # use new form data to override default
 
-    form = AddEvent(ImmutableMultiDict(a))
+    form = forms.AddEvent(ImmutableMultiDict(a))
 
     if form.validate_on_submit(): # sucess passing data
         flash(("s", "Success editing: %s %s"%(user[2],user[1]))) # TODO: db stuff

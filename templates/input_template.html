@@ -44,7 +44,7 @@ along with Track In Time Server.  If not, see <https://www.gnu.org/licenses/>. -
     <div class="element">
       <p>{{ i.label }}</p>
       <!-- { i(id = "form-id%s"%n) } -->
-      {{ i(onchange="myfunction(\"%s\");"%i.id) }}
+      {{ i() }}
       {% for error in i.errors %}
       <span class="error"> {{ error }}</span>
       {% endfor %}
