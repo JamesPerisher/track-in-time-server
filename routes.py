@@ -21,6 +21,9 @@ from flask import render_template, redirect, make_response, request, url_for, fl
 from werkzeug.exceptions import HTTPException
 from werkzeug.datastructures import ImmutableMultiDict
 
+from wtforms import StringField, PasswordField, BooleanField, SelectField, SubmitField, HiddenField, RadioField
+from wtforms.validators import InputRequired
+
 # import logging as log
 import os
 import time
@@ -108,7 +111,26 @@ def search_event(): # TODO: add house to user table in return
 
 @app.route("/add_student", methods = ["GET","POST"])
 def add_student():
-    form = forms.AddStudentForm()
+
+
+    class a1(forms.AddStudentForm):
+        class_ = StringField("Class", validators=[InputRequired()])
+    class a2(forms.AddStudentForm):
+        house = StringField("House", validators=[InputRequired()])
+    class a3(forms.AddStudentForm):
+        class_ = StringField("Class", validators=[InputRequired()])
+        house = StringField("House", validators=[InputRequired()])
+
+    if request.args.get("class_","None") == "1" and request.args.get("house","None") == "1":
+        form = a3()
+
+    elif request.args.get("class_","None") == "1":
+        form = a1()
+    elif request.args.get("house", "None") == "1":
+        form = a2()
+    else:
+        form = forms.AddStudentForm()
+
     if form.validate_on_submit(): # sucess passing data
         app.db.add_participant([form.data.get("name_last"),form.data.get("name_first"),form.data.get("gender"),78,form.data.get("house"),str(form.data.get("dob")), form.data.get("stu_id")]) # TODO: fix year
         flash(("s", "Success Adding: %s %s"%(form.data.get("name_first"), form.data.get("name_last")))) # TODO: db stuff

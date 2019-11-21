@@ -20,12 +20,13 @@ along with Track In Time Server.  If not, see <https://www.gnu.org/licenses/>. -
 {% block head %}
 {{ super() }}
 <link type="text/css" rel="stylesheet" href="static/css/add_values.css" />
-<script src="static/js/select_change.js"></script>
 {% endblock %}
 
 
 
 {% block content %}
+
+<script src="static/js/select_reloader.js"></script>
 
 {% for i in get_flashed_messages() %}
 {% if i[0] == "s" %}

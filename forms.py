@@ -56,9 +56,9 @@ class AddStudentForm(Form):
     name_first = StringField("First Name", validators=[InputRequired()])
     name_last = StringField("Last Name", validators=[InputRequired()])
 
-    class_ = SelectField("Class", choices=[("%s"%x[0],"%s"%x[0]) for x in app.get_data_types("year")]) if (len([("%s"%x[0],"%s"%x[0]) for x in app.get_data_types("year")]) != 0) else StringField("Class", validators=[InputRequired()])
+    class_ = SelectField("Class", choices=[("%s"%x[0],"%s"%x[0]) for x in app.get_data_types("year")] + [("new","New")]) if (len([("%s"%x[0],"%s"%x[0]) for x in app.get_data_types("year")]) != 0) else StringField("Class", validators=[InputRequired()])
     gender = SelectField("Gender", choices=[("male","Male"), ("female","Female"), ("other","Other")])
-    house = SelectField("House", choices=[("%s"%x[0],"%s"%x[0]) for x in app.get_data_types("house")]) if (len([("%s"%x[0],"%s"%x[0]) for x in app.get_data_types("house")]) != 0) else StringField("House", validators=[InputRequired()])
+    house = SelectField("House", choices=[("%s"%x[0],"%s"%x[0]) for x in app.get_data_types("house")] + [("new","New")]) if (len([("%s"%x[0],"%s"%x[0]) for x in app.get_data_types("house")]) != 0) else StringField("House", validators=[InputRequired()])
     dob = DateField("Date of Birth", validators=[InputRequired()])
 
     stu_id = StringField("Student id")
