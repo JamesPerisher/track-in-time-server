@@ -131,7 +131,6 @@ class connection():
         super().__init__()
         self.database = database
         self.app = app
-        self.last_update = time.time()
         path_for_logs = ("db/logs/%s/%s"%(datetime.date.today().year ,datetime.date.today().month))
         try:
             os.makedirs(path_for_logs)
@@ -159,14 +158,6 @@ class connection():
 
     def play(self):
         return self.c.play()
-
-    def update(self):
-        if time.time() > self.last_update:
-            self.pause()
-            self.app.form_update()
-            self.play()
-            self.last_update = time.time() + 5
-
 
     def commit(self):
         try:
