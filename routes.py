@@ -260,7 +260,7 @@ def utility_processor():
 
         for i in app.db.get_results_from_event(id):
             user = app.db.get_participant_info(i[1], "db_id")[0]
-            out.append(("%s %s"%(user[2], user[1]), user[4], user[6].split(" ")[0], i[3], url_for("user_info", name_first=user[2], name_last=user[1], house=user[5], gender=user[3], year=user[4], dob=user[6])))
+            out.append(("%s %s"%(user[2], user[1]), user[4], user[6].split(" ")[0], i[3], url_for("user_info", id=user[0], name_first=user[2], name_last=user[1], house=user[5], gender=user[3], year=user[4], dob=user[6])))
 
         try:
             out.sort(key = lambda x: x[3], reverse=True)
