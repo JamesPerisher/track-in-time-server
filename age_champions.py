@@ -25,8 +25,12 @@ class age_champion():
         super().__init__()
 
     def get_champs(self):
-        for i in app.get_events():
-            users = app.get_results_from_event(i[0])
+        events = app.get_events()
+        if events == []:
+            print("empty list")
+        else:
+            for i in events:
+                users = app.get_results_from_event(i[0])
 
 
 
