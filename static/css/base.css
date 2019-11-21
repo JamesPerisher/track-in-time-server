@@ -1,3 +1,17 @@
+/* This file is part of Track In Time Server.
+
+Track In Time Server is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+Track In Time Server is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Track In Time Server.  If not, see <https://www.gnu.org/licenses/>. */
 html {
   width: 100%;
 }
@@ -138,102 +152,104 @@ footer {
   font-size: 17px;
 }
 
-
 .footer {
-  display:block
+  display: block
 }
 
 .footer small {
-  max-width:1012px;margin-right:auto;margin-left:auto;
-  width:100% !important;
-  padding-right:16px !important;
-  padding-left:16px !important;
-  position:relative !important;
-  display:flex !important;
-  justify-content:space-between !important;
-
-
+  max-width: 1012px;
+  margin-right: auto;
+  margin-left: auto;
+  width: 100% !important;
+  padding-right: 16px !important;
+  padding-left: 16px !important;
+  position: relative !important;
+  display: flex !important;
+  justify-content: space-between !important;
   font-size: 4px;
-  padding-top:24px;
-  padding-bottom:24px;
+  padding-top: 24px;
+  padding-bottom: 24px;
   color: #e3e3e3;
 }
 
-.container-lg{
-  max-width:1012px;margin-right:auto;margin-left:auto
+.container-lg {
+  max-width: 1012px;
+  margin-right: auto;
+  margin-left: auto
 }
 
-.width-full{
-  width:100% !important
+.width-full {
+  width: 100% !important
 }
 
-.px-3{
-  padding-right:16px !important;padding-left:16px !important
+.px-3 {
+  padding-right: 16px !important;
+  padding-left: 16px !important
 }
 
-.position-relative{
-  position:relative !important
+.position-relative {
+  position: relative !important
 }
 
-.d-flex{
-  display:flex !important
+.d-flex {
+  display: flex !important
 }
 
-.flex-justify-between{
-  justify-content:space-between !important
+.flex-justify-between {
+  justify-content: space-between !important
 }
 
-.pt-6{
-  padding-top:40px !important
+.pt-6 {
+  padding-top: 40px !important
 }
 
-.pb-2{
-  padding-bottom:8px !important
+.pb-2 {
+  padding-bottom: 8px !important
 }
 
-.mt-6{
-  margin-top:40px !important
+.mt-6 {
+  margin-top: 40px !important
 }
 
-.f6{
-  font-size:12px !important
+.f6 {
+  font-size: 12px !important
+}
 }
 
-}
-.text-gray{
-  color:#586069 !important
-}
-
-.border-top{
-  border-top:1px #e1e4e8 solid !important
+.text-gray {
+  color: #586069 !important
 }
 
-.border-gray-light{
-  border-color:#eaecef !important
+.border-top {
+  border-top: 1px #e1e4e8 solid !important
 }
 
-.list-style-none{
-  list-style:none !important
+.border-gray-light {
+  border-color: #eaecef !important
 }
 
-.flex-wrap{
-  flex-wrap:wrap !important
+.list-style-none {
+  list-style: none !important
 }
 
-.flex-justify-center{
-  justify-content:center !important
+.flex-wrap {
+  flex-wrap: wrap !important
 }
 
-.pb-6{
-  padding-bottom:40px !important
+.flex-justify-center {
+  justify-content: center !important
 }
 
-.mr-3{
-  margin-right:16px !important
+.pb-6 {
+  padding-bottom: 40px !important
 }
 
-.d-none{
-  display:none !important
+.mr-3 {
+  margin-right: 16px !important
+}
+
+.d-none {
+  display: none !important
 }
 
 .logo-white-fill {
