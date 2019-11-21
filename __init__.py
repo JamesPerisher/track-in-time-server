@@ -24,15 +24,31 @@ import time
 class main(Thread):
     def __init__(self):
         super().__init__()
+        self.updateloop = formUpdate()
 
     def run(self):
         app.run(debug=True, use_reloader=False)
+
+    def post_run(self):
+        self.updateloop.start()
+        app.db.start()
+
+class formUpdate(Thread):
+    def run(self):
+        def __init__(self, app):
+            super().__init__()
+            self.app = app
+
+        while True:
+            app.form_update()
+            time.sleep(10)
 
 if __name__ == '__main__':
     m = main()
     m.start()
     time.sleep(1)
-    app.db.start()
+
+    m.post_run()
 
     if input("Add users Y/N > ").strip().lower() == "y":
         app.db.data_entry()
