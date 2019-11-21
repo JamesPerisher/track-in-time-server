@@ -220,18 +220,25 @@ class connection():
 
     def get_results_from_event(self, event_id):
         order_type = {
+        "t" : "ASC",
         "timed" : "ASC",
+        "s" : "ASC",
         "score" : "ASC",
         "scored" : "ASC",
+        "d" : "DESC",
         "distance" : "DESC"
         }
+        print(self.get_event_info(event_id, "id"))
         return self.c.execute("SELECT * FROM results WHERE event_id = %s ORDER BY result %s" % (event_id, order_type[self.get_event_info(event_id, "id")[0][4]]))
 
     def get_winners_from_event(self, event_id, amount=5):
         order_type = {
+        "t" : "ASC",
         "timed" : "ASC",
+        "s" : "ASC",
         "score" : "ASC",
         "scored" : "ASC",
+        "d" : "DESC",
         "distance" : "DESC"
         }
         return self.c.execute("SELECT * FROM results WHERE event_id = %s ORDER BY result %s LIMIT %s" % (event_id, order_type[self.get_event_info(event_id, "id")[0][4]], amount))

@@ -31,6 +31,7 @@ class age_champion():
         else:
             for i in events:
                 users = app.get_results_from_event(i[0])
+                print(users)
 
 
 
