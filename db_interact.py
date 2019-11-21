@@ -198,7 +198,9 @@ class connection():
         "score" : "ASC",
         "scored" : "ASC",
         "d" : "DESC",
-        "distance" : "DESC"
+        "distance" : "DESC",
+        "placed" : "ASC",
+        "p" : "ASC"
         }
         return self.c.execute("SELECT * FROM results WHERE event_id = %s ORDER BY result %s" % (event_id, order_type[self.get_event_info(event_id, "id")[0][4]]))
 
@@ -210,7 +212,9 @@ class connection():
         "score" : "ASC",
         "scored" : "ASC",
         "d" : "DESC",
-        "distance" : "DESC"
+        "distance" : "DESC",
+        "placed" : "ASC",
+        "p" : "ASC"
         }
         return self.c.execute("SELECT * FROM results WHERE event_id = %s ORDER BY result %s LIMIT %s" % (event_id, order_type[self.get_event_info(event_id, "id")[0][4]], amount))
 

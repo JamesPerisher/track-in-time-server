@@ -68,7 +68,7 @@ class AddEvent(Form):
     name = StringField("Event Name", validators=[InputRequired()])
     gender = SelectField("Gender", choices=[("Male","Male"), ("Female","Female"), ("Other","Other")])
     age_group = SelectField("AgeGroup", choices=[("%s"%x[0],"%s"%x[0]) for x in app.get_data_types("year")])
-    event_type = SelectField("Event type", choices=[("t","Timed"), ("s","Scored"), ("p","Placed"), ])
+    event_type = SelectField("Event type", choices=[("t","Timed"), ("d","Distance"), ("s","Scored"), ("p","Placed"), ])
 
 
 app.kill() # kill thread to allow main db thread to not have errors
