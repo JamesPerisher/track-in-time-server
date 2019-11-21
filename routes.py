@@ -109,7 +109,7 @@ def search_event():
 
     if form.validate_on_submit(): # sucess passing data
         event = app.db.get_event_info(form.data["search"], search_type=form.data["result"])
-        results = [(x[2], x[3], x[5], url_for("event_info", name=x[2], type=x[3], gender=x[5], age_group=x[4], id = x[0])) for x in event]
+        results = [(x[2], x[3], x[5], url_for("event_info", name=x[2], type=x[4], gender=x[5], age_group=x[3], id = x[0])) for x in event]
         flash(results)
 
     return render_template("event_search.html", form=form)
