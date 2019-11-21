@@ -17,11 +17,19 @@
 
 import db_interact as db
 
+app = db.connection()
+app.start()
 
-class age_champion(db):
+class age_champion():
     def __init__(self):
         super().__init__()
 
     def get_champs(self):
-        for i in db.get_events():
-            print(db.get_results_from_event(i[0]))
+        for i in app.get_events():
+            users = app.get_results_from_event(i[0])
+
+
+
+if __name__ == '__main__':
+    ag = age_champion()
+    ag.get_champs()
