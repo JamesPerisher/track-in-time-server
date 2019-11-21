@@ -34,7 +34,7 @@ class EmptyPlacerholder():
 
 class DatabaseManager(Thread):
 
-    def __init__(self, file=":memory:", timeout=2, *arg):
+    def __init__(self, file=":memory:", timeout=10, *arg):
         super().__init__()
         self.file = file
         self.timeout = timeout # timeout in seconds
@@ -221,7 +221,7 @@ class connection():
 
 
     def update_results(self, user_id, event_id, result):
-        self.c.execute("UPDATE results SET event_id=\"%s\" result=\"%s\" WHERE id=\"%s\""%(event_id, result, user_id))
+        self.c.execute("UPDATE results SET result=\"%s\" WHERE participant_id=\"%s\" AND WHERE event_id=\"%s\""%(result, user_id, event_id))
 
 
     def add_event(self, data):
