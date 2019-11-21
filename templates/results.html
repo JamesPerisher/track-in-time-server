@@ -31,14 +31,14 @@ along with Track In Time Server.  If not, see <https://www.gnu.org/licenses/>. -
   {% for i in data %}
 
   <br><br>
-  <h1>Results for: {{ i[1] }} {{ i[2] }} {{ i[3] }} <a href="{{ i[4] }}">[info]</a></h1>
+  <h1>Results for: {{ i[1] }} {{ i[2] }} {{ i[3] }}</h1>
   <table>
     <thead>
       <th><b>Name</b></th>
       <th><b>Year</b></th>
       <th><b>Date of birth</b></th>
       <th><b>Result</b></th>
-      <th><b>Select</b></th>
+      <th><b><a href="{{ i[4] }}">Edit table</a></b></th>
     </thead>
     <tbody>
       {% for i in get_event_stats(i[0]) %}
