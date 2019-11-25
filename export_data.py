@@ -20,40 +20,38 @@ import pandas as pd
 import numpy as np
 import os
 
-app = db.connection()
-app.start()
-
 test_list = [5,4,2]
 
 class data():
-    def __init__(self):
+    def __init__(self, db):
         super().__init__()
+        self.db = db
 
     def get_champs(self):
         results = []
-        events = app.get_events()
+        events = self.db.get_events()
         if events == []:
             print("empty list")
         else:
             for i in events:
-                users = app.get_results_from_event(i[0])
+                users = self.db.get_results_from_event(i[0])
                 print(users)
                 for a,b in zip(test_list, users):
-                    print(app.get_participant_info(b[0], "db_id"), a)
+                    print(self.db.get_participant_info(b[0], "db_id"), a)
                 for j in users[len(test_list)::]:
-                    print(app.get_participant_info(j[0], "db_id"), str(1))
+                    print(self.db.get_participant_info(j[0], "db_id"), str(1))
                 print()
 
 
     def excel_all(self):
-        # print(app.get_events())
+        # print(self.db.get_events())
         # writer = pd.ExcelWriter('output.xlsx', engine='xlsxwriter')
-        for i in app.get_events():
-            data = app.get_results_from_event(i[0])
+        for i in self.db.get_events():
+            data = self.db.get_results_from_event(i[0])
             print()
             for j in data:
-                student = app.get_participant_info(j[1], "db_id")[0]
-                event =  app.get_event_info(j[2], "id")[0]
+                student = self.db.get_participant_info(j[1], "db_id")[0]
+                event =  self.db.get_event_info(j[2], "id")[0]
                 print(student[2], student[1], event[2], j[3])
 
 
@@ -76,6 +74,10 @@ class data():
 
 
 if __name__ == '__main__':
-    data = data()
+    db = db.connection()
+    db.start()
+
+
+    data = data(db)
     data.excel_all()
     data.excel_winners()
