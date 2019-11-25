@@ -135,7 +135,6 @@ class connection():
 
         log.info("Reload")
         self.c.execute("PRAGMA foreign_keys = ON;")
-        print("Reload")
 
     def kill(self):
         return self.c.kill()
