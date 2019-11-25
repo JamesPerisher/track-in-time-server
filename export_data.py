@@ -27,14 +27,11 @@ class data():
         super().__init__()
         self.db = db
 
-<<<<<<< HEAD
         try:
             os.mkdir("downloads")
         except FileExistsError:
             pass
-=======
-        os.mkdir("downloads")
->>>>>>> c386d4dd94bdaa7464c2e3e6bafeb5c0d0a73e08
+
 
     def get_champs(self):
         results = []
@@ -55,15 +52,29 @@ class data():
     def excel_all(self):
         # print(self.db.get_events())
         # writer = pd.ExcelWriter('output.xlsx', engine='xlsxwriter')
-        data_to_add = {}
+
+        writer = pd.ExcelWriter('downloads/pandas_simple.xlsx', engine='xlsxwriter')
+
         for i in self.db.get_events():
+            data_to_add = {"Student":[],"Score":[]}
+
+
             data = self.db.get_results_from_event(i[0])
+            event =  self.db.get_event_info(data[0][2], "id")[0]
+            print(event[2])
+
             for j in data:
                 student = self.db.get_participant_info(j[1], "db_id")[0]
-                event =  self.db.get_event_info(j[2], "id")[0]
-                print(event[2])
-                print(student[2], student[1], event[2], j[3])
-        print(data_to_add)
+
+                data_to_add["Student"].append("{0} {1}".format(student[2], student[1]))
+                data_to_add["Score"].append(j[3])
+                print(student[2], student[1], j[3])
+
+            df = pd.DataFrame(data_to_add)
+            df.to_excel(writer, sheet_name=event[2], index=False)
+
+        writer.save()
+
 
 
     def excel_winners(self):
@@ -72,11 +83,7 @@ class data():
         except Exception as e:
             print(e)
 
-        df = pd.DataFrame()
-        writer = pd.ExcelWriter('downloads/pandas_simple.xlsx', engine='xlsxwriter')
-        df.to_excel(writer, sheet_name='Sheet1')
-        writer.save()
-        print("Done?")
+
         # exel_winners = pd.read_excel("/random.xlsx")
 
 
@@ -90,5 +97,5 @@ if __name__ == '__main__':
 
 
     data = data(db)
-    data.excel_all()
     data.excel_winners()
+    data.excel_all()
