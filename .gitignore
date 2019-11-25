@@ -9,6 +9,7 @@ Book1.xlsx
 test.db
 config.json
 db/
+file_downloads/
 *.db-journal
 
 
