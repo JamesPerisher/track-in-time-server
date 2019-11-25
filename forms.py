@@ -26,6 +26,13 @@ import db_interact as custom_db
 app = custom_db.connection()
 app.start() # start db thread to get inital config data
 
+
+# constants
+GENDER = SelectField("Gender", choices=[("male","Male"), ("female","Female"), ("other","Other")])
+CLASS_ = SelectField("Class", choices=[("%s"%x[0],"%s"%x[0]) for x in app.get_data_types("year")] + [("new","New")]) if (len([("%s"%x[0],"%s"%x[0]) for x in app.get_data_types("year")]) != 0) else StringField("Class", validators=[InputRequired()])
+HOUSE = SelectField("House", choices=[("%s"%x[0],"%s"%x[0]) for x in app.get_data_types("house")] + [("new","New")]) if (len([("%s"%x[0],"%s"%x[0]) for x in app.get_data_types("house")]) != 0) else StringField("House", validators=[InputRequired()])
+DOB = DateField("Date of Birth", validators=[InputRequired()])
+
 class Form(FlaskForm):
     submit = SubmitField("Submit")
 
@@ -56,19 +63,19 @@ class AddStudentForm(Form):
     name_first = StringField("First Name", validators=[InputRequired()])
     name_last = StringField("Last Name", validators=[InputRequired()])
 
-    class_ = SelectField("Class", choices=[("%s"%x[0],"%s"%x[0]) for x in app.get_data_types("year")] + [("new","New")]) if (len([("%s"%x[0],"%s"%x[0]) for x in app.get_data_types("year")]) != 0) else StringField("Class", validators=[InputRequired()])
-    gender = SelectField("Gender", choices=[("male","Male"), ("female","Female"), ("other","Other")])
-    house = SelectField("House", choices=[("%s"%x[0],"%s"%x[0]) for x in app.get_data_types("house")] + [("new","New")]) if (len([("%s"%x[0],"%s"%x[0]) for x in app.get_data_types("house")]) != 0) else StringField("House", validators=[InputRequired()])
-    dob = DateField("Date of Birth", validators=[InputRequired()])
+    class_ = CLASS_
+    gender = GENDER
+    house = HOUSE
+    dob = DOB
 
     stu_id = StringField("Student id")
 
 
 class AddEvent(Form):
     name = StringField("Event Name", validators=[InputRequired()])
-    gender = SelectField("Gender", choices=[("Male","Male"), ("Female","Female"), ("Other","Other")])
+    gender = GENDER
     age_group = SelectField("AgeGroup", choices=[("%s"%x[0],"%s"%x[0]) for x in app.get_data_types("year")])
-    event_type = SelectField("Event type", choices=[("t","Timed"), ("d","Distance"), ("s","Scored"), ("p","Placed"), ])
+    event_type = SelectField("Event type", choices=[("timed","Timed"), ("distance","Distance"), ("placed","Placed"), ])
 
 
 app.kill() # kill thread to allow main db thread to not have errors

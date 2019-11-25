@@ -27,6 +27,15 @@ class data():
         super().__init__()
         self.db = db
 
+<<<<<<< HEAD
+        try:
+            os.mkdir("downloads")
+        except FileExistsError:
+            pass
+=======
+        os.mkdir("downloads")
+>>>>>>> c386d4dd94bdaa7464c2e3e6bafeb5c0d0a73e08
+
     def get_champs(self):
         results = []
         events = self.db.get_events()
