@@ -46,13 +46,15 @@ class data():
     def excel_all(self):
         # print(self.db.get_events())
         # writer = pd.ExcelWriter('output.xlsx', engine='xlsxwriter')
+        data_to_add = {}
         for i in self.db.get_events():
             data = self.db.get_results_from_event(i[0])
-            print()
             for j in data:
                 student = self.db.get_participant_info(j[1], "db_id")[0]
                 event =  self.db.get_event_info(j[2], "id")[0]
+                print(event[2])
                 print(student[2], student[1], event[2], j[3])
+        print(data_to_add)
 
 
     def excel_winners(self):
