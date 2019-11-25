@@ -59,12 +59,12 @@ class data():
 
     def excel_winners(self):
         try:
-            os.remove("pandas_simple.xlsx")
+            os.remove("downloads/pandas_simple.xlsx")
         except Exception as e:
             print(e)
 
         df = pd.DataFrame()
-        writer = pd.ExcelWriter('pandas_simple.xlsx', engine='xlsxwriter')
+        writer = pd.ExcelWriter('downloads/pandas_simple.xlsx', engine='xlsxwriter')
         df.to_excel(writer, sheet_name='Sheet1')
         writer.save()
         print("Done?")
