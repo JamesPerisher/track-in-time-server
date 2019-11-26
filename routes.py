@@ -16,7 +16,8 @@
 # along with Track In Time Server.  If not, see <https://www.gnu.org/licenses/>.
 
 from flask import Flask
-from flask import render_template, redirect, make_response, request, url_for, flash
+from flask import render_template, redirect, make_response, request, url_for, flash, session
+# from flask.ext.session import Session
 
 from werkzeug.exceptions import HTTPException
 from werkzeug.datastructures import ImmutableMultiDict
@@ -47,16 +48,19 @@ print("Secret key: %s" %app.config["SECRET_KEY"])
 app.form_update = lambda : importlib.reload(forms)
 app.db = custom_db.connection(app=app)
 
+if False: # TODO: fix before build
+    u = input("Enter one time Username Press Enter to default to \"Admin\" > ")
+    app.username = u if not u.strip() == "" else "Admin"
 
-u = input("Enter one time Username Press Enter to default to \"Admin\" > ")
-app.username = u if not u.strip() == "" else "Admin"
-
-p = input("Enter one time password > ")
-while len(p) < 5:
-    print("Password must be 5 charecters long")
     p = input("Enter one time password > ")
+    while len(p) < 5:
+        print("Password must be 5 charecters long")
+        p = input("Enter one time password > ")
 
-app.password = p
+    app.password = p
+else:
+    app.username = "Admin"
+    app.password = "12345"
 
 @app.route("/")
 def home():
@@ -83,14 +87,17 @@ def donate():
 def champs():
     pass
 
-
-class Login(forms.Form):
-    username = StringField("Username", validators=[InputRequired(), EqualTo(app.username, message="Username does not match.")])
-    password = PasswordField("Password", validators=[InputRequired(), EqualTo(app.password, message="Password does not match.")])
-
-@app.route("/login")
+@app.route("/login", methods = ["GET","POST"])
 def login():
-    form = Login()
+    form = forms.Login()
+
+    if form.validate_on_submit(): # sucess passing data
+        if form.data["username"] == app.username and form.data["password"] == str(app.password):
+            flash(("s", "Correct"))
+            print("correct")
+        else:
+            flash(("e", "Invalid Username or Password."))
+
     return render_template("login.html", form=form)
 
 @app.route("/cmd")

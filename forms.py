@@ -50,6 +50,10 @@ class Form(FlaskForm):
 
         return None
 
+class Login(Form):
+    username = StringField("Username", validators=[InputRequired()])
+    password = PasswordField("Password", validators=[InputRequired()])
+    
 class SearchUserForm(Form):
     result = SelectField("Search type", choices=[("name_first","First Name"), ("name_last", "Last Name"), ("year", "Year"), ("house", "House")])
     search = StringField("Search term (user name, event name)", validators=[InputRequired()])
