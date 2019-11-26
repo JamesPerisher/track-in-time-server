@@ -19,7 +19,7 @@ from flask_wtf import FlaskForm
 import wtforms
 from wtforms.fields import Field
 from wtforms import StringField, PasswordField, BooleanField, SelectField, SubmitField, HiddenField, RadioField
-from wtforms.validators import InputRequired
+from wtforms.validators import InputRequired, Length, EqualTo
 from wtforms.fields.html5 import DateField
 import db_interact as custom_db
 
