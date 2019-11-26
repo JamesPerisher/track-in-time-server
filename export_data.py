@@ -27,6 +27,8 @@ class data():
         super().__init__()
         self.db = db
 
+        os.mkdir("downloads")
+
     def get_champs(self):
         results = []
         events = self.db.get_events()
