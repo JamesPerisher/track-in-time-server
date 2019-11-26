@@ -53,7 +53,7 @@ class data():
         # print(self.db.get_events())
         # writer = pd.ExcelWriter('output.xlsx', engine='xlsxwriter')
 
-        writer = pd.ExcelWriter('downloads/pandas_simple.xlsx', engine='xlsxwriter')
+        writer = pd.ExcelWriter('downloads/all.xlsx', engine='xlsxwriter')
 
         for i in self.db.get_events():
             data_to_add = {"Student":[],"Score":[]}
@@ -70,8 +70,13 @@ class data():
                 data_to_add["Score"].append(j[3])
                 print(student[2], student[1], j[3])
 
-            df = pd.DataFrame(data_to_add)
-            df.to_excel(writer, sheet_name=event[2], index=False)
+            all_data = pd.DataFrame(data_to_add)
+            print(event)
+            event_data = pd.DataFrame({"should_not_be_seeing_this":event[1::]})
+            event_data.to_excel(writer, sheet_name=event[2], index=False, header=False, startrow=0)
+            all_data.to_excel(writer, sheet_name=event[2], index=False, startcol=2)
+            work_book = writer.book
+            work_sheet = writer.sheets[event[2]]
 
         writer.save()
 
@@ -79,7 +84,7 @@ class data():
 
     def excel_winners(self):
         try:
-            os.remove("downloads/pandas_simple.xlsx")
+            os.remove("downloads/all.xlsx")
         except Exception as e:
             print(e)
 
