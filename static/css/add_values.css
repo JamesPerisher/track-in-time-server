@@ -27,14 +27,6 @@ body {
   margin-bottom: 0px;
 }
 
-.error {
-  color: #AC4345;
-}
-
-.success {
-  color: #66BB8A;
-}
-
 .input-container {
   width: 70%;
   margin: 0 auto;
