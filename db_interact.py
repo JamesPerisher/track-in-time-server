@@ -252,8 +252,11 @@ class connection():
 
     def data_entry(self, file_location="db/Book1.xlsx"):
 
-        # “The real problem is that programmers have spent far too much time worrying about efficiency in the wrong places
-        # and at the wrong times; premature optimization is the root of all evil (or at least most of it) in programming.” - Donald Knuth
+
+
+
+        # " The real problem is that programmers have spent far too much time worrying about efficiency in the wrong places
+        # and at the wrong times; premature optimization is the root of all evil (or at least most of it) in programming." - Donald Knuth
         read_file = (pd.read_excel("db/Book1.xlsx"))
         df = pd.DataFrame(read_file)
         index = read_file.index

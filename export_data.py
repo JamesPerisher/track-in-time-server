@@ -44,6 +44,7 @@ class data():
                     print(app.get_participant_info(j[0], "db_id"), str(1))
                 print()
 
+
     def excel_all(self):
         # print(app.get_events())
         # writer = pd.ExcelWriter('output.xlsx', engine='xlsxwriter')
@@ -76,4 +77,5 @@ class data():
 
 if __name__ == '__main__':
     data = data()
+    data.excel_all()
     data.excel_winners()
