@@ -23,7 +23,7 @@ from werkzeug.datastructures import ImmutableMultiDict
 
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SelectField, SubmitField, HiddenField, RadioField
-from wtforms.validators import InputRequired
+from wtforms.validators import InputRequired, Length, EqualTo
 
 # import logging as log
 import os
@@ -47,6 +47,16 @@ print("Secret key: %s" %app.config["SECRET_KEY"])
 app.form_update = lambda : importlib.reload(forms)
 app.db = custom_db.connection(app=app)
 
+
+u = input("Enter one time Username Press Enter to default to \"Admin\" > ")
+app.username = u if not u.strip() == "" else "Admin"
+
+p = input("Enter one time password > ")
+while len(p) < 5:
+    print("Password must be 5 charecters long")
+    p = input("Enter one time password > ")
+
+app.password = p
 
 @app.route("/")
 def home():
@@ -72,6 +82,16 @@ def donate():
 @app.route("/champs")
 def champs():
     pass
+
+
+class Login(forms.Form):
+    username = StringField("Username", validators=[InputRequired(), EqualTo(app.username, message="Username does not match.")])
+    password = PasswordField("Password", validators=[InputRequired(), EqualTo(app.password, message="Password does not match.")])
+
+@app.route("/login")
+def login():
+    form = Login()
+    return render_template("login.html", form=form)
 
 @app.route("/cmd")
 def cmd():
