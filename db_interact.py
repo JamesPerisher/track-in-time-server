@@ -127,7 +127,6 @@ class connection():
 
 
         self.log = log.basicConfig(filename='db/logs/%s/%s/%s-%s.log'%(datetime.date.today().year ,datetime.date.today().month, datetime.date.today(), os.path.basename(__file__)[:-3]), level=log.DEBUG, format='%(asctime)s: %(message)s', datefmt='%d-%b-%y %H:%M:%S')
-        # self.start()
 
     def start(self):
         self.c = DatabaseManager(self.database, timeout=2)
@@ -135,6 +134,8 @@ class connection():
 
         log.info("Reload")
         self.c.execute("PRAGMA foreign_keys = ON;")
+
+        self.create_db()
 
     def kill(self):
         return self.c.kill()
