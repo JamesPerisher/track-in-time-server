@@ -234,7 +234,7 @@ class connection():
         return self.c.execute("SELECT * FROM events")
 
     def get_event_info(self, data, search_type="name"): # name, track_field, gender
-        sql_command = "SELECT * FROM events WHERE \"{0}\" LIKE \"{1}\" COLLATE NOCASE".format(search_type, data)
+        sql_command = "SELECT * FROM events WHERE {0} LIKE '%{1}%' COLLATE NOCASE".format(search_type, data)
         return self.c.execute(sql_command)
 
     def get_dates(self):
@@ -252,7 +252,6 @@ class connection():
 
     def get_participants(self):
         return(self.c.execute("SELECT * FROM participants"))
-
 
     def data_entry(self, file_location="db/Book1.xlsx"):
 
