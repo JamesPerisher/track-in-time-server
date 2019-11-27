@@ -216,7 +216,7 @@ class connection():
         "placed" : "ASC",
         "p" : "ASC"
         }
-        sql_command = "SELECT * FROM results WHERE event_id = {0} ORDER BY result {1} LIMIT {2}".format(event_id, order_type[self.get_event_info(event_id, "id")[0][4]], amount))
+        sql_command = "SELECT * FROM results WHERE event_id = {0} ORDER BY result {1} LIMIT {2}".format(event_id, order_type[self.get_event_info(event_id, "id")[0][4]], amount)
         return self.c.execute(sql_command)
 
 
