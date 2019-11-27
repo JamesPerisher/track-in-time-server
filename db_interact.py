@@ -128,8 +128,8 @@ class connection():
 
         self.log = log.basicConfig(filename='db/logs/%s/%s/%s-%s.log'%(datetime.date.today().year ,datetime.date.today().month, datetime.date.today(), os.path.basename(__file__)[:-3]), level=log.DEBUG, format='%(asctime)s: %(message)s', datefmt='%d-%b-%y %H:%M:%S')
 
-    def start(self):
-        self.c = DatabaseManager(self.database, timeout=2)
+    def start(self, timeout=2):
+        self.c = DatabaseManager(self.database, timeout=timeout)
         self.c.start()
 
         log.info("Reload")
@@ -194,6 +194,9 @@ class connection():
     def add_result(self, data):
         self.c.execute("INSERT INTO results VALUES (NULL, \"%s\", \"%s\", \"%s\")" % data)
         self.commit()
+
+    def get_results(self):
+        return self.c.execute("SELECT * FROM results")
 
     def update_results(self, user_id, event_id, result):
         self.c.execute("UPDATE results SET result=\"%s\" WHERE participant_id=\"%s\" AND WHERE event_id=\"%s\""%(result, user_id, event_id))
