@@ -42,7 +42,7 @@ along with Track In Time Server.  If not, see <https://www.gnu.org/licenses/>. -
     {% for i in get_flashed_messages() %}
     {% if i[0] == "s" %}
     <span class="success"> {{ i[1] }}</span>
-    {% else %}
+    {% elif i[0] == "e" %}
     <span class="error"> {{ i[1] }}</span>
     {% endif %}
     {% endfor %}

@@ -274,8 +274,10 @@ def event_info():
         if request.args.get("age_group","None") == "None":
             name = SelectField("Class", choices=[], validators=[InputRequired()])
         else:
-            idiots = [("id_%s"%x[0], "%s %s %s %s"%(x[1],x[2], x[3], x[6])) for x in app.db.get_participant_info(request.args.get("age_group","None"), "year")]
+            idiots = [(x[3],"id_%s"%x[0], "%s %s %s"%(x[2], x[1], x[6])) for x in app.db.get_participant_info(request.args.get("age_group","None"), "year")]
+            idiots = [(x[1], x[2]) for x in idiots if x[0] == request.args.get("gender","None")] # filter it cos jkook didnt want to use SQL command.
             name = SelectField("Class", choices=idiots, validators=[InputRequired()])
+
         result = StringField("Result")
         submit = SubmitField("Add")
 
