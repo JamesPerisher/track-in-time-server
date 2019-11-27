@@ -216,12 +216,8 @@ class connection():
         "placed" : "ASC",
         "p" : "ASC"
         }
-        return self.c.execute("SELECT * FROM results WHERE event_id = %s ORDER BY result %s LIMIT %s" % (event_id, order_type[self.get_event_info(event_id, "id")[0][4]], amount))
-
-    def update_participant(self, data, user_id):
-        data.append(user_id)
-        self.c.execute("UPDATE participants SET name_last=\"%s\", name_first=\"%s\", gender=\"%s\", year=\"%s\", house=\"%s\", dob=\"%s\", participant_id=\"%s\" WHERE id=\"%s\""%tuple(data))
-        self.commit()
+        sql_command = "SELECT * FROM results WHERE event_id = {0} ORDER BY result {1} LIMIT {2}".format(event_id, order_type[self.get_event_info(event_id, "id")[0][4]], amount))
+        return self.c.execute(sql_command)
 
 
     def update_results(self, user_id, event_id, result):
@@ -234,12 +230,12 @@ class connection():
         self.commit()
 
 
-
     def get_events(self):
         return self.c.execute("SELECT * FROM events")
 
     def get_event_info(self, data, search_type="name"): # name, track_field, gender
-        return self.c.execute("SELECT * FROM events WHERE \"%s\" = \"%s\" COLLATE NOCASE" %(search_type, data))
+        sql_command = "SELECT * FROM events WHERE \"{0}\" LIKE \"{1}\" COLLATE NOCASE".format(search_type, data)
+        return self.c.execute(sql_command)
 
     def get_dates(self):
         return self.c.execute("SELECT dob FROM participants")
@@ -249,6 +245,13 @@ class connection():
         self.c.execute(sql_command)
         self.commit()
 
+    def update_participant(self, data, user_id):
+        data.append(user_id)
+        self.c.execute("UPDATE participants SET name_last=\"%s\", name_first=\"%s\", gender=\"%s\", year=\"%s\", house=\"%s\", dob=\"%s\", participant_id=\"%s\" WHERE id=\"%s\""%tuple(data))
+        self.commit()
+
+    def get_participants(self):
+        return(self.c.execute("SELECT * FROM participants"))
 
 
     def data_entry(self, file_location="db/Book1.xlsx"):
@@ -294,7 +297,8 @@ class connection():
         "participant_id" : "participant_id"
         }
 
-        return self.c.execute("SELECT * FROM participants WHERE \"%s\" = \"%s\" COLLATE NOCASE"% (lookup, search[search_type]))
+        sql_command = "SELECT * FROM participants WHERE {0} LIKE '%{1}%' COLLATE NOCASE".format(search[search_type], lookup)
+        return self.c.execute(sql_command)
 
 
 if __name__ == '__main__':
