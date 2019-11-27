@@ -183,12 +183,20 @@ class connection():
         self.commit()
         log.info("%s: created databases" % __name__)
 
+    def get_dates(self):
+        return self.c.execute("SELECT dob FROM participants")
+
     def get_data_types(self, type="year"):
         return self.c.execute("SELECT DISTINCT \"%s\" FROM participants"%(type))
 
-    def insert_into_results(self, data):
+
+
+    def add_result(self, data):
         self.c.execute("INSERT INTO results VALUES (NULL, \"%s\", \"%s\", \"%s\")" % data)
         self.commit()
+
+    def update_results(self, user_id, event_id, result):
+        self.c.execute("UPDATE results SET result=\"%s\" WHERE participant_id=\"%s\" AND WHERE event_id=\"%s\""%(result, user_id, event_id))
 
     def get_results_from_event(self, event_id):
         order_type = {
@@ -220,15 +228,11 @@ class connection():
         return self.c.execute(sql_command)
 
 
-    def update_results(self, user_id, event_id, result):
-        self.c.execute("UPDATE results SET result=\"%s\" WHERE participant_id=\"%s\" AND WHERE event_id=\"%s\""%(result, user_id, event_id))
-
 
     def add_event(self, data):
         self.c.execute("INSERT INTO events VALUES (NULL, \"%s\", \"%s\", \"%s\", \"%s\", \"%s\")" % tuple(data))
         log.info("{0: <12} {1}".format("Event added:", str(data)))
         self.commit()
-
 
     def get_events(self):
         return self.c.execute("SELECT * FROM events")
@@ -237,8 +241,7 @@ class connection():
         sql_command = "SELECT * FROM events WHERE {0} LIKE '%{1}%' COLLATE NOCASE".format(search_type, data)
         return self.c.execute(sql_command)
 
-    def get_dates(self):
-        return self.c.execute("SELECT dob FROM participants")
+
 
     def add_participant(self, data):
         sql_command = "INSERT INTO participants VALUES (NULL, \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\")" % tuple(data)
@@ -252,6 +255,25 @@ class connection():
 
     def get_participants(self):
         return(self.c.execute("SELECT * FROM participants"))
+
+    def get_participant_info(self, lookup, search_type="first_name"):  # search from names
+        search = {
+        "db_id" : "id",
+        "name_first" : "name_first",
+        "name_last" : "name_last",
+        "gender" : "gender",
+        "year" : "year",
+        "house" : "house",
+        "dob" : "dob",
+        "participant_id" : "participant_id"
+        }
+        if search[search_type] == "id":
+            sql_command = "SELECT * FROM participants WHERE {0} LIKE {1} COLLATE NOCASE".format(search[search_type], lookup)
+            return self.c.execute(sql_command)
+
+        else:
+            sql_command = "SELECT * FROM participants WHERE {0} LIKE '%{1}%' COLLATE NOCASE".format(search[search_type], lookup)
+            return self.c.execute(sql_command)
 
     def data_entry(self, file_location="db/Book1.xlsx"):
 
@@ -282,25 +304,6 @@ class connection():
         log.info("{0: <12} {1}".format("Added participants from:", file_location))
         self.commit()
 
-    def get_participant_info(self, lookup, search_type="first_name"):  # search from names
-        search = {
-        "db_id" : "id",
-        "name_first" : "name_first",
-        "name_last" : "name_last",
-        "gender" : "gender",
-        "year" : "year",
-        "house" : "house",
-        "dob" : "dob",
-        "participant_id" : "participant_id"
-        }
-        if search[search_type] == "id":
-            sql_command = "SELECT * FROM participants WHERE {0} LIKE {1} COLLATE NOCASE".format(search[search_type], lookup)
-            return self.c.execute(sql_command)
-
-        else:
-            sql_command = "SELECT * FROM participants WHERE {0} LIKE '%{1}%' COLLATE NOCASE".format(search[search_type], lookup)
-            return self.c.execute(sql_command)
-
 
 if __name__ == '__main__':
 
@@ -322,21 +325,21 @@ if __name__ == '__main__':
     c.add_event(("12am", "test_2", "track", "score", "F"))
     c.add_event(("11am", "test_3", "field", "distance", "M"))
 
-    c.insert_into_results(("140", "1", "400"))
-    c.insert_into_results(("5", "1", "100"))
-    c.insert_into_results(("14", "1", "200"))
-    c.insert_into_results(("173", "1", "300"))
+    c.add_result(("140", "1", "400"))
+    c.add_result(("5", "1", "100"))
+    c.add_result(("14", "1", "200"))
+    c.add_result(("173", "1", "300"))
 
 
-    c.insert_into_results(("233", "2", "2"))
-    c.insert_into_results(("11", "2", "1"))
-    c.insert_into_results(("161", "2", "4"))
-    c.insert_into_results(("241", "2", "3"))
+    c.add_result(("233", "2", "2"))
+    c.add_result(("11", "2", "1"))
+    c.add_result(("161", "2", "4"))
+    c.add_result(("241", "2", "3"))
 
-    c.insert_into_results(("295", "3", "1000"))
-    c.insert_into_results(("80", "3", "20"))
-    c.insert_into_results(("135", "3", "500"))
-    c.insert_into_results(("214", "3", "100"))
+    c.add_result(("295", "3", "1000"))
+    c.add_result(("80", "3", "20"))
+    c.add_result(("135", "3", "500"))
+    c.add_result(("214", "3", "100"))
 
     winners = (c.get_winners_from_event("1"))
     for i in winners:

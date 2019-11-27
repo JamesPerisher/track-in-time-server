@@ -288,7 +288,7 @@ def event_info():
         if f:
             app.db.update_results(user_id, event_id, form.data["result"])
         else:
-            app.db.insert_into_results((user_id, event_id, form.data["result"]))
+            app.db.add_result((user_id, event_id, form.data["result"]))
 
     return render_template("event_info.html", form=form)
 
