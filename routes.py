@@ -240,8 +240,7 @@ def add_event():
             for i in form.data.get("years"):
                 app.db.add_event(["time", form.data.get("name"),i ,form.data.get("event_type"),form.data.get("gender")])
 
-                # TODO: rename track_field to age_group, rename timed_score_distance to event_type in db_interact.py
-                flash(("s", "Success Adding: %s for year %s"%(form.data.get("name"), i))) # TODO: db stuff
+                flash(("s", "Success Adding: %s for year %s"%(form.data.get("name"), i)))
 
 
     return render_template("input_template.html", form=form)
