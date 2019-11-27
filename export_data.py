@@ -56,18 +56,21 @@ class data():
         # writer = pd.ExcelWriter('downloads/all.xlsx', engine='xlsxwriter')
 
         events = self.db.get_events()
-        print(events)
-        data_to_add = {}
+        # print(events)
+        data_to_add = []
 
         for student in self.db.get_participants():
-            for event in events:
-                event_results = self.db.get_results_from_event(event[0])
-                for result in event_results:
-                    if student[0] == result[0]:
-                        print(self.db.get_participant_info(student[0], "db_id"), self.db.get_event_info(result[0]))
-                # print(event_results)
+            # print(student)
+            for result in self.db.get_results():
+                if student[0] == result[1]:
+                    data_to_add.append([student, result])
+                    # print(student, self.db.get_event_info(result[2]))
 
-                data_to_add[event[0]] = []
+
+        for i in data_to_add:
+            print(i)
+        print("end")
+
             # for b in self.db.get_results_from_event():
 
             # print(student)
@@ -107,16 +110,15 @@ class data():
 
         # exel_winners = pd.read_excel("/random.xlsx")
 
-
-
-
-
-
 if __name__ == '__main__':
     db = db.connection()
-    db.start()
+    db.start(5)
 
 
     data = data(db)
     data.excel_winners()
     data.excel_all()
+    print("a")
+    db.kill()
+    exit()
+    print("b")
