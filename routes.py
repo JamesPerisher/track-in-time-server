@@ -321,9 +321,14 @@ def event_info():
 
 @app.route("/download", methods=["GET", "POST"])
 def download():
-    if request.method == "POST":
+    if request.args.get("item", "").strip() == "AllUser":
         th = threading.Thread(target=app.exporter.excel_all)
-        flash(("s", "Working wait a moment then refresh the page."))
+        flash(("s", "Working... Please wait a moment then refresh the page."))
+        th.start()
+        
+    if request.args.get("item", "").strip() == "Top":
+        th = threading.Thread(target=app.exporter.get_champs)
+        flash(("s", "Working... Please wait a moment then refresh the page."))
         th.start()
 
     data = [(x.strip(), x.split("_")[0].strip(), x.split("_")[1].strip(), x.split("-")[1].split(".")[0].strip()) for x in os.listdir("downloads")]

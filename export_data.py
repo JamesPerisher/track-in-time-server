@@ -36,7 +36,8 @@ class dataManager():
 
 
     def get_champs(self):
-        writer = pd.ExcelWriter('downloads/points.xlsx', engine='xlsxwriter')
+        name = "TopPerEvent_%s-%s.xlsx" %(date.today().strftime("%d.%m.%y"),str(time.time()).split(".")[0].strip())
+        writer = pd.ExcelWriter('downloads/%s'%name, engine='xlsxwriter')
 
         test_list = [5,4,2]
         results_list = []
@@ -78,7 +79,8 @@ class dataManager():
 
 
         age_champs = (self.point_adder(results_list))
-        print(age_champs)
+        print(self.aged_champs_sorter(age_champs))
+        print("tops")
         pd.DataFrame()
 
 
@@ -90,7 +92,7 @@ class dataManager():
     def excel_all(self):
         # print(self.db.get_events())
 
-        name = "EventResults_%s-%s.xlsx" %(date.today().strftime("%d.%m.%y"),str(time.time()).split(".")[0].strip())
+        name = "AllUser_%s-%s.xlsx" %(date.today().strftime("%d.%m.%y"),str(time.time()).split(".")[0].strip())
 
         writer = pd.ExcelWriter('downloads/%s'%name, engine='xlsxwriter')
 
@@ -175,6 +177,28 @@ class dataManager():
                     out[a["ID"][i]] += a["Points"][i]
                 except KeyError:
                     out[a["ID"][i]] = a["Points"][i]
+        return out
+
+
+    def aged_champs_sorter(self, raw_data):
+        out = {}
+
+        for i in raw_data:
+            u = self.db.get_participant_info(i, "db_id")[0]
+
+            try:
+                out[u[4]].append((u[2], u[1], u[6], u[5], raw_data[i]))
+            except KeyError:
+                out[u[4]] = [(u[2], u[1], u[6], u[5], raw_data[i])]
+
+        for i in out:
+            out[i].sort(key = lambda x: x[4])
+            out[i] = out[i][0:5]
+
+        return out
+
+    def aged_champion(self):
+        self.aged_champs_sorter(self.point_adder())
 
 if __name__ == '__main__':
     db = db.connection()
