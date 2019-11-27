@@ -57,17 +57,17 @@ input[type=submit]:hover {
   background-color: #00007e;
 }
 
-#years {
+.element ul li {
   list-style-type: none;
 }
 
-#years li input {
+.element ul li input {
   display: inline;
   margin: 8px 0px;
   width: 50%;
 }
 
-#years li label {
+.element ul li label {
   display: inline-flex;
   margin: 8px 0px;
   width: 40%;

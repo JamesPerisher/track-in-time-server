@@ -16,7 +16,7 @@
 # along with Track In Time Server.  If not, see <https://www.gnu.org/licenses/>.
 
 from flask import Flask
-from flask import render_template, redirect, make_response, request, url_for, flash, session
+from flask import render_template, redirect, make_response, request, url_for, flash, session, send_from_directory
 
 from werkzeug.exceptions import HTTPException
 from werkzeug.datastructures import ImmutableMultiDict
@@ -26,6 +26,7 @@ from wtforms import StringField, PasswordField, BooleanField, SelectField, Submi
 from wtforms.validators import InputRequired, Length, EqualTo
 
 from functools import wraps
+from configMg import configManager
 
 import os
 import time
@@ -41,15 +42,29 @@ import db_interact as custom_db
 
 
 app = Flask(__name__, template_folder="templates")
+
+app.configMg = configManager()
+app.configMg.update()
+
+
+
 app.config["SECRET_KEY"] = "".join([s.choice([chr(i) for i in range(32,127)]) for j in range(128)]) # gen random secret probs bad idea
+app.config['DOWNLOAD_FOLDER'] = app.configMg.get()["DOWNLOAD_FOLDER"]
 print("Secret key: %s" %app.config["SECRET_KEY"])
+
+
 
 app.form_update = lambda : importlib.reload(forms)
 app.db = custom_db.connection(app=app)
 
-if False: # TODO: fix before build # TODO: add this to config file
-    u = input("Enter one time Username Press Enter to default to \"admin\" > ")
-    app.username = u if not u.strip() == "" else "admin"
+
+df_u = app.configMg.get()["default_login"]["username"]
+df_p = app.configMg.get()["default_login"]["password"]
+df_o = app.configMg.get()["default_login"]["override"]
+
+if df_o: # TODO: fix before build # TODO: add this to config file
+    u = input("Enter one time Username Press Enter to default to \"%s\" > "%df_u)
+    app.username = u if not u.strip() == "" else df_u
 
     p = input("Enter one time password > ")
     while len(p) < 5:
@@ -58,13 +73,8 @@ if False: # TODO: fix before build # TODO: add this to config file
 
     app.password = p
 else:
-    app.username = "admin"
-    app.password = "admin"
-
-
-@app.before_request
-def before_request():
-    session['logged_in'] = True # TODO: remove this funtion
+    app.username = df_u
+    app.password = df_p
 
 
 def login_required(f):
@@ -237,8 +247,10 @@ def add_event():
 
     if form.validate_on_submit(): # sucess passing data
         if len([] if form.data.get("years", []) == None else form.data.get("years", [])) != 0:
-            for i in form.data.get("years"):
-                app.db.add_event(["time", form.data.get("name"),i ,form.data.get("event_type"),form.data.get("gender")])
+            if len([] if form.data.get("gender", []) == None else form.data.get("years", [])) != 0:
+                for i in form.data.get("years"):
+                    for j in form.data.get("gender"):
+                        app.db.add_event(["time", form.data.get("name"), i ,form.data.get("event_type"), j])
 
                 flash(("s", "Success Adding: %s for year %s"%(form.data.get("name"), i)))
 
@@ -262,7 +274,7 @@ def edit_event():
     b = {k: v for k, v in request.form.items() if v is not ""}
     a.update(b) # use new form data to override default
 
-    form = forms.AddEvent(ImmutableMultiDict(a))
+    form = forms.EditEvent(ImmutableMultiDict(a))
 
     if form.validate_on_submit(): # sucess passing data
         flash(("s", "Success editing: %s %s"%(user[2],user[1]))) # TODO: db stuff
@@ -307,9 +319,19 @@ def event_info():
 
 @app.route("/download")
 def download():
-    return render_template("download_template.html", name="fancy name", data=[("Zip","/hello"),("Zip","/hello"),("Zip","/hello"),("Zip","/hello")])
+    data = [(x.strip(), x.split("_")[0].strip(), x.split("_")[1].strip(), x.split("-")[1].split(".")[0].strip()) for x in os.listdir("downloads")]
+    data.sort(key=lambda x: x[3], reverse=True)
 
-@app.route("/results")
+    return render_template("download_template.html", data=data)
+
+@app.route('/downloads/<path:filename>', methods=['GET', 'POST'])
+def downloads(filename):
+    downloads = os.path.join(app.root_path, app.config['DOWNLOAD_FOLDER'])
+    return send_from_directory(directory=downloads, filename=filename)
+
+
+
+@app.route("/results") # TODO: replacve /events
 def results():
     return render_template("results.html", data=[("dave", "10000"), ("dave", "10000"), ("dave", "10000"), ("dave", "10000"), ("dave", "10000"), ], event_name="100m sprint", gender="attack helicopter", year="10")
 

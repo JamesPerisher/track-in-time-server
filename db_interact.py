@@ -50,6 +50,12 @@ class DatabaseManager(Thread):
         self.working = False
 
     def execute(self, command, timeout=-99999):
+        if not command[0:len("CREATE TABLE IF NOT EXISTS")] == "CREATE TABLE IF NOT EXISTS":
+            # print(command)
+            pass
+        else:
+            # print("TABLE")
+            pass
         timeout = self.timeout if timeout == -99999 else timeout
         temp_key = time.time()
         n = temp_key + self.timeout
@@ -199,7 +205,8 @@ class connection():
         return self.c.execute("SELECT * FROM results")
 
     def update_results(self, user_id, event_id, result):
-        self.c.execute("UPDATE results SET result=\"%s\" WHERE participant_id=\"%s\" AND WHERE event_id=\"%s\""%(result, user_id, event_id))
+        sql_command = "UPDATE results SET result=\"%s\" WHERE participant_id=\"%s\" AND event_id=\"%s\""%(result, user_id, event_id)
+        self.c.execute(sql_command)
 
     def get_results_from_event(self, event_id):
         order_type = {
@@ -213,7 +220,8 @@ class connection():
         "placed" : "ASC",
         "p" : "ASC"
         }
-        return self.c.execute("SELECT * FROM results WHERE event_id = %s ORDER BY result %s" % (event_id, order_type[self.get_event_info(event_id, "id")[0][4]]))
+        sql_command = "SELECT * FROM results WHERE event_id = %s ORDER BY result %s" % (event_id, order_type[self.get_event_info(event_id, "id")[0][4]])
+        return self.c.execute(sql_command)
 
     def get_winners_from_event(self, event_id, amount=5):
         order_type = {
@@ -249,7 +257,6 @@ class connection():
     def add_participant(self, data):
         sql_command = "INSERT INTO participants VALUES (NULL, \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\")" % tuple(data)
         self.c.execute(sql_command)
-        self.commit()
 
     def update_participant(self, data, user_id):
         data.append(user_id)
@@ -292,6 +299,7 @@ class connection():
                 "m" : "male",
                 "F" : "female",
                 "f" : "female"}
+        n = 0
         for index, row in df.iterrows():
             details = []
             for i in columns:
@@ -302,6 +310,10 @@ class connection():
             details[2] = convert.get(details[2].strip(), details[2])
             details = [details[0], details[1], details[2], details[3], details[4].lower(), details[6], details[7]]
             self.add_participant(details)
+
+            if n % 15 == 0:
+                self.commit()
+            n += 1
 
         log.info("{0: <12} {1}".format("Added participants from:", file_location))
         self.commit()
