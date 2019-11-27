@@ -170,7 +170,6 @@ class dataManager():
         out = {}
 
         for a in b:
-            print(a)
             for i in range(len(a["Points"])):
                 try:
                     out[a["ID"][i]] += a["Points"][i]
@@ -183,8 +182,7 @@ if __name__ == '__main__':
 
 
     data = dataManager(db)
-    data.excel_winners()
-    data.excel_all()
-    # data.get_champs()
+
+    data.get_champs()
+
     db.kill()
-    exit()
