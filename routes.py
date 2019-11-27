@@ -62,6 +62,11 @@ else:
     app.password = "admin"
 
 
+@app.before_request
+def before_request():
+    session['logged_in'] = True # TODO: remove this funtion
+
+
 def login_required(f):
     @wraps(f)
     def wrap(*args, **kwargs):
@@ -135,7 +140,7 @@ def cmd():
 
 @app.errorhandler(HTTPException)
 def error404(error):
-    print(error, type(error))
+    print("Page Error: ", error, type(error))
     error = str(error)
     try:
         return render_template("error.html", error_num=error.split(":",1)[0], error_txt=error.split(":",1)[1])
@@ -231,9 +236,12 @@ def add_event():
     form = forms.AddEvent()
 
     if form.validate_on_submit(): # sucess passing data
-        app.db.add_event(["time", form.data.get("name"),form.data.get("age_group"),form.data.get("event_type"),form.data.get("gender")])
-        # TODO: rename track_field to age_group, rename timed_score_distance to event_type in db_interact.py
-        flash(("s", "Success Adding: %s"%form.data.get("name"))) # TODO: db stuff
+        if len([] if form.data.get("years", []) == None else form.data.get("years", [])) != 0:
+            for i in form.data.get("years"):
+                app.db.add_event(["time", form.data.get("name"),i ,form.data.get("event_type"),form.data.get("gender")])
+
+                # TODO: rename track_field to age_group, rename timed_score_distance to event_type in db_interact.py
+                flash(("s", "Success Adding: %s for year %s"%(form.data.get("name"), i))) # TODO: db stuff
 
 
     return render_template("input_template.html", form=form)
@@ -274,8 +282,10 @@ def event_info():
         if request.args.get("age_group","None") == "None":
             name = SelectField("Class", choices=[], validators=[InputRequired()])
         else:
-            idiots = [("id_%s"%x[0], "%s %s %s %s"%(x[1],x[2], x[3], x[6])) for x in app.db.get_participant_info(request.args.get("age_group","None"), "year")]
+            idiots = [(x[3],"id_%s"%x[0], "%s %s %s"%(x[2], x[1], x[6])) for x in app.db.get_participant_info(request.args.get("age_group","None"), "year")]
+            idiots = [(x[1], x[2]) for x in idiots if x[0] == request.args.get("gender","None")] # filter it cos jkook didnt want to use SQL command.
             name = SelectField("Class", choices=idiots, validators=[InputRequired()])
+
         result = StringField("Result")
         submit = SubmitField("Add")
 
@@ -283,8 +293,6 @@ def event_info():
     if form.validate_on_submit(): # sucess passing data
         user_id = form.data["name"].split("_")[1] # TODO: edit/add checks
         event_id = request.args.get("id", "None")
-
-        print(form.data)
 
         f = False
         for i in app.db.get_results_from_event(event_id):

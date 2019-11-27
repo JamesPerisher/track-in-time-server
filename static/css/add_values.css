@@ -56,3 +56,19 @@ input[type=submit] {
 input[type=submit]:hover {
   background-color: #00007e;
 }
+
+#years {
+  list-style-type: none;
+}
+
+#years li input {
+  display: inline;
+  margin: 8px 0px;
+  width: 50%;
+}
+
+#years li label {
+  display: inline-flex;
+  margin: 8px 0px;
+  width: 40%;
+}

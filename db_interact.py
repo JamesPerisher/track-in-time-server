@@ -279,18 +279,19 @@ class connection():
             return self.c.execute(sql_command)
 
     def data_entry(self, file_location="db/Book1.xlsx"):
-        
+
         # " The real problem is that programmers have spent far too much time worrying about efficiency in the wrong places
         # and at the wrong times; premature optimization is the root of all evil (or at least most of it) in programming." - Donald Knuth
+
         read_file = (pd.read_excel("db/Book1.xlsx"))
         df = pd.DataFrame(read_file)
         index = read_file.index
         columns = (list(df.columns.values))
         convert = {
-            '"M"' : '"Male"',
-            '"m"' : '"Male"',
-            '"F"' : '"Female"',
-            '"f"' : '"Female"'}
+                "M" : "male",
+                "m" : "male",
+                "F" : "female",
+                "f" : "female"}
         for index, row in df.iterrows():
             details = []
             for i in columns:
@@ -298,7 +299,8 @@ class connection():
                     details.append(row[i])
                 else:
                     details.append("NULL")
-            details = [details[0], details[1], convert.get(details[2].strip(),details[2]), details[3], details[4].lower(), details[6], details[7]]
+            details[2] = convert.get(details[2].strip(), details[2])
+            details = [details[0], details[1], details[2], details[3], details[4].lower(), details[6], details[7]]
             self.add_participant(details)
 
         log.info("{0: <12} {1}".format("Added participants from:", file_location))
