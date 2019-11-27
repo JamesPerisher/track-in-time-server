@@ -28,19 +28,28 @@ along with Track In Time Server.  If not, see <https://www.gnu.org/licenses/>. -
 {% block content %}
 
 <div class="input-container">
-  <h1>Download: {{ name }}</h1>
+  <h1>Downloads</h1>
   <table>
-    <tr>
-      <th>Type</th>
-      <th>Link</th>
-    </tr>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Date</th>
+        <th>Download</th>
+      </tr>
+    </thead>
     {% for i in data %}
-    <tr>
-      <td>{{ i[0] }}</td>
-      <td><a href="{{ i[1] }}">download</a></td>
-    </tr>
+    <tbody>
+      <tr>
+        <td>{{ i[1] }}</td>
+        <td>{{ i[2] }}</td>
+        <td><a href="{{ url_for("downloads", filename=i[0]) }}">download</a></td>
+      </tr>
+    </tbody>
     {% endfor %}
   </table>
+
+  <h1>Download Latest: <a href="{{ url_for("downloads", filename=data[0][0]) }}">{{ data[0][1] }} {{ data[0][2] }}</a></h1>
+
 </div>
 
 

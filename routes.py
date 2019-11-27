@@ -16,7 +16,7 @@
 # along with Track In Time Server.  If not, see <https://www.gnu.org/licenses/>.
 
 from flask import Flask
-from flask import render_template, redirect, make_response, request, url_for, flash, session
+from flask import render_template, redirect, make_response, request, url_for, flash, session, send_from_directory
 
 from werkzeug.exceptions import HTTPException
 from werkzeug.datastructures import ImmutableMultiDict
@@ -42,6 +42,7 @@ import db_interact as custom_db
 
 app = Flask(__name__, template_folder="templates")
 app.config["SECRET_KEY"] = "".join([s.choice([chr(i) for i in range(32,127)]) for j in range(128)]) # gen random secret probs bad idea
+app.config['UPLOAD_FOLDER'] = "downloads"
 print("Secret key: %s" %app.config["SECRET_KEY"])
 
 app.form_update = lambda : importlib.reload(forms)
@@ -308,9 +309,22 @@ def event_info():
 
 @app.route("/download")
 def download():
-    return render_template("download_template.html", name="fancy name", data=[("Zip","/hello"),("Zip","/hello"),("Zip","/hello"),("Zip","/hello")])
+    data = [(x.strip(), x.split("_")[0].strip(), x.split("_")[1].strip(), x.split("-")[1].split(".")[0].strip()) for x in os.listdir("downloads")]
+    data.sort(key=lambda x: x[3], reverse=True)
+    print(data)
 
-@app.route("/results")
+    # TODO: we need test files
+
+    return render_template("download_template.html", data=data)
+
+@app.route('/downloads/<path:filename>', methods=['GET', 'POST'])
+def downloads(filename):
+    downloads = os.path.join(app.root_path, app.config['UPLOAD_FOLDER'])
+    return send_from_directory(directory=downloads, filename=filename)
+
+
+
+@app.route("/results") # TODO: replacve /events
 def results():
     return render_template("results.html", data=[("dave", "10000"), ("dave", "10000"), ("dave", "10000"), ("dave", "10000"), ("dave", "10000"), ], event_name="100m sprint", gender="attack helicopter", year="10")
 
