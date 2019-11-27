@@ -26,6 +26,7 @@ from wtforms import StringField, PasswordField, BooleanField, SelectField, Submi
 from wtforms.validators import InputRequired, Length, EqualTo
 
 from functools import wraps
+from configMg import configManager
 
 import os
 import time
@@ -41,16 +42,29 @@ import db_interact as custom_db
 
 
 app = Flask(__name__, template_folder="templates")
+
+app.configMg = configManager()
+app.configMg.update()
+
+
+
 app.config["SECRET_KEY"] = "".join([s.choice([chr(i) for i in range(32,127)]) for j in range(128)]) # gen random secret probs bad idea
-app.config['UPLOAD_FOLDER'] = "downloads"
+app.config['DOWNLOAD_FOLDER'] = app.configMg.get()["DOWNLOAD_FOLDER"]
 print("Secret key: %s" %app.config["SECRET_KEY"])
+
+
 
 app.form_update = lambda : importlib.reload(forms)
 app.db = custom_db.connection(app=app)
 
-if False: # TODO: fix before build # TODO: add this to config file
-    u = input("Enter one time Username Press Enter to default to \"admin\" > ")
-    app.username = u if not u.strip() == "" else "admin"
+
+df_u = app.configMg.get()["default_login"]["username"]
+df_p = app.configMg.get()["default_login"]["password"]
+df_o = app.configMg.get()["default_login"]["override"]
+
+if df_o: # TODO: fix before build # TODO: add this to config file
+    u = input("Enter one time Username Press Enter to default to \"%s\" > "%df_u)
+    app.username = u if not u.strip() == "" else df_u
 
     p = input("Enter one time password > ")
     while len(p) < 5:
@@ -59,13 +73,8 @@ if False: # TODO: fix before build # TODO: add this to config file
 
     app.password = p
 else:
-    app.username = "admin"
-    app.password = "admin"
-
-
-@app.before_request
-def before_request():
-    session['logged_in'] = True # TODO: remove this funtion
+    app.username = df_u
+    app.password = df_p
 
 
 def login_required(f):
@@ -316,7 +325,7 @@ def download():
 
 @app.route('/downloads/<path:filename>', methods=['GET', 'POST'])
 def downloads(filename):
-    downloads = os.path.join(app.root_path, app.config['UPLOAD_FOLDER'])
+    downloads = os.path.join(app.root_path, app.config['DOWNLOAD_FOLDER'])
     return send_from_directory(directory=downloads, filename=filename)
 
 
