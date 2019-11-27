@@ -282,8 +282,6 @@ class connection():
         log.info("{0: <12} {1}".format("Added participants from:", file_location))
         self.commit()
 
-
-
     def get_participant_info(self, lookup, search_type="first_name"):  # search from names
         search = {
         "db_id" : "id",
