@@ -62,6 +62,11 @@ else:
     app.password = "admin"
 
 
+@app.before_request
+def before_request():
+    session['logged_in'] = True # TODO: remove this funtion
+
+
 def login_required(f):
     @wraps(f)
     def wrap(*args, **kwargs):
@@ -231,9 +236,12 @@ def add_event():
     form = forms.AddEvent()
 
     if form.validate_on_submit(): # sucess passing data
-        app.db.add_event(["time", form.data.get("name"),form.data.get("age_group"),form.data.get("event_type"),form.data.get("gender")])
-        # TODO: rename track_field to age_group, rename timed_score_distance to event_type in db_interact.py
-        flash(("s", "Success Adding: %s"%form.data.get("name"))) # TODO: db stuff
+        if len([] if form.data.get("years", []) == None else form.data.get("years", [])) != 0:
+            for i in form.data.get("years"):
+                app.db.add_event(["time", form.data.get("name"),i ,form.data.get("event_type"),form.data.get("gender")])
+
+                # TODO: rename track_field to age_group, rename timed_score_distance to event_type in db_interact.py
+                flash(("s", "Success Adding: %s for year %s"%(form.data.get("name"), i))) # TODO: db stuff
 
 
     return render_template("input_template.html", form=form)

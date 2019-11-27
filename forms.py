@@ -18,7 +18,8 @@
 from flask_wtf import FlaskForm
 import wtforms
 from wtforms.fields import Field
-from wtforms import StringField, PasswordField, BooleanField, SelectField, SubmitField, HiddenField, RadioField
+from wtforms import StringField, PasswordField, BooleanField, SelectField, SubmitField, HiddenField, RadioField, SelectMultipleField
+from wtforms import widgets
 from wtforms.validators import InputRequired, Length, EqualTo
 from wtforms.fields.html5 import DateField
 import db_interact as custom_db
@@ -32,6 +33,19 @@ GENDER = SelectField("Gender", choices=[("male","Male"), ("female","Female"), ("
 CLASS_ = SelectField("Class", choices=[("%s"%x[0],"%s"%x[0]) for x in app.get_data_types("year")] + [("new","New")]) if (len([("%s"%x[0],"%s"%x[0]) for x in app.get_data_types("year")]) != 0) else StringField("Class", validators=[InputRequired()])
 HOUSE = SelectField("House", choices=[("%s"%x[0],"%s"%x[0]) for x in app.get_data_types("house")] + [("new","New")]) if (len([("%s"%x[0],"%s"%x[0]) for x in app.get_data_types("house")]) != 0) else StringField("House", validators=[InputRequired()])
 DOB = DateField("Date of Birth", validators=[InputRequired()])
+
+
+class MultiCheckboxField(SelectMultipleField):
+    """
+    A multiple-select, except displays a list of checkboxes.
+
+    Iterating the field will produce subfields, allowing custom rendering of
+    the enclosed checkbox fields.
+    """
+
+    widget = widgets.ListWidget(prefix_label=True)
+    option_widget = widgets.CheckboxInput()
+
 
 class Form(FlaskForm):
     submit = SubmitField("Submit")
@@ -53,7 +67,7 @@ class Form(FlaskForm):
 class Login(Form):
     username = StringField("Username", validators=[InputRequired()])
     password = PasswordField("Password", validators=[InputRequired()])
-    
+
 class SearchUserForm(Form):
     result = SelectField("Search type", choices=[("name_first","First Name"), ("name_last", "Last Name"), ("year", "Year"), ("house", "House")])
     search = StringField("Search term (user name, event name)", validators=[InputRequired()])
@@ -78,7 +92,8 @@ class AddStudentForm(Form):
 class AddEvent(Form):
     name = StringField("Event Name", validators=[InputRequired()])
     gender = GENDER
-    age_group = SelectField("AgeGroup", choices=[("%s"%x[0],"%s"%x[0]) for x in app.get_data_types("year")])
+
+    years = MultiCheckboxField('Years', choices=[(str(x), "Year %s"%x) for x in [5,6,7,8,9,10,11,12,"other"]])
     event_type = SelectField("Event type", choices=[("timed","Timed"), ("distance","Distance"), ("placed","Placed"), ])
 
 
