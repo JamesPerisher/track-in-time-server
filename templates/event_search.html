@@ -76,7 +76,17 @@ along with Track In Time Server.  If not, see <https://www.gnu.org/licenses/>. -
       </tr>
       {% endfor %}
     </tbody>
-
+    {% elif res != None %}
+    <tbody>
+      {% for i in res %}
+      <tr>
+        <td>{{ i[0] }}</td>
+        <td>{{ i[1] }}</td>
+        <td>{{ i[2] }}</td>
+        <td><a href="{{ i[3] }}">Select</a></td>
+      </tr>
+      {% endfor %}
+    </tbody>
     {% endif %}
     {% endwith %}
 

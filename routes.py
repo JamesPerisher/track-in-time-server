@@ -47,9 +47,9 @@ print("Secret key: %s" %app.config["SECRET_KEY"])
 app.form_update = lambda : importlib.reload(forms)
 app.db = custom_db.connection(app=app)
 
-if False: # TODO: fix before build
-    u = input("Enter one time Username Press Enter to default to \"Admin\" > ")
-    app.username = u if not u.strip() == "" else "Admin"
+if False: # TODO: fix before build # TODO: add this to config file
+    u = input("Enter one time Username Press Enter to default to \"admin\" > ")
+    app.username = u if not u.strip() == "" else "admin"
 
     p = input("Enter one time password > ")
     while len(p) < 5:
@@ -58,8 +58,8 @@ if False: # TODO: fix before build
 
     app.password = p
 else:
-    app.username = "Admin"
-    app.password = "12345"
+    app.username = "admin"
+    app.password = "admin"
 
 
 def login_required(f):
@@ -158,12 +158,18 @@ def search_user():
 def search_event():
     form = forms.SearchEventForm()
 
-    if form.validate_on_submit(): # sucess passing data
-        event = app.db.get_event_info(form.data["search"], search_type=form.data["result"])
-        results = [(x[2], x[3], x[5], url_for("event_info", name=x[2], type=x[4], gender=x[5], age_group=x[3], id = x[0])) for x in event]
+    if form.validate_on_submit(): # sucess passing data # TODO: blank in serach term for all results
+        events = app.db.get_event_info(form.data["search"], search_type=form.data["result"])
+        results = [(x[2], x[3], x[5], url_for("event_info", name=x[2], type=x[4], gender=x[5], age_group=x[3], id = x[0])) for x in events]
         flash(results)
 
-    return render_template("event_search.html", form=form)
+        return render_template("event_search.html", form=form)
+
+    events = app.db.get_events()
+    res = [(x[2], x[3], x[5], url_for("event_info", name=x[2], type=x[4], gender=x[5], age_group=x[3], id = x[0])) for x in events]
+
+
+    return render_template("event_search.html", res=res, form=form)
 
 
 @app.route("/add_student", methods = ["GET","POST"])
