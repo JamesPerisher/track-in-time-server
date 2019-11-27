@@ -311,9 +311,6 @@ def event_info():
 def download():
     data = [(x.strip(), x.split("_")[0].strip(), x.split("_")[1].strip(), x.split("-")[1].split(".")[0].strip()) for x in os.listdir("downloads")]
     data.sort(key=lambda x: x[3], reverse=True)
-    print(data)
-
-    # TODO: we need test files
 
     return render_template("download_template.html", data=data)
 
