@@ -32,12 +32,14 @@ import os
 import time
 import pytz
 import datetime
+import importlib
+import threading
+
 import numpy as np
 import secrets as s
-import importlib
 
 import forms
-
+import export_data as ex_data
 import db_interact as custom_db
 
 
@@ -56,6 +58,7 @@ print("Secret key: %s" %app.config["SECRET_KEY"])
 
 app.form_update = lambda : importlib.reload(forms)
 app.db = custom_db.connection(app=app)
+app.exporter = ex_data.dataManager(app.db)
 
 
 df_u = app.configMg.get()["default_login"]["username"]
@@ -106,7 +109,6 @@ def logout():
     session.pop('logged_in', None)
     flash(("s","Logged out"))
     return redirect(url_for('home'))
-
 
 
 @app.route("/")
@@ -317,8 +319,13 @@ def event_info():
 
     return render_template("event_info.html", form=form)
 
-@app.route("/download")
+@app.route("/download", methods=["GET", "POST"])
 def download():
+    if request.method == "POST":
+        th = threading.Thread(target=app.exporter.excel_all)
+        flash(("s", "Working wait a moment then refresh the page."))
+        th.start()
+
     data = [(x.strip(), x.split("_")[0].strip(), x.split("_")[1].strip(), x.split("-")[1].split(".")[0].strip()) for x in os.listdir("downloads")]
     data.sort(key=lambda x: x[3], reverse=True)
 

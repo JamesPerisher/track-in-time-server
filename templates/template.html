@@ -23,7 +23,7 @@ along with Track In Time Server.  If not, see <https://www.gnu.org/licenses/>. -
 
   <div class="topnav">
     {% if not newpages %}{% set newpages = dict() %}{% endif %}
-    {% set nav_list = dict({"home":"Home", "add_student":"Add Student", "events":"Results", "search_user":"Search Users", "search_event":"Search Events"}, **newpages) %}
+    {% set nav_list = dict({"home":"Home", "add_student":"Add Student", "events":"Results", "download":"Downloads", "search_user":"Search Users", "search_event":"Search Events"}, **newpages) %}
 
     {% if 'logged_in' in session %}
     <a class="cat" style="float: right;" href="/logout">Logout</a>

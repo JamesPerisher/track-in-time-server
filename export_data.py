@@ -22,7 +22,7 @@ import os
 
 
 
-class data():
+class dataManager():
     def __init__(self, db):
         super().__init__()
         self.db = db
@@ -162,22 +162,12 @@ class data():
 
 
 
-
-    def excel_winners(self):
-        try:
-            os.remove("downloads/all.xlsx")
-        except Exception as e:
-            print(e)
-
-
-        # exel_winners = pd.read_excel("/random.xlsx")
-
 if __name__ == '__main__':
     db = db.connection()
     db.start(5)
 
 
-    data = data(db)
+    data = dataManager(db)
     data.excel_winners()
     data.excel_all()
     # data.get_champs()
