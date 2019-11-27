@@ -135,7 +135,7 @@ def cmd():
 
 @app.errorhandler(HTTPException)
 def error404(error):
-    print(error, type(error))
+    print("Page Error: ", error, type(error))
     error = str(error)
     try:
         return render_template("error.html", error_num=error.split(":",1)[0], error_txt=error.split(":",1)[1])
@@ -285,8 +285,6 @@ def event_info():
     if form.validate_on_submit(): # sucess passing data
         user_id = form.data["name"].split("_")[1] # TODO: edit/add checks
         event_id = request.args.get("id", "None")
-
-        print(form.data)
 
         f = False
         for i in app.db.get_results_from_event(event_id):
