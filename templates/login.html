@@ -28,6 +28,7 @@ along with Track In Time Server.  If not, see <https://www.gnu.org/licenses/>. -
 {% block content %}
 
 <div class="input-container">
+  <br><br>
   <form class="" action="" method="post">
     <div class="element">
       <p>{{ form.username.label }}</p>
@@ -40,7 +41,6 @@ along with Track In Time Server.  If not, see <https://www.gnu.org/licenses/>. -
 
     <div class="element">
       <p>{{ form.password.label }}</p>
-      <!-- { i(id = "form-id%s"%n) } -->
       {{ form.password() }}
       {% for error in form.password.errors %}
       <span class="error"> {{ error }}</span>
