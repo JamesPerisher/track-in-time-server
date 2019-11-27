@@ -247,11 +247,13 @@ def add_event():
 
     if form.validate_on_submit(): # sucess passing data
         if len([] if form.data.get("years", []) == None else form.data.get("years", [])) != 0:
-            for i in form.data.get("years"):
-                app.db.add_event(["time", form.data.get("name"),i ,form.data.get("event_type"),form.data.get("gender")])
+            if len([] if form.data.get("gender", []) == None else form.data.get("years", [])) != 0:
+                for i in form.data.get("years"):
+                    for j in form.data.get("gender"):
+                        app.db.add_event(["time", form.data.get("name"), i ,form.data.get("event_type"), j])
 
-                # TODO: rename track_field to age_group, rename timed_score_distance to event_type in db_interact.py
-                flash(("s", "Success Adding: %s for year %s"%(form.data.get("name"), i))) # TODO: db stuff
+                        # TODO: rename track_field to age_group, rename timed_score_distance to event_type in db_interact.py
+                        flash(("s", "Success Adding: %s for year %s"%(form.data.get("name"), i))) # TODO: db stuff
 
 
     return render_template("input_template.html", form=form)
