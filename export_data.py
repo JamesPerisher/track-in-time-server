@@ -68,7 +68,7 @@ class data():
                     results["Score"].append(result[3])
 
                 # print(results)
-                results_list.append(results)
+                results_list.append(results.copy())
 
                 info = pd.DataFrame({1:[i[2]],2:[i[3]],3:[i[5]]})
                 results.pop("ID")
@@ -77,7 +77,9 @@ class data():
                 all_data.to_excel(writer, sheet_name="points", index=False, header=True, startcol=count*5, startrow=2)
 
 
-        print(self.point_adder(results_list))
+        age_champs = (self.point_adder(results_list))
+        print(age_champs)
+        pd.DataFrame()
 
 
         writer.save()
@@ -168,19 +170,25 @@ class data():
         out = {}
 
         for a in b:
+            print(a)
             for i in range(len(a["Points"])):
                 try:
-                    out[a["Students"][i]] += a["Points"][i]
+                    out[a["ID"][i]] += a["Points"][i]
                 except KeyError:
-                    out[a["Students"][i]] = a["Points"][i]
+                    out[a["ID"][i]] = a["Points"][i]
 
         return out
 
-    def excel_winners(self):
-        try:
-            os.remove("downloads/all.xlsx")
-        except Exception as e:
-            print(e)
+
+# Traceback (most recent call last):
+#   File "C:\Users\JKook Studios\Documents\School\IT\track_in_time_server\export_data.py", line 200, in <module>
+#     data.get_champs()
+#   File "C:\Users\JKook Studios\Documents\School\IT\track_in_time_server\export_data.py", line 80, in get_champs
+#     age_champs = (self.point_adder(results_list))
+#   File "C:\Users\JKook Studios\Documents\School\IT\track_in_time_server\export_data.py", line 177, in point_adder
+#     out[a["ID"][i]] = a["Points"][i]
+# KeyError: 'ID'
+
 
 
         # exel_winners = pd.read_excel("/random.xlsx")
@@ -193,7 +201,6 @@ if __name__ == '__main__':
 
 
     data = data(db)
-    data.excel_winners()
     # data.excel_all()
     data.get_champs()
     db.kill()
