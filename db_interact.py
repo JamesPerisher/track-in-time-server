@@ -295,9 +295,13 @@ class connection():
         "dob" : "dob",
         "participant_id" : "participant_id"
         }
+        if search[search_type] == "id":
+            sql_command = "SELECT * FROM participants WHERE {0} LIKE {1} COLLATE NOCASE".format(search[search_type], lookup)
+            return self.c.execute(sql_command)
 
-        sql_command = "SELECT * FROM participants WHERE {0} LIKE '%{1}%' COLLATE NOCASE".format(search[search_type], lookup)
-        return self.c.execute(sql_command)
+        else:
+            sql_command = "SELECT * FROM participants WHERE {0} LIKE '%{1}%' COLLATE NOCASE".format(search[search_type], lookup)
+            return self.c.execute(sql_command)
 
 
 if __name__ == '__main__':
