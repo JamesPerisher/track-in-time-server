@@ -96,4 +96,11 @@ class AddEvent(Form):
     event_type = SelectField("Event type", choices=[("timed","Timed"), ("distance","Distance"), ("placed","Placed"), ])
 
 
+class EditEvent(Form):
+    name = StringField("Event Name", validators=[InputRequired()])
+    gender = GENDER
+    age_group = SelectField("AgeGroup", choices=[("%s"%x[0],"%s"%x[0]) for x in app.get_data_types("year")])
+    event_type = SelectField("Event type", choices=[("timed","Timed"), ("distance","Distance"), ("placed","Placed"), ])
+
+
 app.kill() # kill thread to allow main db thread to not have errors

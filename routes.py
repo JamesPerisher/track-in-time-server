@@ -275,7 +275,7 @@ def edit_event():
     b = {k: v for k, v in request.form.items() if v is not ""}
     a.update(b) # use new form data to override default
 
-    form = forms.AddEvent(ImmutableMultiDict(a))
+    form = forms.EditEvent(ImmutableMultiDict(a))
 
     if form.validate_on_submit(): # sucess passing data
         flash(("s", "Success editing: %s %s"%(user[2],user[1]))) # TODO: db stuff
