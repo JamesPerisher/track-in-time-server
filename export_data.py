@@ -51,30 +51,75 @@ class data():
 
     def excel_all(self):
         # print(self.db.get_events())
-        # writer = pd.ExcelWriter('output.xlsx', engine='xlsxwriter')
 
-        # writer = pd.ExcelWriter('downloads/all.xlsx', engine='xlsxwriter')
+        writer = pd.ExcelWriter('downloads/all.xlsx', engine='xlsxwriter')
 
         events = self.db.get_events()
-        # print(events)
-        data_to_add = []
-
-        for student in self.db.get_participants():
-            # print(student)
-            for result in self.db.get_results():
-                if student[0] == result[1]:
-                    data_to_add.append([student, result])
-                    # print(student, self.db.get_event_info(result[2]))
+        print(events)
+        events = [(1, 'time', 'Event 1', '9', 'd', 'Female'), (2, 'time', 'Event 2', '11', 's', 'Male'), (3, 'time', 'Event 2', '11', 'placed', 'female'), (4, 'time', 'Event 3', '11', 'placed', 'female')]
 
 
-        for i in data_to_add:
-            print(i)
-        print("end")
+        data_to_add = {198: [(3, 198, 1, 42.0)], 202: [(1, 202, 1, 356.0)], 208: [(2, 208, 1, 43.0)], 209: [(4, 209, 1, '`12')], 212: [(5, 212, 1, 43.0)], 275: [(7, 275, 2, 32.0), (10, 275, 3, 4356.0), (12, 275, 4, 1234.0)], 276: [(11, 276, 3, 12.0), (13, 276, 4, 24.0)], 277: [(9, 277, 2, 24.0)], 282: [(6, 282, 2, 134.0)], 283: [(8, 283, 2, '`1')]}
+        event_ids = [x[0] for x in events]
 
-            # for b in self.db.get_results_from_event():
+        # NOTE: DO NOT TOUCH THIS!!! TREAT LIKE BLACK BOX.
 
-            # print(student)
+        # lookup tables
+        # NOTE: event_ids must be unique
+        final = {"Students":[]}
+        f = {}
+        for i,x in enumerate(event_ids):
+            f[x] = i
 
+        p = list([None]*len(event_ids))
+
+
+        # logic
+        out = {}
+        for user_id in data_to_add:
+            out[user_id] = []
+            for result in data_to_add[user_id]:
+                out[user_id].append(result[2])
+
+        o = {}
+        for user_id in out:
+            data = out[user_id]
+            a = p[0::]
+            for data_i in data:
+
+                try:
+
+                    a[f[data_i]] = [x for x in data_to_add[user_id] if x[2] == data_i][0][3]
+                except IndexError:
+                    print("error")
+
+            o[user_id] = a
+
+
+        for event in events:
+            final[event[0]] = []
+
+        for i in o:
+            final["Students"].append(i)
+            for event, val in zip(events,o[i]):
+                final[event[0]].append(val)
+                # final[j].append([])
+        print(o)
+        print(final)
+
+
+        all_data = pd.DataFrame(final)
+        print(event)
+        event_data = pd.DataFrame({"should_not_be_seeing_this":event[2::]})
+        event_data.to_excel(writer, sheet_name=event[2], index=False, header=False, startrow=0)
+        all_data.to_excel(writer, sheet_name=event[2], index=False, startcol=2)
+
+        writer.save()
+
+        #     for b in self.db.get_results_from_event():
+        #
+        #     print(student)
+        #
         # for i in self.db.get_events():
         #     data_to_add = {"Student":[],"Score":[]}
         #
@@ -89,15 +134,11 @@ class data():
         #         data_to_add["Student"].append("{0} {1}".format(student[2], student[1]))
         #         data_to_add["Score"].append(j[3])
         #         print(student[2], student[1], j[3])
-        #
-        #     all_data = pd.DataFrame(data_to_add)
-        #     print(event)
-        #     event_data = pd.DataFrame({"should_not_be_seeing_this":event[2::]})
-        #     event_data.to_excel(writer, sheet_name=event[2], index=False, header=False, startrow=0)
-        #     all_data.to_excel(writer, sheet_name=event[2], index=False, startcol=2)
 
 
-        # writer.save()
+
+
+
 
 
 
