@@ -15,6 +15,11 @@
 # You should have received a copy of the GNU General Public License
 # along with Track In Time Server.  If not, see <https://www.gnu.org/licenses/>.
 
+from db_interact import connection
+c = connection()
+c.start()
+c.create_db()
+c.kill()
 
 from routes import app
 from threading import Thread

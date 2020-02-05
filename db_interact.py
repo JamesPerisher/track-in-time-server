@@ -95,8 +95,6 @@ class DatabaseManager(Thread):
                         log.info("SQL Command: %s" %current[1])
                         self.crsr.execute(current[1])
                     except Exception as e:
-                        # print("before e.args")
-                        # print(e.args)
                         if "UNIQUE constraint failed:" in e.args[0]:
                             log.error("{0: <12} {1}, {2}".format("Record not unique: ",str(e.args[0]), str(current[1])))
                         elif "FOREIGN KEY constraint failed" in e.args[0]:
@@ -115,7 +113,7 @@ class DatabaseManager(Thread):
 
 
 class connection():
-    def __init__(self, database='test.db', app=None):
+    def __init__(self, database='database.db', app=None):
         super().__init__()
         self.database = database
         self.app = app

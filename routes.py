@@ -225,8 +225,6 @@ def event_info():
         user_id = form.data["name"].split("_")[1] # TODO: edit/add checks
         event_id = request.args.get("id", "None")
 
-        print(form.data)
-
         f = False
         for i in app.db.get_results_from_event(event_id):
             if str(i[1]) == user_id:

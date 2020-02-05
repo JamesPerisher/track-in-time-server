@@ -6,7 +6,7 @@ __pycache__/
 # files
 Book1.xlsx
 ~$Book1.xlsx
-test.db
+database.db
 config.json
 db/
 file_downloads/
