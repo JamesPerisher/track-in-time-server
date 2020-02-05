@@ -19,61 +19,202 @@ import db_interact as db
 import pandas as pd
 import numpy as np
 import os
+import time
 
-app = db.connection()
-app.start()
+from datetime import date
 
-test_list = [5,4,2]
 
-class data():
-    def __init__(self):
+class dataManager():
+    def __init__(self, db):
         super().__init__()
+        self.db = db
+
+        try:
+            os.mkdir("downloads")
+        except FileExistsError:
+            pass
+
 
     def get_champs(self):
-        results = []
-        events = app.get_events()
+        name = "TopPerEvent_%s-%s.xlsx" %(date.today().strftime("%d.%m.%y"),str(time.time()).split(".")[0].strip())
+        writer = pd.ExcelWriter('downloads/%s'%name, engine='xlsxwriter')
+
+        test_list = [5,4,2]
+        results_list = []
+
+        events = self.db.get_events()
         if events == []:
             print("empty list")
         else:
-            for i in events:
-                users = app.get_results_from_event(i[0])
-                print(users)
-                for a,b in zip(test_list, users):
-                    print(app.get_participant_info(b[0], "db_id"), a)
-                for j in users[len(test_list)::]:
-                    print(app.get_participant_info(j[0], "db_id"), str(1))
-                print()
+            for count,i in enumerate(events):
+                results = {}
+                results["Students"] = []
+                results["House"] = []
+                results["Score"] = []
+                results["Points"] = []
+                results["ID"] = []
+                event_results = self.db.get_results_from_event(i[0])
+
+                for amount in test_list[0:len(event_results)]:
+                    results["Points"].append(amount)
+
+                for _ in event_results[len(test_list)::]:
+                    results["Points"].append(1)
+
+                for result in event_results:
+                    student = (self.db.get_participant_info(result[1], "db_id"))[0]
+                    results["ID"].append(student[0])
+                    results["House"].append(student[5])
+                    results["Students"].append("%s %s"%(student[2], student[1]))
+                    results["Score"].append(result[3])
+
+                # print(results)
+                results_list.append(results.copy())
+
+                info = pd.DataFrame({1:[i[2]],2:[i[3]],3:[i[5]]})
+                results.pop("ID")
+                all_data = pd.DataFrame(results)
+                info.to_excel(writer, sheet_name="points", index=False, header=False, startcol=count*5, startrow=0)
+                all_data.to_excel(writer, sheet_name="points", index=False, header=True, startcol=count*5, startrow=2)
+
+
+        age_champs = (self.point_adder(results_list))
+        print(self.aged_champs_sorter(age_champs))
+        print("tops")
+        pd.DataFrame()
+
+
+        writer.save()
+
+
+# {dwdwd:[efd,fe,sdg,ef], wad:[gr,awd,wad,aw]}
 
     def excel_all(self):
-        # print(app.get_events())
-        # writer = pd.ExcelWriter('output.xlsx', engine='xlsxwriter')
-        for i in app.get_events():
-            data = app.get_results_from_event(i[0])
-            print()
-            for j in data:
-                student = app.get_participant_info(j[1], "db_id")[0]
-                event =  app.get_event_info(j[2], "id")[0]
-                print(student[2], student[1], event[2], j[3])
+        # print(self.db.get_events())
+
+        name = "AllUser_%s-%s.xlsx" %(date.today().strftime("%d.%m.%y"),str(time.time()).split(".")[0].strip())
+
+        writer = pd.ExcelWriter('downloads/%s'%name, engine='xlsxwriter')
+
+        events = self.db.get_events()
+        results = self.db.get_results()
+
+        data_to_add = {}
+        for i in results:
+            try:
+                data_to_add[i[1]].append(i)
+            except KeyError:
+                data_to_add[i[1]] = [i]
 
 
-    def excel_winners(self):
-        try:
-            os.remove("pandas_simple.xlsx")
-        except Exception as e:
-            print(e)
+        # data_to_add = {198: [(3, 198, 1, 42.0)], 202: [(1, 202, 1, 356.0)], 208: [(2, 208, 1, 43.0)], 209: [(4, 209, 1, '`12')], 212: [(5, 212, 1, 43.0)], 275: [(7, 275, 2, 32.0), (10, 275, 3, 4356.0), (12, 275, 4, 1234.0)], 276: [(11, 276, 3, 12.0), (13, 276, 4, 24.0)], 277: [(9, 277, 2, 24.0)], 282: [(6, 282, 2, 134.0)], 283: [(8, 283, 2, '`1')]}
 
-        df = pd.DataFrame()
-        writer = pd.ExcelWriter('pandas_simple.xlsx', engine='xlsxwriter')
-        df.to_excel(writer, sheet_name='Sheet1')
+        event_ids = [x[0] for x in events]
+
+
+        # NOTE: DO NOT TOUCH THIS!!! TREAT LIKE BLACK BOX.
+
+        # lookup tables
+        # NOTE: event_ids must be unique
+        final = {"Name":[], "DOB":[], "House":[]}
+        f = {}
+        for i,x in enumerate(event_ids):
+            f[x] = i
+
+        p = list([None]*len(event_ids))
+
+
+        # logic
+        out = {}
+        for user_id in data_to_add:
+            out[user_id] = []
+            for result in data_to_add[user_id]:
+                out[user_id].append(result[2])
+
+        o = {}
+        for user_id in out:
+            data = out[user_id]
+            a = p[0::]
+            for data_i in data:
+
+                try:
+
+                    a[f[data_i]] = [x for x in data_to_add[user_id] if x[2] == data_i][0][3]
+                except IndexError:
+                    print("error")
+
+            o[user_id] = a
+
+
+        for event in events:
+            final["%s - %s"% (event[2], event[0])] = []
+
+        for i in o:
+            student_info = self.db.get_participant_info(i, "db_id")[0]
+            Name = ("%s %s" %(student_info[2], student_info[1]))
+            final["Name"].append(Name)
+            final["DOB"].append(student_info[6])
+            final["House"].append(student_info[5])
+            for event, val in zip(events,o[i]):
+                final["%s - %s"% (event[2], event[0])].append(val)
+                # final[j].append([])
+        # print(o)
+
+
+        all_data = pd.DataFrame(final)
+        event_data = pd.DataFrame({"should_not_be_seeing_this":event[2::]})
+        event_data.to_excel(writer, sheet_name=event[2], index=False, header=False, startrow=0)
+        all_data.to_excel(writer, sheet_name=event[2], index=False, startcol=2)
+
         writer.save()
-        print("Done?")
-        # exel_winners = pd.read_excel("/random.xlsx")
+
+    def point_adder(self, b):
+        out = {}
+
+        for a in b:
+            for i in range(len(a["Points"])):
+                try:
+                    out[a["ID"][i]] += a["Points"][i]
+                except KeyError:
+                    out[a["ID"][i]] = a["Points"][i]
+        return out
+
+
+    def aged_champs_sorter(self, raw_data):
+        out = {}
+
+        for i in raw_data:
+            u = self.db.get_participant_info(i, "db_id")[0]
+
+            try:
+                out[u[4]].append((u[2], u[1], u[6], u[5], raw_data[i]))
+            except KeyError:
+                out[u[4]] = [(u[2], u[1], u[6], u[5], raw_data[i])]
+
+        for i in out:
+            out[i].sort(key = lambda x: x[4])
+            out[i] = out[i][0:5]
+
+        return out
+
+    def aged_champion(self):
+        name = "AgedChampionjs_%s-%s.xlsx" %(date.today().strftime("%d.%m.%y"),str(time.time()).split(".")[0].strip())
+
+        writer = pd.ExcelWriter('downloads/%s'%name, engine='xlsxwriter')
 
 
 
 
 
+        self.aged_champs_sorter(self.point_adder())
 
 if __name__ == '__main__':
-    data = data()
-    data.excel_winners()
+    db = db.connection()
+    db.start(5)
+
+
+    data = dataManager(db)
+
+    data.get_champs()
+
+    db.kill()

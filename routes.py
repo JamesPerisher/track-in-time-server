@@ -16,42 +16,104 @@
 # along with Track In Time Server.  If not, see <https://www.gnu.org/licenses/>.
 
 from flask import Flask
-from flask import render_template, redirect, make_response, request, url_for, flash
+from flask import render_template, redirect, make_response, request, url_for, flash, session, send_from_directory
 
 from werkzeug.exceptions import HTTPException
 from werkzeug.datastructures import ImmutableMultiDict
 
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SelectField, SubmitField, HiddenField, RadioField
-from wtforms.validators import InputRequired
+from wtforms.validators import InputRequired, Length, EqualTo
 
-# import logging as log
+from functools import wraps
+from configMg import configManager
+
 import os
 import time
-import json
 import pytz
 import datetime
+import importlib
+import threading
+
 import numpy as np
 import secrets as s
-import importlib
 
 import forms
-
+import export_data as ex_data
 import db_interact as custom_db
 
 
 app = Flask(__name__, template_folder="templates")
+
+app.configMg = configManager()
+app.configMg.update()
+
+
+
 app.config["SECRET_KEY"] = "".join([s.choice([chr(i) for i in range(32,127)]) for j in range(128)]) # gen random secret probs bad idea
+app.config['DOWNLOAD_FOLDER'] = app.configMg.get()["DOWNLOAD_FOLDER"]
 print("Secret key: %s" %app.config["SECRET_KEY"])
+
+
 
 app.form_update = lambda : importlib.reload(forms)
 app.db = custom_db.connection(app=app)
+app.exporter = ex_data.dataManager(app.db)
+
+
+df_u = app.configMg.get()["default_login"]["username"]
+df_p = app.configMg.get()["default_login"]["password"]
+df_o = app.configMg.get()["default_login"]["override"]
+
+if df_o: # TODO: fix before build # TODO: add this to config file
+    u = input("Enter one time Username Press Enter to default to \"%s\" > "%df_u)
+    app.username = u if not u.strip() == "" else df_u
+
+    p = input("Enter one time password > ")
+    while len(p) < 5:
+        print("Password must be 5 charecters long")
+        p = input("Enter one time password > ")
+
+    app.password = p
+else:
+    app.username = df_u
+    app.password = df_p
+
+
+def login_required(f):
+    @wraps(f)
+    def wrap(*args, **kwargs):
+        if 'logged_in' in session:
+            return f(*args, **kwargs)
+        else:
+            flash(("e", "You need to login first"))
+            return redirect(url_for('login'))
+    return wrap
+
+@app.route("/login", methods = ["GET","POST"])
+def login():
+    form = forms.Login()
+
+    if form.validate_on_submit(): # sucess passing data
+        if form.data["username"] == app.username and form.data["password"] == str(app.password):
+            flash(("s", "Correct"))
+            session['logged_in'] = True
+        else:
+            flash(("e", "Invalid Username or Password."))
+
+    return render_template("login.html", form=form)
+
+@app.route('/logout')
+@login_required
+def logout():
+    session.pop('logged_in', None)
+    flash(("s","Logged out"))
+    return redirect(url_for('home'))
 
 
 @app.route("/")
 def home():
     return render_template("home.html")
-
 
 @app.route("/home")
 def home_redirect():
@@ -73,7 +135,13 @@ def donate():
 def champs():
     pass
 
+@app.route("/admin")
+@login_required
+def admin():
+    return render_template("home.html")
+
 @app.route("/cmd")
+@login_required
 def cmd():
     try:
         a = eval(request.args.to_dict()["cmd"])
@@ -84,7 +152,7 @@ def cmd():
 
 @app.errorhandler(HTTPException)
 def error404(error):
-    print(error, type(error))
+    print("Page Error: ", error, type(error))
     error = str(error)
     try:
         return render_template("error.html", error_num=error.split(":",1)[0], error_txt=error.split(":",1)[1])
@@ -107,12 +175,18 @@ def search_user():
 def search_event():
     form = forms.SearchEventForm()
 
-    if form.validate_on_submit(): # sucess passing data
-        event = app.db.get_event_info(form.data["search"], search_type=form.data["result"])
-        results = [(x[2], x[3], x[5], url_for("event_info", name=x[2], type=x[4], gender=x[5], age_group=x[3], id = x[0])) for x in event]
+    if form.validate_on_submit(): # sucess passing data # TODO: blank in serach term for all results
+        events = app.db.get_event_info(form.data["search"], search_type=form.data["result"])
+        results = [(x[2], x[3], x[5], url_for("event_info", name=x[2], type=x[4], gender=x[5], age_group=x[3], id = x[0])) for x in events]
         flash(results)
 
-    return render_template("event_search.html", form=form)
+        return render_template("event_search.html", form=form)
+
+    events = app.db.get_events()
+    res = [(x[2], x[3], x[5], url_for("event_info", name=x[2], type=x[4], gender=x[5], age_group=x[3], id = x[0])) for x in events]
+
+
+    return render_template("event_search.html", res=res, form=form)
 
 
 @app.route("/add_student", methods = ["GET","POST"])
@@ -169,19 +243,25 @@ def edit_student():
 
 
 @app.route("/add_event", methods = ["GET","POST"])
+@login_required
 def add_event():
     form = forms.AddEvent()
 
     if form.validate_on_submit(): # sucess passing data
-        app.db.add_event(["time", form.data.get("name"),form.data.get("age_group"),form.data.get("event_type"),form.data.get("gender")])
-        # TODO: rename track_field to age_group, rename timed_score_distance to event_type in db_interact.py
-        flash(("s", "Success Adding: %s"%form.data.get("name"))) # TODO: db stuff
+        if len([] if form.data.get("years", []) == None else form.data.get("years", [])) != 0:
+            if len([] if form.data.get("gender", []) == None else form.data.get("years", [])) != 0:
+                for i in form.data.get("years"):
+                    for j in form.data.get("gender"):
+                        app.db.add_event(["time", form.data.get("name"), i ,form.data.get("event_type"), j])
+
+                flash(("s", "Success Adding: %s for year %s"%(form.data.get("name"), i)))
 
 
     return render_template("input_template.html", form=form)
 
 
 @app.route("/edit_event", methods = ["GET","POST"])
+@login_required
 def edit_event():
     if request.args.get("id", "None") == "None":
         return redirect("/add_event") # no use for that id send to create page
@@ -196,7 +276,7 @@ def edit_event():
     b = {k: v for k, v in request.form.items() if v is not ""}
     a.update(b) # use new form data to override default
 
-    form = forms.AddEvent(ImmutableMultiDict(a))
+    form = forms.EditEvent(ImmutableMultiDict(a))
 
     if form.validate_on_submit(): # sucess passing data
         flash(("s", "Success editing: %s %s"%(user[2],user[1]))) # TODO: db stuff
@@ -215,8 +295,10 @@ def event_info():
         if request.args.get("age_group","None") == "None":
             name = SelectField("Class", choices=[], validators=[InputRequired()])
         else:
-            idiots = [("id_%s"%x[0], "%s %s %s %s"%(x[1],x[2], x[3], x[6])) for x in app.db.get_participant_info(request.args.get("age_group","None"), "year")]
+            idiots = [(x[3],"id_%s"%x[0], "%s %s %s"%(x[2], x[1], x[6])) for x in app.db.get_participant_info(request.args.get("age_group","None"), "year")]
+            idiots = [(x[1], x[2]) for x in idiots if x[0] == request.args.get("gender","None")] # filter it cos jkook didnt want to use SQL command.
             name = SelectField("Class", choices=idiots, validators=[InputRequired()])
+
         result = StringField("Result")
         submit = SubmitField("Add")
 
@@ -233,15 +315,35 @@ def event_info():
         if f:
             app.db.update_results(user_id, event_id, form.data["result"])
         else:
-            app.db.insert_into_results((user_id, event_id, form.data["result"]))
+            app.db.add_result((user_id, event_id, form.data["result"]))
 
     return render_template("event_info.html", form=form)
 
-@app.route("/download")
+@app.route("/download", methods=["GET", "POST"])
 def download():
-    return render_template("download_template.html", name="fancy name", data=[("Zip","/hello"),("Zip","/hello"),("Zip","/hello"),("Zip","/hello")])
+    if request.args.get("item", "").strip() == "AllUser":
+        th = threading.Thread(target=app.exporter.excel_all)
+        flash(("s", "Working... Please wait a moment then refresh the page."))
+        th.start()
+        
+    if request.args.get("item", "").strip() == "Top":
+        th = threading.Thread(target=app.exporter.get_champs)
+        flash(("s", "Working... Please wait a moment then refresh the page."))
+        th.start()
 
-@app.route("/results")
+    data = [(x.strip(), x.split("_")[0].strip(), x.split("_")[1].strip(), x.split("-")[1].split(".")[0].strip()) for x in os.listdir("downloads")]
+    data.sort(key=lambda x: x[3], reverse=False)
+
+    return render_template("download_template.html", data=data if len(data) != 0 else "")
+
+@app.route('/downloads/<path:filename>', methods=['GET', 'POST'])
+def downloads(filename):
+    downloads = os.path.join(app.root_path, app.config['DOWNLOAD_FOLDER'])
+    return send_from_directory(directory=downloads, filename=filename)
+
+
+
+@app.route("/results") # TODO: replacve /events
 def results():
     return render_template("results.html", data=[("dave", "10000"), ("dave", "10000"), ("dave", "10000"), ("dave", "10000"), ("dave", "10000"), ], event_name="100m sprint", gender="attack helicopter", year="10")
 
@@ -270,16 +372,6 @@ def utility_processor():
         return out
     return dict(get_event_stats=get_event_stats)
 
-@app.context_processor
-def utility_processor():
-    def get_user_stats(id):
-        out = []
-
-        if id == None:
-            return out
-
-        return out
-    return dict(get_user_stats=get_user_stats)
 
 if __name__ == "__main__":
     app.run(debug = True, use_reloader=True)

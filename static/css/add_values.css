@@ -27,14 +27,6 @@ body {
   margin-bottom: 0px;
 }
 
-.error {
-  color: #AC4345;
-}
-
-.success {
-  color: #66BB8A;
-}
-
 .input-container {
   width: 70%;
   margin: 0 auto;
@@ -44,28 +36,10 @@ body {
   margin: 0px auto;
 }
 
-input {
-  background: #36393F;
-  color: #ffffff;
-  border: 1px solid #ccc;
-}
-
 input, select {
   background: #36393F;
   color: #ffffff;
   border: 1px solid #ccc;
-}
-
-input[type=text], select {
-  width: 100%;
-  padding: 12px 20px;
-  margin: 8px 0;
-  display: inline-block;
-  border-radius: 4px;
-  box-sizing: border-box;
-}
-
-input[type=date], select {
   width: 100%;
   padding: 12px 20px;
   margin: 8px 0;
@@ -75,16 +49,26 @@ input[type=date], select {
 }
 
 input[type=submit] {
-  width: 100%;
-  background-color: #36393F;
-  color: white;
-  padding: 14px 20px;
-  margin: 8px 0;
-  border: none;
-  border-radius: 4px;
   cursor: pointer;
+  border: none;
 }
 
 input[type=submit]:hover {
   background-color: #00007e;
+}
+
+.element ul li {
+  list-style-type: none;
+}
+
+.element ul li input {
+  display: inline;
+  margin: 8px 0px;
+  width: 50%;
+}
+
+.element ul li label {
+  display: inline-flex;
+  margin: 8px 0px;
+  width: 40%;
 }

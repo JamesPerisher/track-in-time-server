@@ -25,6 +25,7 @@ from routes import app
 from threading import Thread
 
 import time
+import json
 
 class main(Thread):
     def __init__(self):
@@ -47,6 +48,8 @@ class formUpdate(Thread):
         while True:
             app.form_update()
             time.sleep(10)
+
+
 
 if __name__ == '__main__':
     m = main()

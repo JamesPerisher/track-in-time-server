@@ -27,6 +27,14 @@ body {
   margin-bottom: 0px;
 }
 
+.error {
+  color: #AC4345;
+}
+
+.success {
+  color: #66BB8A;
+}
+
 .content {
   min-height: calc(100vh - 150px);
 }
@@ -68,7 +76,7 @@ html {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #202225;
+  background: #36393F;
   border-radius: 5px;
 }
 

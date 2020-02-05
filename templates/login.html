@@ -14,7 +14,7 @@ You should have received a copy of the GNU General Public License
 along with Track In Time Server.  If not, see <https://www.gnu.org/licenses/>. -->
 
 {% extends "template.html" %}
-{% block title %}Download{% endblock %}
+{% block title %}Results{% endblock %}
 {% set active=(request.path.split("/")[-1].strip()) %}
 
 {% block head %}
@@ -28,36 +28,29 @@ along with Track In Time Server.  If not, see <https://www.gnu.org/licenses/>. -
 {% block content %}
 
 <div class="input-container">
-  <h1>Downloads</h1>
-  <table>
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Date</th>
-        <th>Download</th>
-      </tr>
-    </thead>
-    {% if data != "" %}
-    {% for i in data %}
-    <tbody>
-      <tr>
-        <td>{{ i[1] }}</td>
-        <td>{{ i[2] }}</td>
-        <td><a href="{{ url_for("downloads", filename=i[0]) }}">download</a></td>
-      </tr>
-    </tbody>
-    {% endfor %}
-    {% endif %}
-  </table>
+  <br><br>
+  <form class="" action="" method="post">
+    <div class="element">
+      <p>{{ form.username.label }}</p>
+      {{ form.username() }}
+      {% for error in form.username.errors %}
+      <span class="error"> {{ error }}</span>
+      {% endfor %}
+      <br>
+    </div>
 
-  {% if data != "" %}
-  <h1>Download Latest: <a href="{{ url_for("downloads", filename=data[0][0]) }}">{{ data[0][1] }} {{ data[0][2] }}</a></h1>
-  {% endif %}
+    <div class="element">
+      <p>{{ form.password.label }}</p>
+      {{ form.password() }}
+      {% for error in form.password.errors %}
+      <span class="error"> {{ error }}</span>
+      {% endfor %}
+      <br>
+    </div>
 
-  <a class="button" href="/download?item=AllUser">Generate all users table</a>
-  <a class="button" href="/download?item=Top">Generate top in events spreadsheet</a>
-  <a class="button" href="/download?item=AgedChamps">Generate aged champions table</a>
-
+    {{ form.csrf_token }}
+    {{ form.submit() }}
+  </form>
 </div>
 
 
