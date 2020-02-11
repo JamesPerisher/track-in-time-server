@@ -129,7 +129,7 @@ def license():
 
 @app.route("/donate")
 def donate():
-    return redirect("https://www.paypal.me/pauln07/5USD")
+    return redirect("https://www.paypal.me/pauln07")
 
 @app.route("/champs")
 def champs():
@@ -325,7 +325,7 @@ def download():
         th = threading.Thread(target=app.exporter.excel_all)
         flash(("s", "Working... Please wait a moment then refresh the page."))
         th.start()
-        
+
     if request.args.get("item", "").strip() == "Top":
         th = threading.Thread(target=app.exporter.get_champs)
         flash(("s", "Working... Please wait a moment then refresh the page."))
@@ -374,4 +374,4 @@ def utility_processor():
 
 
 if __name__ == "__main__":
-    app.run(debug = True, use_reloader=True)
+    app.run(host="0.0.0.0", debug = True, use_reloader=True)

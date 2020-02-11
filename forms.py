@@ -91,7 +91,7 @@ class AddStudentForm(Form):
 
 class AddEvent(Form):
     name = StringField("Event Name", validators=[InputRequired()])
-    gender = MultiCheckboxField('Years', choices=[("male","Male"), ("female","Female"), ("other","Other")])
+    gender = MultiCheckboxField('Gender', choices=[("male","Male"), ("female","Female"), ("other","Other")])
     years = MultiCheckboxField('Years', choices=[(str(x), "Year %s"%x) for x in [5,6,7,8,9,10,11,12,"other"]])
     event_type = SelectField("Event type", choices=[("timed","Timed"), ("distance","Distance"), ("placed","Placed"), ])
 

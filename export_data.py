@@ -39,7 +39,6 @@ class dataManager():
         name = "TopPerEvent_%s-%s.xlsx" %(date.today().strftime("%d.%m.%y"),str(time.time()).split(".")[0].strip())
         writer = pd.ExcelWriter('downloads/%s'%name, engine='xlsxwriter')
 
-        test_list = [5,4,2]
         results_list = []
 
         events = self.db.get_events()
@@ -54,6 +53,7 @@ class dataManager():
                 results["Points"] = []
                 results["ID"] = []
                 event_results = self.db.get_results_from_event(i[0])
+                test_list = [5,4,3,2] + ([1] * (len(event_results)+1))
 
                 for amount in test_list[0:len(event_results)]:
                     results["Points"].append(amount)
@@ -105,9 +105,6 @@ class dataManager():
                 data_to_add[i[1]].append(i)
             except KeyError:
                 data_to_add[i[1]] = [i]
-
-
-        # data_to_add = {198: [(3, 198, 1, 42.0)], 202: [(1, 202, 1, 356.0)], 208: [(2, 208, 1, 43.0)], 209: [(4, 209, 1, '`12')], 212: [(5, 212, 1, 43.0)], 275: [(7, 275, 2, 32.0), (10, 275, 3, 4356.0), (12, 275, 4, 1234.0)], 276: [(11, 276, 3, 12.0), (13, 276, 4, 24.0)], 277: [(9, 277, 2, 24.0)], 282: [(6, 282, 2, 134.0)], 283: [(8, 283, 2, '`1')]}
 
         event_ids = [x[0] for x in events]
 
