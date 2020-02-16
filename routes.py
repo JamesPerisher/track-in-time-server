@@ -331,6 +331,12 @@ def download():
         flash(("s", "Working... Please wait a moment then refresh the page."))
         th.start()
 
+    if request.args.get("item", "").strip() == "AgedChamps":
+        th = threading.Thread(target=app.exporter.excel_aged_champs)
+        flash(("s", "Working... Please wait a moment then refresh the page."))
+        th.start()
+
+
     data = [(x.strip(), x.split("_")[0].strip(), x.split("_")[1].strip(), x.split("-")[1].split(".")[0].strip()) for x in os.listdir("downloads")]
     data.sort(key=lambda x: x[3], reverse=False)
 

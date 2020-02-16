@@ -53,7 +53,7 @@ class dataManager():
                 results["Points"] = []
                 results["ID"] = []
                 event_results = self.db.get_results_from_event(i[0])
-                test_list = [5,4,3,2] + ([1] * (len(event_results)+1))
+                test_list = [5,4,3,2]
 
                 for amount in test_list[0:len(event_results)]:
                     results["Points"].append(amount)
@@ -68,7 +68,7 @@ class dataManager():
                     results["Students"].append("%s %s"%(student[2], student[1]))
                     results["Score"].append(result[3])
 
-                # print(results)
+                print(results)
                 results_list.append(results.copy())
 
                 info = pd.DataFrame({1:[i[2]],2:[i[3]],3:[i[5]]})
@@ -78,13 +78,74 @@ class dataManager():
                 all_data.to_excel(writer, sheet_name="points", index=False, header=True, startcol=count*5, startrow=2)
 
 
-        age_champs = (self.point_adder(results_list))
+
+        age_champs = self.point_adder(results_list)
+        print(age_champs)
         print(self.aged_champs_sorter(age_champs))
-        print("tops")
         pd.DataFrame()
 
 
         writer.save()
+
+        return age_champs
+
+    def excel_aged_champs(self):
+        name = "AgedChampions_%s-%s.xlsx" %(date.today().strftime("%d.%m.%y"),str(time.time()).split(".")[0].strip())
+        writer = pd.ExcelWriter('downloads/%s'%name, engine='xlsxwriter')
+
+        results_list = []
+
+        events = self.db.get_events()
+        if events == []:
+            print("empty list")
+        else:
+            for count,i in enumerate(events):
+                results = {}
+                results["Students"] = []
+                results["House"] = []
+                results["Score"] = []
+                results["Points"] = []
+                results["ID"] = []
+                event_results = self.db.get_results_from_event(i[0])
+                test_list = [5,4,3,2]
+
+                for amount in test_list[0:len(event_results)]:
+                    results["Points"].append(amount)
+
+                for _ in event_results[len(test_list)::]:
+                    results["Points"].append(1)
+
+                for result in event_results:
+                    student = (self.db.get_participant_info(result[1], "db_id"))[0]
+                    results["ID"].append(student[0])
+                    results["House"].append(student[5])
+                    results["Students"].append("%s %s"%(student[2], student[1]))
+                    results["Score"].append(result[3])
+
+                print(results)
+                results_list.append(results.copy())
+
+
+        age_champs = self.point_adder(results_list)
+        print(age_champs)
+
+        df = pd.DataFrame(columns=["name_first", "name_last", "gender", "year", "dob", "house", "points"])
+
+        print(df)
+
+        for k,user in enumerate(age_champs):
+            points = age_champs[user]
+            user = self.db.get_participant_info(user, "db_id")[0]
+
+            print(user, points)
+            df.loc[k] = [user[2], user[1], user[3], user[4], user[6], user[5], points]
+
+
+        df.to_excel(writer, sheet_name="aged champions", index=False, header=True, startcol=0, startrow=0)
+
+        writer.save()
+
+
 
 
 # {dwdwd:[efd,fe,sdg,ef], wad:[gr,awd,wad,aw]}
@@ -194,16 +255,6 @@ class dataManager():
 
         return out
 
-    def aged_champion(self):
-        name = "AgedChampionjs_%s-%s.xlsx" %(date.today().strftime("%d.%m.%y"),str(time.time()).split(".")[0].strip())
-
-        writer = pd.ExcelWriter('downloads/%s'%name, engine='xlsxwriter')
-
-
-
-
-
-        self.aged_champs_sorter(self.point_adder())
 
 if __name__ == '__main__':
     db = db.connection()
@@ -212,6 +263,6 @@ if __name__ == '__main__':
 
     data = dataManager(db)
 
-    data.get_champs()
+    data.excel_aged_champs()
 
     db.kill()
