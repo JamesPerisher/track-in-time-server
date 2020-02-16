@@ -68,7 +68,6 @@ class dataManager():
                     results["Students"].append("%s %s"%(student[2], student[1]))
                     results["Score"].append(result[3])
 
-                print(results)
                 results_list.append(results.copy())
 
                 info = pd.DataFrame({1:[i[2]],2:[i[3]],3:[i[5]]})
@@ -80,8 +79,6 @@ class dataManager():
 
 
         age_champs = self.point_adder(results_list)
-        print(age_champs)
-        print(self.aged_champs_sorter(age_champs))
         pd.DataFrame()
 
 
@@ -219,8 +216,8 @@ class dataManager():
 
         all_data = pd.DataFrame(final)
         event_data = pd.DataFrame({"should_not_be_seeing_this":event[2::]})
-        event_data.to_excel(writer, sheet_name=event[2], index=False, header=False, startrow=0)
-        all_data.to_excel(writer, sheet_name=event[2], index=False, startcol=2)
+        event_data.to_excel(writer, sheet_name=event[2][0:30], index=False, header=False, startrow=0)
+        all_data.to_excel(writer, sheet_name=event[2][0:30], index=False, startcol=2)
 
         writer.save()
 
