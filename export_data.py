@@ -97,7 +97,7 @@ class dataManager():
 
         events = self.db.get_events()
         if events == []:
-            print("empty list")
+            pass
         else:
             for count,i in enumerate(events):
                 results = {}
@@ -121,27 +121,25 @@ class dataManager():
                     results["House"].append(student[5])
                     results["Students"].append("%s %s"%(student[2], student[1]))
                     results["Score"].append(result[3])
-
-                print(results)
                 results_list.append(results.copy())
 
 
         age_champs = self.point_adder(results_list)
-        print(age_champs)
 
-        df = pd.DataFrame(columns=["name_first", "name_last", "gender", "year", "dob", "house", "points"])
+        people = pd.DataFrame(columns=["name_first", "name_last", "gender", "year", "dob", "house", "points"])
 
-        print(df)
+        housepoints = {}
 
         for k,user in enumerate(age_champs):
             points = age_champs[user]
             user = self.db.get_participant_info(user, "db_id")[0]
 
-            print(user, points)
-            df.loc[k] = [user[2], user[1], user[3], user[4], user[6], user[5], points]
+            housepoints[user[5]] = [housepoints.get(user[5], [0])[0] + points]
+            people.loc[k] = [user[2], user[1], user[3], user[4], user[6], user[5], points]
 
 
-        df.to_excel(writer, sheet_name="aged champions", index=False, header=True, startcol=0, startrow=0)
+        people.to_excel(writer, sheet_name="aged champions", index=False, header=True, startcol=0, startrow=0)
+        pd.DataFrame(data=housepoints).to_excel(writer, sheet_name="aged champions", index=False, header=True, startcol=8, startrow=0)
 
         writer.save()
 
