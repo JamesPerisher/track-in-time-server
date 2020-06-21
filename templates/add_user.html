@@ -1,0 +1,16 @@
+{% extends "layout.html" %}
+
+{% block title %}Add user{% endblock %}
+
+{% block head %}
+{{ super() }}
+{% endblock %}
+
+
+{% block body %}
+
+{% from "_formhelpers.html" import render_multi_fields %}
+{{ render_multi_fields(form_fields) }}
+
+
+{% endblock %}

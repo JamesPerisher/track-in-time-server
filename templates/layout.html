@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+
+
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    {% block head %}
+    <title>{% block title %}{% endblock %} - Track In Time Server</title>
+
+    <!-- <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"> -->
+    {% endblock %}
+
+
+  </head>
+  <body>
+    {% include 'navbar.html' %}
+
+    {% block body %}{% endblock %}
+
+  </body>
+
+  {% include 'footer.html' %}
+</html>

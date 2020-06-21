@@ -4,12 +4,9 @@ __pycache__/
 *$py.class
 
 # files
-Book1.xlsx
-~$Book1.xlsx
-database.db
+*.db
 config.json
-db/
-file_downloads/
+/logs/*
 *.db-journal
 
 
